@@ -33,6 +33,12 @@ Route::group(['middleware' => ['auth']], function () {
         return view('pages.about');
     })->name('pages.about');
 
+
+    Route::get('/settings', function () {
+        return view('pages.settings');
+    })->name('pages.settings');
+
+
     // Route::get('/company', 'CompanyController@index')->name('pages.company');
     // Route::get('/wholesale', 'ProductController@index')->name('pages.wholesale');
 

@@ -45,6 +45,28 @@ form, input, select, textarea, button {
     outline: 0;
     background: 0;
 }
+svg{
+    fill: currentColor
+}
+
+
+.account-group .avatar {
+    background-color: rgba(0,0,0,.5);
+    border-radius: 50%;
+    width: 48px;
+    height: 48px;
+}
+.account-group .content {
+    width: calc(100% - 48px);
+}
+.account-group .title {
+    font-weight: bold;
+    color: #212121;
+}
+.account-group .subtitle {
+    color: #6c757d;
+    font-size: 80%;
+}
 
 /**/
 /* pics */
@@ -243,6 +265,22 @@ body.logged-in .page-topbar>.navbar{
     padding-left: var(--navigation-width);
 }
 
+.page-topbar .navbar-brand{
+        padding-top: 7px;
+    text-transform: uppercase;
+}
+
+.page-topbar .navbar-brand h1 {
+    margin-bottom: 3px;
+    line-height: 1;
+    font-size: 14px;
+}
+.page-topbar .navbar-brand h2 {
+    margin-bottom: 0;
+    line-height: 1;
+    font-size: 10px;
+}
+
 
 /**/
 /* page navigation */
@@ -272,13 +310,30 @@ body.logged-in .page-main{
 }
 
 
+.page-navigation-sidenav .nav-item.head {
+    margin-left: 12px;
+    font-size: 10px;
+    font-weight: bold;
+    color: #888;
+    text-transform: uppercase;
+    display: none;
+    margin-bottom: 2px;
+}
+body.is-pushed-left .page-navigation-sidenav .nav-item.head {
+    display: block;
+}
+.page-navigation-sidenav{
+    padding: 8px 0;
+}
+.page-navigation-sidenav + .page-navigation-sidenav {
+    border-top: 1px solid #dadce0;
+}
 
 .page-navigation-sidenav .nav-link{
     color: var(--navigation-color);
     display: flex;
     width: 100%;
     padding: 16px 12px;
-    transition: padding 0.2s ease-in;
 }
 .page-navigation-sidenav .nav-link:hover, .page-navigation-sidenav .nav-link.active{
     color: var(--navigation-color-hover);
@@ -293,7 +348,8 @@ body.logged-in .page-main{
 .page-navigation-sidenav .nav-link-icon{
     width: 44px;
     display: block;
-    text-align: center
+    text-align: center;
+    margin-top: 3px;
 }
 .page-navigation-sidenav .nav-link-text{
     overflow: hidden;
@@ -304,8 +360,8 @@ body.logged-in .page-main{
     display: block;
     line-height: 32px;
 
-display: none;
-opacity: 0;
+    display: none;
+    opacity: 0;
     -webkit-transition: opacity .4s cubic-bezier(.4,0,.2,1);
     transition: opacity .4s cubic-bezier(.4,0,.2,1);
 
@@ -401,11 +457,25 @@ body.is-pushed-left .page-navigation-sidenav .nav-link-text{
     opacity: 1;
 }
 
-
-
-svg{
-    fill: currentColor
+.nav-primary-body .account-group {
+    padding: 15px 14px 0;
 }
+.nav-primary-body .account-group .avatar {
+    width: 36px;
+    height: 36px;
+}
+body.is-pushed-left .nav-primary-body .account-group .avatar {
+    width: 48px;
+    height: 48px;
+}
+.nav-primary-body .account-group .content {
+    display: none;
+    padding-left: 10px;
+}
+body.is-pushed-left .nav-primary-body .account-group .content {
+    display: block;
+}
+
 
 .navleft {
     background-color: #f6f6f6;

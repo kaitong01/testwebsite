@@ -2,9 +2,8 @@
     <nav class="navbar navbar-expand-md navbar-dark">
 
         <a class="navbar-brand" href="{{ url('/') }}">
-            <h1 style="line-height: 1;font-size: 14px;">Admin</h1>
-            <h2 style="line-height: 1;font-size: 10px;"></h2>
-            {{-- {{ config('app.name', 'Easy Web Tour') }} --}}
+            <h1>Manager</h1>
+            <h2>Easy Web Tour</h2>
         </a>
 
         <div class="collapse navbar-collapse">
