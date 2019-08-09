@@ -1,0 +1,41 @@
+# composer create-project --prefer-dist laravel/laravel manage "5.6.*"
+# php artisan serve
+
+
+-----  App\Providers  -----
+use Illuminate\Support\Facades\Schema;
+fu boot -> Schema::defaultStringLength(191);
+
+# php artisan migrate
+
+# php artisan make:seeder UsersTablesSeeder
+----- update: fun run -----
+User::create([
+    'name'    => 'Chong',
+    'email'    => 'chong.bkksoft@gmail.com',
+    'username'  => 'chong',
+    'password'   =>  Hash::make('1234'),
+    'remember_token' =>  str_random(10),
+]);
+
+
+# php artisan migrate:fresh
+# php artisan make:migration create_users_roles_table --create=users_roles
+# php artisan db:seed
+
+
+# npm install --save
+# npm i font-awesome --save
+# npm run dev
+
+# php artisan make:auth
+-- remove register, password/reset, password/reset => vendor\laravel\framework\src\Illuminate\Routing
+
+-- update Error page => \resources\views\errors
+- 403 Error
+- 404 Error
+- 419 Error
+- 500 Error
+- 503 Error
+
+
