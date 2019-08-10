@@ -1,3 +1,10 @@
+<?php
+
+// use Illuminate\Support\Facades\Session;
+
+
+
+?>
 <div id="page-topbar" class="page-topbar">
     <nav class="navbar navbar-expand-md navbar-dark">
 
@@ -5,6 +12,14 @@
             <h1>Manager</h1>
             <h2>Easy Web Tour</h2>
         </a>
+
+        <?php
+
+        // echo Session::get('cid');
+
+        
+
+        ?>
 
         <div class="collapse navbar-collapse">
             <!-- Left Side Of Navbar -->
