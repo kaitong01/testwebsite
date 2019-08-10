@@ -1,4 +1,30 @@
-<!DOCTYPE html>
+<?php
+
+// use Illuminate\Support\Facades\Session;
+
+$site_menu_open = Session::get('site_menu_open');
+
+$bodyCls = '';
+if( !empty($site_menu_open) ){
+    $bodyCls .= $bodyCls!=''? ' ':'';
+    $bodyCls .= 'is-pushed-left';
+}
+
+if( Auth::guest() ){
+    $bodyCls .= $bodyCls!=''? ' ':'';
+    $bodyCls .= 'logged-out';   
+}
+else{
+    $bodyCls .= $bodyCls!=''? ' ':'';
+    $bodyCls .= 'logged-in';   
+}
+
+if( !empty($bodyCls) ){
+    $bodyCls = ' class="'.$bodyCls.'"';
+}
+
+
+?><!DOCTYPE html>
 <html lang="{{ app()->getLocale() }}">
 <head>
     <meta charset="UTF-8">
@@ -15,7 +41,7 @@
     <link rel="stylesheet" href="{{ mix('/css/app.css') }}">
 
 </head>
-<body @guest class="logged-out" @else class="logged-in" @endguest>
+<body<?=$bodyCls?>>
 
     <div id="doc">
         @auth
@@ -39,7 +65,6 @@
     <div class="modals">
         @yield('modals')
     </div>
-
 
     <!-- Scripts -->
     <script src="https://ajax.googleapis.com/ajax/libs/jquery/1.11.3/jquery.min.js"></script>

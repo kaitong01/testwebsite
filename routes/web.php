@@ -29,6 +29,9 @@ Route::group(['middleware' => ['auth', 'company']], function () {
 
     })->name('pages.home');
 
+    Route::get('/site/menu', 'SiteController@menu');
+    Route::post('/site/menu', 'SiteController@menu');
+
     Route::get('/home', function () {
 
         return view('pages.home');
@@ -38,18 +41,18 @@ Route::group(['middleware' => ['auth', 'company']], function () {
     Route::get('/about', function () {
 
         return view('pages.about');
-
     })->name('pages.about');
 
 
     Route::get('/settings', function () {
-        
-        return view('pages.settings');
 
+        return view('pages.settings');
     })->name('pages.settings');
 
-    // CompanyController::check( Auth::user()->company_id, 'pages.settings' );
 
+
+
+    // CompanyController::check( Auth::user()->company_id, 'pages.settings' );
 
     // Route::get('/company', 'CompanyController@index')->name('pages.company');
     // Route::get('/wholesale', 'ProductController@index')->name('pages.wholesale');

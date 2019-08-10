@@ -1,7 +1,7 @@
 @extends('index')
 
 
-@section('title', 'ตั้งค่า')
+@section('title', 'การตั้งค่า')
 
 
 @section('content')

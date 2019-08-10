@@ -31,11 +31,11 @@ $navs[] = array('title'=>'Setting ', 'items'=>$items);
 
 echo '<div class="account-group">
     <div class="d-flex align-items-center">
-        <div class="avatar avatar-9"></div>
-        <div class="content">
-            <div class="title">ชง</div>
-            <div class="subtitle">ผู้ดูแล</div>
-        </div>
+        <div class="avatar avatar-'.Auth::user()->user_avatar.'"></div>
+        <div class="content">'.
+            '<div class="title">'.Auth::user()->user_name.'</div>'.
+            // <div class="subtitle">ผู้ดูแล</div>
+        '</div>
     </div>
 </div>';
 
