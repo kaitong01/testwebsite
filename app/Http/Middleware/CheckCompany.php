@@ -2,6 +2,7 @@
 
 namespace App\Http\Middleware;
 use App\Http\Controllers\CompanyController;
+use Illuminate\Support\Facades\Auth;
 
 use Closure;
 
@@ -16,24 +17,18 @@ class CheckCompany
      */
     public function handle($request, Closure $next)
     {
+        $response = $next($request);
 
-        if( CompanyController::is() ){
-
-
-            return $next($request);
+        if( Auth::user()->user_status != 1 ){
+            Auth::logout();
+            return redirect('/login')->with('erro_login', 'status disable');
+        }
+        else if( CompanyController::is() ){
+            return $response;
         }
         else{
-
-
-            return redirect('no-company');
-
-            // return false;
-            // dd('Error Page');
-            // return $next($request);
+            Auth::logout();
+            return redirect('/login')->with('erro_login', 'No Company');
         }
-        
-
-
-        
     }
 }

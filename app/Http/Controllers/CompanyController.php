@@ -16,8 +16,6 @@ class CompanyController extends Controller
     {
         $id = Auth::user()->company_id;
 
-
-
         if( $id==0 ){
 
             $id = Session::get('cid');
@@ -52,8 +50,7 @@ class CompanyController extends Controller
             return false;
         }
     }
-
-
+    
     public static function first()
     {
         return DB::table('companies')
