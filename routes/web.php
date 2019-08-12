@@ -52,6 +52,29 @@ Route::group(['middleware' => ['auth', 'company']], function () {
 
 
 
+    // /settings/tours/
+    Route::get('/settings/tours/route', function () {
+        
+        return view('pages.settings');
+    })->name('pages.settings');
+
+
+    Route::get('/settings/tours/country', function () {
+        return view('pages.settings');
+    })->name('pages.settings');
+
+    Route::get('/settings/tours/wholesale', function () {
+        return view('pages.settings');
+    })->name('pages.settings');
+
+    Route::get('/settings/tours/category', function () {
+        return view('pages.settings');
+    })->name('pages.settings');
+
+    
+    
+
+
     // CompanyController::check( Auth::user()->company_id, 'pages.settings' );
 
     // Route::get('/company', 'CompanyController@index')->name('pages.company');
