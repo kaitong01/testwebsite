@@ -15679,6 +15679,7 @@ body.is-pushed-left .nav-primary-body .account-group .content {
   -webkit-box-sizing: border-box;
           box-sizing: border-box;
   position: relative;
+  padding: 4px 0;
 }
 
 .navleft-sub {
@@ -15706,7 +15707,8 @@ body.is-pushed-left .nav-primary-body .account-group .content {
   display: flex;
 }
 
-.navleft-link.active {
+.navleft-link.active,
+.navleft-item.active .navleft-link {
   color: #286efa;
 }
 

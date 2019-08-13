@@ -1,48 +1,62 @@
-<div class="layout__box o__has-columns">
+<?php
+
+
+$nav = array();
+
+
+$items = array();
+$items[] = array('id'=>'/settings/tours/country', 'name'=>'ประเทศ', 'count'=>0);
+$items[] = array('id'=>'/settings/tours/route', 'name'=>'เส้นทาง', 'count'=>0);
+$items[] = array('id'=>'/settings/tours/wholesale', 'name'=>'โฮลเซลล์', 'count'=>0);
+$items[] = array('id'=>'/settings/tours/category', 'name'=>'ประเภททัวร์', 'count'=>0);
+$nav[] = array('title'=>'ทัวร์', 'items'=>$items);
+
+
+$items = array();
+$items[] = array('id'=>'/settings/blogs/category', 'name'=>'ประเภทบทความ', 'count'=>0);
+$nav[] = array('title'=>'บทความ', 'items'=>$items);
+
+$currTab = !empty($slot) ? $slot:'';
+
+
+?><div class="layout__box o__has-columns">
 
 	<div class="navleft layout__box o__has-rows">
 
 		<div class="navleft-header pt-3 px-3 mb-2 layout__box"><h1 class="navleft-header-title">การตั้งค่า</h1></div>
 
 
-		<div class="navleft-body">
-			<ul class="navleft-nav">							
+		<div class="navleft-body"><?php
 
-				<li class="navleft-item head"><span>ทัวร์</span></li>
+			foreach ($nav as $val) {
 
-				<li class="navleft-item active">
-					<a href="/settings/tours/country" class="navleft-link navleft-title">
-						<span class="navleft-text">ประเทศ</span>
-						<span class="navleft-count">0</span>
-					</a>
-				</li>
+				echo '<ul class="navleft-nav">';
 
-				<li class="navleft-item">
-					<a href="/settings/tours/route" class="navleft-link navleft-title">
-						<span class="navleft-text">เส้นทาง</span>
-						<span class="navleft-count">0</span>
-					</a>
-				</li>
-			
+				if( isset($val['title']) ){
+					echo '<li class="navleft-item head"><span>'.$val['title'].'</span></li>';
+				}
 				
-				<li class="navleft-item">
-					<a href="/settings/tours/wholesale" class="navleft-link navleft-title">
-						<span class="navleft-text">โฮลเซลล์</span>
-						<span class="navleft-count">0</span>
-					</a>
-				</li>
+				foreach ($val['items'] as $key => $value) {
 
-				<li class="navleft-item">
-					<a href="/settings/tours/category" class="navleft-link navleft-title">
-						<span class="navleft-text">ประเภททัวร์</span>
-						<span class="navleft-count">0</span>
-					</a>
-				</li>
+
+					$active = $currTab == $value['id']? ' active':'';
+
+					echo '<li class="navleft-item'.$active.'">'.
+
+						'<a href="'.$value['id'].'" class="navleft-link navleft-title">'.
+							'<span class="navleft-text">'.$value['name'].'</span>'.
+							'<span class="navleft-count">'.$value['count'].'</span>'.
+						'</a>'.
+					'</li>';
+					
+				}
+
+				echo '</ul>';
+			}	
+
 			
 
-			</ul>
-
-		</div>
+		?></div>
 
 	</div>
 

@@ -53,23 +53,25 @@ Route::group(['middleware' => ['auth', 'company']], function () {
 
 
     // /settings/tours/
-    Route::get('/settings/tours/route', function () {
-        
-        return view('pages.settings');
-    })->name('pages.settings');
+    Route::get('/settings/tours/{param?}', 'SettingsToursController@index')->name('pages.settings.tours');
+
+    // /settings/blogs/
+    Route::get('/settings/blogs/{param?}', 'SettingsBlogsController@index')->name('pages.settings.blogs');
 
 
-    Route::get('/settings/tours/country', function () {
-        return view('pages.settings');
-    })->name('pages.settings');
+    // Route::get('/settings/tours/country', function () {
 
-    Route::get('/settings/tours/wholesale', function () {
-        return view('pages.settings');
-    })->name('pages.settings');
+    //     return view('pages.settings');
+    // })->name('pages.settings');
 
-    Route::get('/settings/tours/category', function () {
-        return view('pages.settings');
-    })->name('pages.settings');
+    // Route::get('/settings/tours/wholesale', function () {
+
+    //     return view('pages.settings');
+    // })->name('pages.settings');
+
+    // Route::get('/settings/tours/category', function () {
+    //     return view('pages.settings');
+    // })->name('pages.settings');
 
     
     
