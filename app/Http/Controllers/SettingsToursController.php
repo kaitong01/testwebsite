@@ -7,7 +7,14 @@ use Illuminate\Http\Request;
 class SettingsToursController extends Controller
 {
 
-    private $_tabs = array('country','route', 'wholesale', 'category');
+    private $_tabs = [
+
+        'country' => [ 'id'=>'', 'name'=>'ประเทศ' ],
+        'route' => [ 'id'=>'', 'name'=>'เส้นทาง' ],
+        'wholesale' => [ 'id'=>'', 'name'=>'โฮลเซลล์' ],
+        'category' => [ 'id'=>'', 'name'=>'ประเภททัวร์' ],
+    ];
+
     /**
      * Display a listing of the resource.
      *
@@ -16,15 +23,37 @@ class SettingsToursController extends Controller
     public function index( $tab=null )
     {
 
-        if( !in_array($tab, $this->_tabs) ){
+        // dd($this->_tabs);
+        $current = null;
+        foreach ($this->_tabs as $key => $value) {
+            
+            if( $tab==$key ){
+                $current = $value;
+                break;
+            }
+        }
 
+
+        if( is_null($current) ){
             return view('pages.error');
-        };
+        }
 
+
+        // if( !in_array($tab, $this->_tabs) ){
+
+        //     return view('pages.error');
+        // };
 
         // dd($parem);
 
         return view('pages.settings')->with([
+            'datatable' => [
+                'title' => $current['name'],
+
+                'options' => [
+                    "url" => '555'
+                ]
+            ],
             'page_current_tab' => '/settings/tours/'.$tab
         ]);
     }

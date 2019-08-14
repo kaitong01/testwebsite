@@ -4,16 +4,42 @@ namespace App\Http\Controllers;
 
 use Illuminate\Http\Request;
 
+
+use App\Library\Business;
+
 class SettingsBlogsController extends Controller
 {
+
+    private $_tabs = array('category');
     /**
      * Display a listing of the resource.
      *
      * @return \Illuminate\Http\Response
      */
-    public function index()
+    public function index( $tab=null )
     {
-        //
+
+        if( !in_array($tab, $this->_tabs) ){
+
+            return view('pages.error');
+        };
+
+
+        return view('pages.settings')->with([
+            'datatable' => [
+                'title' => 'ประเภทบทความ',
+
+                'options' => [
+                    'page' => 1,
+                    'limit' => 24
+                ],
+                "url" => '/blogs/category',
+
+
+                'actions_right' => '<a class="btn btn-primary ml-2" href="javascript:void(0)"><svg class="svg-icon o__tiny o__by-text" xmlns="http://www.w3.org/2000/svg" width="12" height="12" viewBox="0 0 12 12"><path d="M2 5v2h3v3h2V7h3V5H7V2H5v3H2z"></path></svg> <span>เพิ่ม</span></a>'
+            ],
+            'page_current_tab' => '/settings/blogs/'.$tab
+        ]);
     }
 
     /**

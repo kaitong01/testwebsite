@@ -9,10 +9,11 @@ use Illuminate\Support\Facades\Auth;
 
 use DB;
 use App\Company;
+// use App\Library\Business;
 
 class CompanyController extends Controller
 {
-    public static function is()
+    public function is()
     {
         $id = Auth::user()->company_id;
 
@@ -32,16 +33,20 @@ class CompanyController extends Controller
 
             if( empty($company) ){
 
-                
                 $company = CompanyController::first();
                 $id = $company->co_id;
-
-                Session::put('cid', $id);
+                // Session::put('cid', $id);
             }
         }
 
-        $results = CompanyController::get( $id );
+        $results = CompanyController::get( $id );   
+
         if( !empty($results) ){
+
+            Session::put('cid', $id);
+            // $this->_company = $results;
+            // Business::set($results);
+            // dd(Business::get());
             return true;
         }
         else{

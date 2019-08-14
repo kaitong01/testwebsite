@@ -38,4 +38,8 @@ User::create([
 - 500 Error
 - 503 Error
 
-
+/**
+/* https://laravel.com/docs/5.8/passport */
+**/
+# composer require laravel/passport
+# php artisan passport:install

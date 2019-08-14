@@ -23,6 +23,7 @@ Auth::routes([
 
 Route::group(['middleware' => ['auth', 'company']], function () {
 
+
     Route::get('/', function () {
 
         return view('pages.home');
@@ -57,6 +58,14 @@ Route::group(['middleware' => ['auth', 'company']], function () {
 
     // /settings/blogs/
     Route::get('/settings/blogs/{param?}', 'SettingsBlogsController@index')->name('pages.settings.blogs');
+
+
+
+    Route::get('/blogs/category', 'BlogsCategoryController@index');
+
+
+
+
 
 
     // Route::get('/settings/tours/country', function () {

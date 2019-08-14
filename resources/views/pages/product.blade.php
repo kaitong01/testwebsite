@@ -3,7 +3,8 @@
 @section('title', 'ลูกค้า')
 
 @section('content')
-
+    
+    
     @component('components.columns', [
 
         'navleft'=> ''

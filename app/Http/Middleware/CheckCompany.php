@@ -18,12 +18,13 @@ class CheckCompany
     public function handle($request, Closure $next)
     {
         $response = $next($request);
+        $c = new CompanyController;
 
         if( Auth::user()->user_status != 1 ){
             Auth::logout();
             return redirect('/login')->with('erro_login', 'status disable');
         }
-        else if( CompanyController::is() ){
+        else if( $c->is() ){
             return $response;
         }
         else{
