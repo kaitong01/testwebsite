@@ -1,5 +1,7 @@
 <?php
 
+$Fn = new Fn;
+
 $imageCoverOpt = array(
     'name' => 'image',
     'width' => 600,
@@ -19,6 +21,7 @@ if( !empty($item) ){
     // $arr['hiddenInput'][] = array('name'=>'_method', 'value'=>'PUT');
 
     $arr['title'] = 'แก้ไขประเภทบทความ';
+    $arr['title'] .= '<div class="fsm text-muted" style="font-size:13px">แก้ไขล่าสุด: '.$Fn->q('time')->live( $item['updated_at'] ).'</div>';
 }
 else{
     $formAction = '/blogs/category';
@@ -30,7 +33,7 @@ $arr['hiddenInput'][] = array('name'=>'_token', 'value'=>csrf_token());
 
 
 
-$Fn = new Fn;
+
 $form = new Form();
 $formBasic = $form->create()
     // set From
