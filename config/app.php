@@ -210,6 +210,7 @@ return [
         'View' => Illuminate\Support\Facades\View::class,
 
         'Fn'   => App\Library\Fn::class,
+        'Form'   => App\Library\Form::class,
         'Business'   => App\Library\Business::class,
     ],
 

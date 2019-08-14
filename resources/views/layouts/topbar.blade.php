@@ -52,16 +52,17 @@
     </nav>
 </div>
 
-
+<!-- 'addClass' => 'modal-lg' -->
 @section('modals')
-    {{-- set model: logout --}}
-    @component('components.model', [
+    {{-- set modal: logout --}}
+    @component('components.modal', [
         'id' => 'logoutModal',
         'form'=> [
             'action'=> route('logout'),
             'method'=> 'POST'
         ],
-        'title' => "ออกจากระบบ"
+        'title' => "ออกจากระบบ",
+        
     ])
 
         ยืนยันการออกจากระบบหรือไม่?

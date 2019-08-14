@@ -348,6 +348,15 @@ var Doc = {
     },
 };
 
+function refreshDatatable() {
+	// console.log('refreshDatatable');
+
+	var $btn = $('.datatable-header').find('[data-action=refresh]');
+	if( $btn.length ){
+		$btn.trigger('click');
+	}
+}
+
 $(document).ready(function(){
     // console.log( PHP, Doc.getURL() );
 

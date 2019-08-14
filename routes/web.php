@@ -13,6 +13,9 @@
 use App\Http\Controllers\CompanyController;
 use App\Http\Middleware\CheckCompany;
 
+use Illuminate\Http\Request;
+use App\Library\Fn;
+
 Auth::routes([
     'register' => false,
     'verify' => true,
@@ -62,6 +65,22 @@ Route::group(['middleware' => ['auth', 'company']], function () {
 
 
     Route::get('/blogs/category', 'BlogsCategoryController@index');
+    Route::get('/blogs/category/add', 'BlogsCategoryController@add');
+
+
+
+    Route::get('/createPrimaryLink', function ( Request $request ) {
+
+        $Fn = new Fn;
+        // return response('Hello World', 200)
+        //           ->header('Content-Type', 'text/plain');
+
+        return response([
+            'code' => 200,
+            'message' => 'Ok',
+            'data' => $Fn->q('text')->createPrimaryLink( $request->value )
+        ]);
+    });
 
 
 

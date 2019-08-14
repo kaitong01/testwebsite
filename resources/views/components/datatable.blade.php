@@ -11,11 +11,11 @@
         {{-- Header -> top --}}
         <div class="layout__box d-flex justify-content-between mb-2">
 
-            <div class="d-flex">
+            <div class="d-flex align-items-center">
                 {{-- title --}}
-                <div style="margin-right: 8px;padding-right: 15px;border-right: 1px solid #ddd">
-                    <h1 style="font-size: 22px;line-height: 1;font-weight: bold">{{ $title }}</h1>
-                    <span style="font-size: 12px;line-height: 1;color: #666">ผลลัพธ์ทั้งหมด <span ref="total">0</span> รายการ</span>
+                <div class="group-title">
+                    <h2 class="title" ref="title">{{ $title }}</h2>
+                    <span class="text">ผลลัพธ์ทั้งหมด <span ref="total">0</span> รายการ</span>
                 </div>
                 {{-- end: title --}}
 

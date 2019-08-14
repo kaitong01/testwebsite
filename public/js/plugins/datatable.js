@@ -9,6 +9,7 @@ if ( typeof Object.create !== 'function' ) {
 
 (function( $, window, document, undefined ) {
 
+
 	var datatable = {
 		init: function ( options, elem ) {
 			var self = this;
@@ -36,7 +37,6 @@ if ( typeof Object.create !== 'function' ) {
 			self.lastValue = '';
 
 
-			
 
 			// Data
 			self._setData();
@@ -376,9 +376,7 @@ if ( typeof Object.create !== 'function' ) {
 			self.is_load = setTimeout(function () {
 
 				self.fetch().done(function( res ) {
-
-					console.log( res )
-
+					
 					if( res.error ){
 
 						self.$el.container.addClass('has-error');
@@ -551,7 +549,7 @@ if ( typeof Object.create !== 'function' ) {
 
 		infinite: 'scrolling', //Scrolling Vs. Pagination https://medium.com/@dalpattapaniya/infinite-scrolling-vs-pagination-f237592f339a
 	
-		triggerMenu: '#menu-trigger',
+		triggerMenu: '#page-navigation-trigger',
 
 		loadThrottle: 300
 	};

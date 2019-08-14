@@ -3,9 +3,13 @@
 namespace App\Http\Controllers;
 
 use Illuminate\Http\Request;
-use DB;
+use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\Session;
-// use App\Library\Business;
+use DB;
+use App\Library\Fn;
+use App\Library\Form;
+
+use App\Models\BlogsCategoryModel;
 
 class BlogsCategoryController extends Controller
 {
@@ -43,13 +47,9 @@ class BlogsCategoryController extends Controller
             ->take( $ops['limit'] )
             ->get();
 
-
         $arr['total'] = DB::table('blog_category')->count();
         $arr['data'] = $results;
         $arr['options'] = $ops;
-
-
-
 
         $keys = array();
         $keys[] = array('label'=>'#', 'cls'=>'td-index', 'type'=>'index');
@@ -112,6 +112,63 @@ class BlogsCategoryController extends Controller
         $arr['items'] = $tr;
         
         return json_encode($arr);
+    }
+
+    public function add()
+    {
+        
+        return view('forms.blogs.category.add');
+    }
+
+    public function save(Request $request)
+    {
+        $arr = array();
+        $arr['post'] = $request;
+
+        if( empty($request->name) ){
+            $arr['error']['name'] = 'ป้อนข้อมูล';
+        }
+
+        if( empty($arr['error']) ){
+
+            $db = new BlogsCategoryModel;
+
+            // $db = BlogsCategoryModel::find( $id );
+
+            $db->name           = $request->name;
+            $db->status         = $request->status;
+            $db->created_uid    = Auth::user()->id;
+            $db->updated_uid    = Auth::user()->id;
+
+            $db->description    = $request->description;
+            $db->cid            = Session::get('cid');
+
+
+            if( $db->save() ){
+                $arr['code'] = 200;
+                $arr['message'] = 'บันทึกเรียบร้อย';
+                // $arr['redirect'] = 'refresh';
+
+                $arr['call'] = 'refreshDatatable';
+            }
+            else{
+
+                $arr['message'] = 'บันทึกข้อมูลล้มเหล่ว, กรุณาลองใหม่';
+            }
+
+            // DB::table('blog_category')->insert([
+            //     'cid'           => Session::get('cid'),
+            //     'name'          => $request->name,
+            //     'description'   => $request->description
+            // ]);
+           
+        }
+        else{
+            $arr['code'] = 202;
+        }
+
+        http_response_code(200);
+        echo json_encode($arr);
     }
 
     /**

@@ -29,8 +29,8 @@ class CompanyController extends Controller
                 Session::get('cid', $id);
             }
 
-            $company = CompanyController::get( $id );
 
+            $company = CompanyController::get( $id );
             if( empty($company) ){
 
                 $company = CompanyController::first();
