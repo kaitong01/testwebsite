@@ -286,9 +286,9 @@ if ( typeof Object.create !== 'function' ) {
 		setHiddenInput: function( data ){
 			return $.map( data, function(obj, i){
 				return $('<input/>', {
-					class: 'hiddenInput',
+					// class: 'hiddenInput',
 					type: "hidden",
-					autocomplete: "off"
+					autoComplete: "off"
 				}).attr( obj )[0];
 			});
 		},

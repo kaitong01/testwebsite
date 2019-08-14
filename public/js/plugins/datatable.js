@@ -376,21 +376,28 @@ if ( typeof Object.create !== 'function' ) {
 			self.is_load = setTimeout(function () {
 
 				self.fetch().done(function( res ) {
-					
+
+
+
+
 					if( res.error ){
 
 						self.$el.container.addClass('has-error');
 						return false;
 					}
 
+
+					if( res.options ){
+						self.data.options = $.extend({}, self.data.options, res.options);	
+					}
+
+
+					self.data.options.limit = parseInt(self.data.options.limit);
+					self.data.options.page = parseInt(self.data.options.page);
+					self.data.options.more = self.data.options.limit*self.data.options.page < res.total;
+
 					// has data
 					if( res.data ){
-
-		
-						if( res.options ){
-							self.data.options = $.extend({}, self.data.options, res.options);	
-						}
-
 
 						if(	res.data.length==0 && self.data.options.page==1 ){
 							self.$el.container.addClass('has-empty');

@@ -53,15 +53,15 @@
 
 
         {{-- Header -> filters --}}
-        @if ( !empty($filter) || !empty($filter_right) )
-        <nav class="datatable-filter d-flex" role="filter">
+        @if ( isset($filter) || isset($filter_right) )
+        <nav class="datatable-filter d-flex mb-2 align-items-center justify-content-between" role="filter">
 
-            @if ( !empty($filter) )
-            <ul class="nav mr-auto">{{ $filter }}</ul>
-            @endif
+            @isset ( $filter )
+            <div class="filters d-flex align-items-center">{!!$filter!!}</div>
+            @endisset
 
             @if ( !empty($filter_right) )
-            <ul class="nav ml-auto">{{ $filter }}</ul>
+            <ul class="nav">{{ $filter }}</ul>
             @endif
 
         </nav>

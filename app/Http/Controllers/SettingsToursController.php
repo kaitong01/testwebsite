@@ -47,13 +47,14 @@ class SettingsToursController extends Controller
         // dd($parem);
 
         return view('pages.settings')->with([
-            'datatable' => [
-                'title' => $current['name'],
+            // 'datatable' => [
+            //     'title' => $current['name'],
 
-                'options' => [
-                    "url" => '555'
-                ]
-            ],
+            //     'options' => [
+            //         "url" => '555'
+            //     ]
+            // ],
+            'se' => 123,
             'page_current_tab' => '/settings/tours/'.$tab
         ]);
     }

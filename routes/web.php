@@ -55,7 +55,6 @@ Route::group(['middleware' => ['auth', 'company']], function () {
 
 
 
-
     // /settings/tours/
     Route::get('/settings/tours/{param?}', 'SettingsToursController@index')->name('pages.settings.tours');
 
@@ -64,50 +63,24 @@ Route::group(['middleware' => ['auth', 'company']], function () {
 
 
 
-    Route::get('/blogs/category', 'BlogsCategoryController@index');
-    Route::get('/blogs/category/add', 'BlogsCategoryController@add');
+    // Route::get('/blogs/category', 'BlogsCategoryController@index');
+    // Route::get('/blogs/category/create', 'BlogsCategoryController@create');
+    // Route::post('/blogs/category', 'BlogsCategoryController@store');
+    // Route::get('/blogs/category/{id}/edit', 'BlogsCategoryController@edit');
+    // Route::put('/blogs/category/{id}', 'BlogsCategoryController@update');
+    // Route::delete('/blogs/category/{id}', 'BlogsCategoryController@destroy');
+    Route::resource('/blogs/category', 'BlogsCategoryController');
+    Route::get('/blogs/category/{id}/delete', 'BlogsCategoryController@delete');
 
 
 
     Route::get('/createPrimaryLink', function ( Request $request ) {
-
         $Fn = new Fn;
-        // return response('Hello World', 200)
-        //           ->header('Content-Type', 'text/plain');
 
         return response([
             'code' => 200,
             'message' => 'Ok',
-            'data' => $Fn->q('text')->createPrimaryLink( $request->value )
+            'data' => $Fn->q('text')->createPrimaryLink( $request->text )
         ]);
     });
-
-
-
-
-
-
-    // Route::get('/settings/tours/country', function () {
-
-    //     return view('pages.settings');
-    // })->name('pages.settings');
-
-    // Route::get('/settings/tours/wholesale', function () {
-
-    //     return view('pages.settings');
-    // })->name('pages.settings');
-
-    // Route::get('/settings/tours/category', function () {
-    //     return view('pages.settings');
-    // })->name('pages.settings');
-
-    
-    
-
-
-    // CompanyController::check( Auth::user()->company_id, 'pages.settings' );
-
-    // Route::get('/company', 'CompanyController@index')->name('pages.company');
-    // Route::get('/wholesale', 'ProductController@index')->name('pages.wholesale');
-
 });

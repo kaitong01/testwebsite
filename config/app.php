@@ -211,6 +211,7 @@ return [
 
         'Fn'   => App\Library\Fn::class,
         'Form'   => App\Library\Form::class,
+        'Ui'   => App\Library\Ui::class,
         'Business'   => App\Library\Business::class,
     ],
 

@@ -1,19 +1,36 @@
 <?php
 
-$arr['title'] = 'ประเภทบทความ';
-
-
-$Fn = new Fn;
-
 $imageCoverOpt = array(
     'name' => 'image',
     'width' => 600,
     'height' => 338,
 
-    'dropzoneText' => 'เพิ่มรูปหน้าปก',
+    'dropzoneText' => 'แนบรูปหน้าปก',
 );
 
 
+
+if( !empty($item) ){
+    $formAction = '/blogs/category/'.$item['id'];
+
+
+    $arr['hiddenInput'][] = array('name'=>'id', 'value'=>$item['id']);
+    $arr['hiddenInput'][] = array('name'=>'_method', 'value'=>'PUT');
+    // $arr['hiddenInput'][] = array('name'=>'_method', 'value'=>'PUT');
+
+    $arr['title'] = 'แก้ไขประเภทบทความ';
+}
+else{
+    $formAction = '/blogs/category';
+    $arr['hiddenInput'][] = array('name'=>'_method', 'value'=>'post');
+    $arr['title'] = 'เพิ่มประเภทบทความ';
+}
+
+$arr['hiddenInput'][] = array('name'=>'_token', 'value'=>csrf_token());
+
+
+
+$Fn = new Fn;
 $form = new Form();
 $formBasic = $form->create()
     // set From
@@ -26,11 +43,11 @@ $formBasic = $form->create()
         ->text( '<div style="width: 585px">'.$Fn->q('form')->imageCover( $imageCoverOpt ).'</div>' )
 
  ->field("name")
-        ->label( 'ประเภทบทความ' )
+        ->label( 'หัวเรื่อง' )
         ->autocomplete('off')
         ->addClass('form-control input-title')
         // ->placeholder('')
-        ->value( !empty($this->item['name'])? $this->item['name']:'' )
+        ->value( !empty($item['name'])? $item['name']:'' )
 
  ->field("description")
         ->type( 'textarea' )
@@ -39,7 +56,7 @@ $formBasic = $form->create()
         ->addClass('form-control input-content')
         // ->placeholder('อธิบายเส้นทางเพื่อให้ผู้คนรู้ว่ามีเนื้อหาเกี่ยวกับอะไร')
         ->attr('data-plugin', 'autosize')
-        ->value( !empty($this->item['description'])? $this->item['description']:'' )
+        ->value( !empty($item['description'])? $item['description']:'' )
 ->html();
 
 
@@ -57,7 +74,7 @@ $formSEO = $form->create()
         ->addClass('form-control input-seo input-title-seo')
         ->autocomplete("off")
         ->maxlength( 70 )
-        ->value( !empty($this->item['seo_title']) ? $this->item['seo_title']:'' )
+        ->value( !empty($item['seo_title']) ? $item['seo_title']:'' )
 
     ->field("seo_description")
         ->label('เพจนี้เกี่ยวกับอะไร เพิ่มคำบรรยายเพจ (320 ตัวอักษร)')
@@ -66,7 +83,7 @@ $formSEO = $form->create()
         ->type('textarea')
         ->maxlength( 320 )
         ->attr('data-plugins', 'autosize')
-        ->value( !empty($this->item['seo_description']) ? $this->item['seo_description']:'' )
+        ->value( !empty($item['seo_description']) ? $item['seo_description']:'' )
 
     ->field("link")
         ->label('ใส่ URL เพจของคุณ')
@@ -74,9 +91,9 @@ $formSEO = $form->create()
         ->text(
 
             '<div class="seourl-wrap d-flex justify-content-between align-items-center">'.
-                '<div class="seourl-base">/</div>'.
+                '<div class="seourl-base">/บทความ/</div>'.
                 '<div class="seourl-input">'.
-                    '<input id="link" class="form-control input-seo input-url-seo" autocomplete="off" type="text" name="link" value="'.(!empty($this->item['link'])? $this->item['link']:'').'" />'.
+                    '<input id="link" class="form-control input-seo input-url-seo" autocomplete="off" type="text" name="link" value="'.(!empty($item['permalink'])? $item['permalink']:'').'" />'.
                 '</div>'.
             '</div>'
         )
@@ -96,11 +113,6 @@ $formSEO = $form->create()
     '</div>' )
 ->html();
 
-
-
-
-$arr['hiddenInput'][] = array('name'=>'_method', 'value'=>'post');
-$arr['hiddenInput'][] = array('name'=>'_token', 'value'=>csrf_token());
 
 
 # body
@@ -134,10 +146,10 @@ $arr['body'] = '<div data-plugins="formstaps|formseo" class="form-staps row no-g
 
 '</div>';
 
-$arr['form'] = '<form class="model-body-p0" method="post" action="'.asset('/blogs/category/save').'" data-plugin="formSubmit"></form>';
+$arr['form'] = '<form class="model-body-p0" method="post" action="'.asset( $formAction ).'" data-plugin="formSubmit"></form>';
 
 
-$statusCurr = !empty($this->item['status'])? $this->item['status']: 1;
+$statusCurr = !empty($item['status'])? $item['status']: 1;
 
 $status = '';
 $statusList = array();
@@ -160,6 +172,8 @@ $arr['button'] = '<div class="d-flex justify-content-end">'.
 // $arr['cancel'] = '<button type="button" class="btn" data-action="close"><span class="btn-text">ยกเลิก</span></button>';
 
 $arr['width'] = 964;
+
+// return response()->json($arr, 404);
 
 http_response_code(200);
 echo json_encode($arr);

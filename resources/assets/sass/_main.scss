@@ -52,6 +52,7 @@ svg{
     fill: currentColor
 }
 
+.textbox-wrap{position:relative}.form-textbox:focus{box-shadow:none}.form-textbox~.form-label{left:.75rem;color:#888;pointer-events:none;padding:0;z-index:1;-webkit-transition-timing-function:ease-in;transition-timing-function:ease-in;-webkit-transition-duration:.125s;transition-duration:.125s;pointer-events:none;margin:0;position:absolute;top:8px;font-size:100%}.form-textbox:focus~.form-label,.form-textbox:valid[required]~.form-label{font-size:10px;letter-spacing:-.01em;top:-8px;color:#666;background:linear-gradient(0deg,transparent,transparent 42%,var(--input-background,#fff) 0,var(--input-background,#fff) 51%,transparent 0)}.form-textbox.form-icon-left{padding-left:36px}.form-textbox:required{padding-right:36px}.form-textbox~.textbox-icon{position:absolute;width:18px;height:18px;left:.75rem;z-index:5;top:50%;margin-top:-9px}.form-textbox~.textbox-clear{right:.375rem;z-index:1;display:none;text-transform:uppercase;color:#0057ff;font-size:12px;font-weight:600;position:absolute;top:50%;padding:0;margin-top:-12px;color:#b8b8b8}.form-textbox:valid[required]~.textbox-clear{display:block}
 
 .account-group .avatar {
     background-color: rgba(0,0,0,.5);
@@ -179,16 +180,12 @@ label.checkbox input[type=checkbox]:checked::after, label.radio input[type=radio
 
 .ui-status{
 
-    padding: 0 6px;
-    line-height: 22px;
-    color: #fff;
-    border-radius: 2px;
-    position: relative;
-    white-space: nowrap;
-    background-color: #0077dd;
+    background-color: #f2f2f2;
+    padding: 3px 12px;
+    border-radius: .25rem;
+    text-align: center;
     font-size: 13px;
-    cursor: default;
-    text-transform: uppercase;
+    white-space: nowrap;
 }
 span.ui-status{
     display: inline-block;
@@ -198,6 +195,21 @@ span.ui-status{
 }
 .publish.ui-status{
     background-color: #4caf50
+}
+.ui-status.primary{
+    border-color: #007bff;
+background-color: #007bff;
+color: #fff
+}
+.ui-status.success{
+    border-color: #28a745;
+background-color: #28a745;
+color: #fff
+}
+.ui-status.danger{
+    border-color: #dc3545;
+background-color: #dc3545;
+color: #fff
 }
 
 .alert-state>div{
@@ -937,10 +949,12 @@ body.logged-out{
 .datatable-table .td-checkbox,.datatable-table .td-index{width:10px;white-space:nowrap;padding-left:6px;padding-right:6px}
 .datatable-table .td-move{width:16px;white-space:nowrap}
 .datatable-table .td-count{text-align:center;width:70px}
-.datatable-table .td-date{width:70px;background-color:rgba(0,0,0,.02);white-space:nowrap}
+.datatable-table .td-date{width:70px;white-space:nowrap}
+.datatable-table .td-light{background-color:rgba(0,0,0,.02)}
+.datatable-table tr:hover td.td-light{background-color:rgba(0,0,0,.05)}
+
 .datatable-table td.td-date{text-align:right}
 .datatable-table tr td:first-child,.datatable-table tr th:first-child{padding-left:16px}
-.datatable-table tr:hover td.td-date{background-color:rgba(0,0,0,.05)}
 .datatable-table .td-action{width:80px;white-space:nowrap}
 .datatable-table .td-checkbox .checkbox{margin-bottom:0}
 .datatable-table .td-checkbox .checkbox>input{margin:0}
@@ -1126,7 +1140,7 @@ body.logged-out{
 .model.outer .middle{display:table-cell;vertical-align:middle}
 .red.model-dialog{background-color:gray;background-color:rgba(0,0,0,.5);-ms-filter:"alpha(opacity=50)"}
 .red.model-dialog .model-title{background:#ee5951;color:#fff;border-radius:3px 3px 0 0;font-weight:500}
-
+.red.model-dialog .model-close{color: #fff}
 .model-background{position: fixed;top: 0;left:0;right: 0;bottom: 0; z-index: 350}
 /*.active.model-outer .model-background.black{background-color: rgba(0,0,0,.5);opacity:1;}*/
 
@@ -1141,9 +1155,17 @@ body.logged-out{
     position: fixed !important;
 }
 
-.form-staps{
+/* uiList */
+.uiListHoriz>li{float:left}
+.uiListHorItem>li{float:left;border-width:0 0 0 1px}
+.uiListHorizInline>li{display:inline-block}
+.uiListVerItem>li{border-width:1px 0 0 0}
+.uiListHorItem>li, .uiListVerItem>li{border-style:solid;border-color:#e9e9e9}
+.uiListMedium>li{border-color:#ccc}
+.uiListDark>li{border-color:#aaa}
+.uiListHorItem>li:first-child, .uiListVerItem>li:first-child{border-width:0}
+.uiListStandard>li{margin-left:35px;list-style-type:square;display:list-item}
 
-}
 .form-staps-content{
   padding: 20px;
 //   overflow-y: scroll;
@@ -1231,3 +1253,9 @@ body.logged-out{
 .seourl-wrap{background-color:#fff;background-clip:padding-box;border:1px solid #ced4da;border-radius:.25rem;transition:border-color .15s ease-in-out,box-shadow .15s ease-in-out}.seourl-base{padding-left:15px;padding-right:4px;white-space:nowrap;color:#95a7b7}.seourl-input{width:100%}.seourl-wrap .form-control{border-width:0;box-shadow:none;padding-left:0}.is-focus.seourl-wrap{box-shadow:0 0 0 .2rem rgba(0,0,255,.15);border-color:rgba(0,0,255,.2)}
 
 .control-google-preview .header{letter-spacing:.07272727em;font-size:80%;font-weight:500;text-transform:uppercase;color:#5f6368;margin-bottom:4px}.control-google-preview .preview{padding:12px;border:1px solid #d9e1e8;background-color:#fff;border-radius:4px}.control-google-preview .preview .title{font-family:Arial,sans-serif;font-size:18px;font-weight:700;color:#1a0dab;font-weight:700}.control-google-preview .preview .url{font-family:Arial,sans-serif;font-size:14px;font-weight:400;color:#006621;-webkit-user-select:text;-moz-user-select:text;-ms-user-select:text;user-select:text;display:block;overflow:hidden;text-overflow:ellipsis;white-space:nowrap}.control-google-preview .preview .description{font-family:Arial,sans-serif;font-size:13px;font-weight:400;color:#545454}
+
+
+.is-change-data{position:relative;background-color:#fff8dc;-moz-transition:all 1s ease-out;-webkit-transition:all 1s ease-out;-o-transition:all 1s ease-out;transition:all 1s ease-out}
+
+
+.filter-item{margin-left:15px}.filter-item:not(.check){display:-ms-flexbox;display:flex;background-color:#f5f6f7;border:1px solid #dadde1;color:#444950;border-radius:.25rem;white-space:nowrap}.filter-item-label{height:34px;padding-left:12px;line-height:34px;margin-right:4px;font-size:13px;font-weight:700}.filter-item-input{padding-top:0;padding-bottom:0;padding-right:12px;height:34px;line-height:34px}.filter-item-input,.filter-item-input:active,.filter-item-input:focus,.filter-item-input:hover{background-color:transparent;border-width:0;box-shadow:none}.filter-item.search .filter-item-input{background-color:#fff}.filter-item:first-child{margin-left:0}.filter-item-text{line-height:38px}.filter-item .checkbox{margin-top:5px}

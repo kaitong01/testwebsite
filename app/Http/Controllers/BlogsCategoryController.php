@@ -5,170 +5,74 @@ namespace App\Http\Controllers;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\Session;
+use Illuminate\Support\Facades\Validator;
+
 use DB;
 use App\Library\Fn;
 use App\Library\Form;
 
 use App\Models\BlogsCategoryModel;
 
+
 class BlogsCategoryController extends Controller
 {
+    protected $table = 'blog_category';
+
     /**
      * Display a listing of the resource.
      *
      * @return \Illuminate\Http\Response
      */
-    public function index()
+    public function index(Request $request)
     {
+        // $model = new BlogsCategoryModel;
+        // $model->_find();
+
         // dd($this->_company);
 
-
-        $cid = Session::get('cid');
-        // dd($cid);
-
         $ops = array(
-            'sort' => isset($_GET['sort'])? $_GET['sort']: 'id',
-            'dir' => isset($_GET['dir'])? $_GET['dir']: 'asc',
+            'sort' => isset($request->sort)? $request->sort: 'updated_at',
+            'dir' => isset($request->dir)? $request->dir: 'desc',
 
-
-            'limit' => isset($_GET['limit'])? $_GET['limit']: 2,
-            'page' => isset($_GET['page'])? $_GET['page']: 1,
+            'limit' => isset($request->limit)? $request->limit: 2,
+            'page' => isset($request->page)? $request->page: 1,
 
             'ts' => time(),
         );
 
 
+        $sth = DB::table($this->table);
+        $sth->where( 'cid', '=', Session::get('cid') );
 
-        $results = DB::table('blog_category')
 
-            ->where( 'cid', '=', $cid )
-            ->orderby( $ops['sort'], $ops['dir'] )
-            ->skip( ($ops['page']*$ops['limit'])- $ops['limit'])
-            ->take( $ops['limit'] )
-            ->get();
+        if( isset($request->q) ){
+            $ops['q'] = trim($request->q);
 
-        $arr['total'] = DB::table('blog_category')->count();
+            $sth->where( 'name', 'LIKE', "%{$ops['q']}%" );
+        }
+
+        if( isset($request->status) ){
+            $ops['status'] = trim($request->status);
+            $sth->where( 'status', '=', $ops['status'] );
+        }
+
+
+        $total = $sth;
+
+        $sth->orderby( $ops['sort'], $ops['dir'] );
+        $sth->skip( ($ops['page']*$ops['limit'])- $ops['limit']);
+        $sth->take( $ops['limit'] );
+
+
+        $results = $sth->get();
+        $arr['total'] = $total->count();
+
         $arr['data'] = $results;
         $arr['options'] = $ops;
 
-        $keys = array();
-        $keys[] = array('label'=>'#', 'cls'=>'td-index', 'type'=>'index');
-        // $keys[] = array('id'=>'', 'label'=>'', 'cls'=>'td-move', 'type'=>'move');
-        // $keys[] = array('id'=>'', 'label'=>'', 'cls'=>'td-checkbox', 'type'=>'checkbox');
-        $keys[] = array('id'=>'name', 'label'=>'ชื่อ', 'cls'=>'td-name');
-        // $keys[] = array('id'=>'date_at', 'label'=>'วันที่สร้าง', 'cls'=>'td-date');
-        $keys[] = array('id'=>'status', 'label'=>'สถานะ', 'cls'=>'td-status', 'type'=>'status');
-        $keys[] = array('id'=>'date_at', 'label'=>'วันที่/เวลา', 'cls'=>'td-date');
-        $keys[] = array('id'=>'discount', 'label'=>'ส่วนลด', 'cls'=>'td-number td-success', 'type'=>'number');
-        $keys[] = array('id'=>'itemsVal', 'label'=>'สินค้าที่ร่วมรายการ', 'cls'=>'td-count', 'type'=>'number');
-        $keys[] = array('id'=>'bookVal', 'label'=>'ยอดจอง', 'cls'=>'td-count', 'type'=>'number');
+        $arr['items'] = $this->ui->req('Item_BlogCategory')->init($arr['data'], $arr['options']);
 
-
-        
-        $tr = '';
-        $seq = ($ops['page'] * $ops['limit']) - $ops['limit'];
-
-         // header
-        if( $ops['page']==1 ){
-
-            $ths = '';
-            foreach ($keys as $key => $value) {
-                
-                $ico = isset($value['icon']) ? '<i class="mr-1 icon-'.$value['icon'].'"></i>':'';
-                $cls = isset($value['cls']) ? ' class="'.$value['cls'].'"':'';
-                $ths .= '<th'.$cls.'>'.$ico.'<span>'.$value['label'].'</span></th>';
-                //  data-col="'.$key.'"
-            }
-            $tr .= '<tr class="tr-fixed" role="table__fixed">'.$ths.'</tr>';
-        }
-
-
-        // dd($results);
-        foreach ($results as $i => $item) {
-
-            $item = json_decode( json_encode($item), 1);
-
-            $tds = '';
-            foreach ($keys as $label) {
-
-                $type = isset($label['type'])? $label['type']: 'text';
-                $text = '';
-
-
-                if( $type=='text' ){
-
-                    $text = !empty($item[$label['id']])? $item[$label['id']]: '';
-                    $text = '<span ref="'.$label['id'].'">'.$text.'</span>';
-                }
-
-
-                $cls = isset($label['cls']) ? ' class="'.$label['cls'].'"':'';
-                $tds .= '<td'.$cls.'>'.$text.'</td>';
-            }
-
-            $tr .= '<tr blogs-category-id="'.$item['id'].'">'.$tds.'</tr>';
-        }
-
-        $arr['items'] = $tr;
-        
-        return json_encode($arr);
-    }
-
-    public function add()
-    {
-        
-        return view('forms.blogs.category.add');
-    }
-
-    public function save(Request $request)
-    {
-        $arr = array();
-        $arr['post'] = $request;
-
-        if( empty($request->name) ){
-            $arr['error']['name'] = 'ป้อนข้อมูล';
-        }
-
-        if( empty($arr['error']) ){
-
-            $db = new BlogsCategoryModel;
-
-            // $db = BlogsCategoryModel::find( $id );
-
-            $db->name           = $request->name;
-            $db->status         = $request->status;
-            $db->created_uid    = Auth::user()->id;
-            $db->updated_uid    = Auth::user()->id;
-
-            $db->description    = $request->description;
-            $db->cid            = Session::get('cid');
-
-
-            if( $db->save() ){
-                $arr['code'] = 200;
-                $arr['message'] = 'บันทึกเรียบร้อย';
-                // $arr['redirect'] = 'refresh';
-
-                $arr['call'] = 'refreshDatatable';
-            }
-            else{
-
-                $arr['message'] = 'บันทึกข้อมูลล้มเหล่ว, กรุณาลองใหม่';
-            }
-
-            // DB::table('blog_category')->insert([
-            //     'cid'           => Session::get('cid'),
-            //     'name'          => $request->name,
-            //     'description'   => $request->description
-            // ]);
-           
-        }
-        else{
-            $arr['code'] = 202;
-        }
-
-        http_response_code(200);
-        echo json_encode($arr);
+        return response()->json($arr, 200);
     }
 
     /**
@@ -178,7 +82,7 @@ class BlogsCategoryController extends Controller
      */
     public function create()
     {
-        //
+        return view('forms.blogs.category.add');
     }
 
     /**
@@ -189,7 +93,51 @@ class BlogsCategoryController extends Controller
      */
     public function store(Request $request)
     {
-        //
+        $arr = array();
+
+        $validator = Validator::make($request->all(), [
+            'name' => 'required|max:75',
+        ],[
+            'name.required' => 'กรุณากรอกข้อมูลหัวเรื่อง',
+        ]);
+
+        if ( $validator->fails() ) {
+
+            $arr['code'] = 422;
+            $arr['errors'] = $validator->errors();
+        }
+        else{
+
+            $data = new BlogsCategoryModel;
+
+            $data->name           = $request->name;
+            $data->description    = $request->description;
+            $data->status         = $request->status;
+
+
+            $data->seo_title      = $request->seo_title;
+            $data->seo_description= $request->seo_description;
+            $data->permalink      = $this->fn->q('text')->createPrimaryLink( $request->link );
+
+            $data->created_uid    = Auth::user()->id;
+            $data->updated_uid    = Auth::user()->id;
+
+            $data->cid            = Session::get('cid');
+
+            if( $data->save() ){
+                $arr['code'] = 200;
+                $arr['message'] = 'บันทึกเรียบร้อย';
+                // $arr['redirect'] = 'refresh';
+
+                $arr['call'] = 'refreshDatatable';
+            }
+            else{
+                $arr['code'] = 422;
+                $arr['message'] = 'บันทึกข้อมูลล้มเหล่ว, กรุณาลองใหม่';
+            }
+        }
+
+        return response()->json($arr, $arr['code']);
     }
 
     /**
@@ -200,7 +148,7 @@ class BlogsCategoryController extends Controller
      */
     public function show($id)
     {
-        //
+        
     }
 
     /**
@@ -211,7 +159,12 @@ class BlogsCategoryController extends Controller
      */
     public function edit($id)
     {
-        //
+        $data = BlogsCategoryModel::find( $id );
+        if( is_null( $data ) ){
+            return response()->json(["message" => 'Record not found!'], 404);
+        }
+
+        return view('forms.blogs.category.add')->with('item', $data);
     }
 
     /**
@@ -223,7 +176,62 @@ class BlogsCategoryController extends Controller
      */
     public function update(Request $request, $id)
     {
-        //
+        $data = BlogsCategoryModel::find( $id );
+
+        if( is_null( $data ) ){
+            return response()->json(["message" => 'Record not found!'], 404);
+        }
+
+        $arr = array();
+        $validator = Validator::make($request->all(), [
+            'name' => 'required|max:75',
+        ],[
+            'name.required' => 'กรุณากรอกข้อมูลหัวเรื่อง',
+        ]);
+
+        if ( $validator->fails() ) {
+
+            $arr['code'] = 422;
+            $arr['errors'] = $validator->errors();
+        }
+        else{
+
+            $data->name           = $request->name;
+            $data->description    = $request->description;
+            $data->status         = $request->status;
+
+            $data->seo_title      = $request->seo_title=='' ? $request->name: $request->seo_title;
+            $data->seo_description= $request->seo_description;
+            $data->permalink      = $this->fn->q('text')->createPrimaryLink( $request->link );
+
+            $data->updated_uid    = Auth::user()->id;
+
+            if( $data->update() ){
+                $arr['code'] = 200;
+                $arr['message'] = 'บันทึกข้อมูลเรียบร้อย';
+                // $arr['redirect'] = 'refresh';
+
+                $arr['update'] = ['[blog-category-id='.$id.']', $data];
+            }
+            else{
+                $arr['code'] = 422;
+                $arr['message'] = 'บันทึกข้อมูลล้มเหล่ว, กรุณาลองใหม่';
+            }
+        }
+
+        return response()->json($arr, $arr['code']);
+    }
+
+
+
+    public function delete($id)
+    {
+        $data = BlogsCategoryModel::find( $id );
+        if( is_null( $data ) ){
+            return response()->json(["message" => 'Record not found!'], 404);
+        }
+
+        return view('forms.blogs.category.delete')->with('item', $data);
     }
 
     /**
@@ -232,8 +240,26 @@ class BlogsCategoryController extends Controller
      * @param  int  $id
      * @return \Illuminate\Http\Response
      */
-    public function destroy($id)
+    public function destroy(Request $request, $id)
     {
-        //
+        $data = BlogsCategoryModel::find($id);
+        if( is_null( $data ) ){
+            return response()->json(["message" => 'Record not found!'], 404);
+        }
+
+        $arr['update'] = ['[blog-category-id='.$id.']', $data];
+
+        $arr['call'] = 'refreshDatatable';
+
+        $data->delete();
+        return response()->json([
+            "message" => 'ลบข้อมูลเรียบร้อย', 
+            'code' => 200,
+            'info' => 'Successfully deleted.',
+
+            // 'delete' => '[blog-category-id='.$id.']',
+            'call' => 'refreshDatatable',
+
+        ], 200);
     }
 }

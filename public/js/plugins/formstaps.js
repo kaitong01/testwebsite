@@ -21,8 +21,8 @@ if ( typeof Object.create !== 'function' ) {
 			self.$nav = self.$elem.find('[data-stap-action]');
 
 			self.$elem.find('.form-staps-content').css({
-				height: self.$elem.find('.form-staps-content').outerHeight(),
-				overflowY: 'auto'
+				minHeight: self.$elem.find('.form-staps-content').outerHeight(),
+				// overflowY: 'auto'
 			});
 
 			self.$nav.click(function(evt) {

@@ -10,6 +10,8 @@ use Illuminate\Foundation\Auth\Access\AuthorizesRequests;
 use Illuminate\Support\Facades\Session;
 use App\Company;
 use App\Library\Business;
+use App\Library\Fn;
+use App\Library\Ui;
 
 class Controller extends BaseController
 {
@@ -18,9 +20,11 @@ class Controller extends BaseController
     public $_company = array();
 
     public function __construct() {
-       		
+       	
+        $this->ui = New Ui;
+        $this->fn = New Fn;
 
-       	$id = Session::get('cid');
+       	// $id = Session::get('cid');
        	// dd( $id );
 
        	// $db = new Company();

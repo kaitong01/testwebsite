@@ -55,20 +55,16 @@
                 $datatable->tabs
                 @endslot
             @endisset
-
-            {{-- <ul class="datatable-checkbox nav">
-                <li class="nav-item active">
-                    <label class="checkbox">
-                        <input type="checkbox" name="" value="" checked />
-                        <span class="text">ทั้งหมด</span>
-                        <span class="count">(0)</span>
-                    </label>
-
-                </li>
-            </ul> --}}
+            
 
         @endcomponent
         @endisset
+
+
+        @isset( $se )
+        Hello
+        @endisset
+
 
     @endcomponent
 

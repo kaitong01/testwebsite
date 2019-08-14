@@ -170,6 +170,8 @@ if ( typeof Object.create !== 'function' ) {
 		},
 		fetch: function () {
 			var self = this;
+
+
 	
 			return $.ajax({
 				// async: true,
@@ -179,16 +181,39 @@ if ( typeof Object.create !== 'function' ) {
 				dataType: self.options.dataType,
 				data: self.formData,
 
+				// method: self.$form.find(':input[name=_method]').val() || 'POST',
+
 				processData: false,
 				contentType: false,
 
-				/*"headers": {
-				    "cache-control": "no-cache",
-				    "Postman-Token": "a2b5a323-55ba-4d90-8e99-70a0fbcd612b"
-				}*/
+				"headers": {
+					"Accept": "application/json",
+				    // "cache-control": "no-cache",
+				    // "Postman-Token": "a2b5a323-55ba-4d90-8e99-70a0fbcd612b"
+				}
 			})
 			.fail(function(jqXHR, textStatus) {
-				// console.log("error");
+				
+
+				if( textStatus=='error' ){
+
+					var res = jqXHR.responseJSON
+
+					if( res.message ){
+						self.alert.update({
+							text: res.message,
+							type: 'error',
+							close: true,
+							// auto: false
+						}).show();
+					}
+					
+					if( res.errors ){
+						self._setErrorForm( res.errors );
+					}
+					
+					// console.log("error", jqXHR.responseJSON);
+				}
 
 				if( textStatus=='parsererror' ){
 					self.alert.update({
@@ -379,6 +404,7 @@ if ( typeof Object.create !== 'function' ) {
 			// console.log( '_setErrorForm', data );
 
 			$.each(data, function(field, noity){
+
 				var $field = self.$form.find('#'+field+"_fieldset"),
 					$noity = $field.find('.notification');
 
