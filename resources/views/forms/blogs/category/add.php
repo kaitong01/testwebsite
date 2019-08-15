@@ -7,6 +7,7 @@ $imageCoverOpt = array(
     'width' => 600,
     'height' => 338,
 
+
     'dropzoneText' => 'แนบรูปหน้าปก',
 );
 
@@ -14,7 +15,9 @@ $imageCoverOpt = array(
 
 if( !empty($item) ){
     $formAction = '/blogs/category/'.$item['id'];
-
+    if(!empty($item['image'])){
+      $imageCoverOpt['src'] = asset($item['image']);
+    }
 
     $arr['hiddenInput'][] = array('name'=>'id', 'value'=>$item['id']);
     $arr['hiddenInput'][] = array('name'=>'_method', 'value'=>'PUT');
@@ -172,9 +175,11 @@ $arr['button'] = '<div class="d-flex justify-content-end">'.
     '<button type="submit" class="btn btn-primary btn-submit ml-2"><span class="btn-text">บันทึก</span></button>'.
 
 '</div>';
-// $arr['cancel'] = '<button type="button" class="btn" data-action="close"><span class="btn-text">ยกเลิก</span></button>';
-
-$arr['width'] = 964;
+// $arr['cancel'] = '<button type="button" class="btn btn-sm btn-danger" data-action="close"><span class="btn-text">ยกเลิก</span></button>';
+// $arr['close'] = true;
+$arr['width'] = 965;
+// $arr['bg'] = 'blue';
+// $arr['effect'] = 7;
 
 // return response()->json($arr, 404);
 

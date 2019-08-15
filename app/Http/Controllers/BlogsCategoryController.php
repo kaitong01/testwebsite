@@ -97,8 +97,14 @@ class BlogsCategoryController extends Controller
 
         $validator = Validator::make($request->all(), [
             'name' => 'required|max:75',
+            'description' => 'required',
+            'image' => 'required | mimes:jpeg,jpg,png | max:1000',
         ],[
             'name.required' => 'กรุณากรอกข้อมูลหัวเรื่อง',
+            'description.required' => 'กรุณากรอกคำอธิบาย',
+            'image.required' => 'กรุณาใส่รูปภาพ',
+            'image.max' => 'ขนาดไฟล์เกินกำหนด',
+            'image.mimes' => 'ชนิดของไฟล์ต้องเป็น jpeg,jpg,png เท่านั้น',
         ]);
 
         if ( $validator->fails() ) {
@@ -108,12 +114,19 @@ class BlogsCategoryController extends Controller
         }
         else{
 
+
+            $image =   $request->file('image');
+            $new_name = rand().'_'.time().'.' .$image->getClientOriginalExtension();
+
+            $image->move(public_path('uploads/'.Session::get('cid').'/blogs/category'),$new_name);
+            $path = 'uploads/'.Session::get('cid').'/blogs/category/'.$new_name;
+
             $data = new BlogsCategoryModel;
 
             $data->name           = $request->name;
             $data->description    = $request->description;
             $data->status         = $request->status;
-
+            $data->image          = $path;
 
             $data->seo_title      = $request->seo_title;
             $data->seo_description= $request->seo_description;
@@ -148,7 +161,7 @@ class BlogsCategoryController extends Controller
      */
     public function show($id)
     {
-        
+
     }
 
     /**
@@ -176,11 +189,16 @@ class BlogsCategoryController extends Controller
      */
     public function update(Request $request, $id)
     {
+
         $data = BlogsCategoryModel::find( $id );
+
+
 
         if( is_null( $data ) ){
             return response()->json(["message" => 'Record not found!'], 404);
         }
+
+
 
         $arr = array();
         $validator = Validator::make($request->all(), [
@@ -195,6 +213,28 @@ class BlogsCategoryController extends Controller
             $arr['errors'] = $validator->errors();
         }
         else{
+
+
+          if(!empty($data->image)&&$request->file('image') || $request->_image&&!empty($data->image) ){
+            $pathname = public_path($data->image);
+            if(file_exists($pathname)){
+
+              unlink($pathname);
+              $data->image="";
+            }
+          }
+
+
+          if($request->file('image')){
+
+
+            $image =   $request->file('image');
+            $new_name = rand().'_'.time().'.' .$image->getClientOriginalExtension();
+
+            $image->move(public_path('uploads/'.Session::get('cid').'/blogs/category'),$new_name);
+            $path = '/uploads/'.Session::get('cid').'/blogs/category/'.$new_name;
+            $data->image = $path;
+          }
 
             $data->name           = $request->name;
             $data->description    = $request->description;
@@ -253,7 +293,7 @@ class BlogsCategoryController extends Controller
 
         $data->delete();
         return response()->json([
-            "message" => 'ลบข้อมูลเรียบร้อย', 
+            "message" => 'ลบข้อมูลเรียบร้อย',
             'code' => 200,
             'info' => 'Successfully deleted.',
 

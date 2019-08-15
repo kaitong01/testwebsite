@@ -37,8 +37,8 @@ class Item_BlogCategory_Ui extends Ui
 	    	$ths = '';
 	    	foreach ($keys as $key => $value) {
 
-	    		$label = isset($value['label']) ?$value['label']: ''; 
-	    		
+	    		$label = isset($value['label']) ?$value['label']: '';
+
 	    		$ico = isset($value['icon']) ? '<i class="mr-1 icon-'.$value['icon'].'"></i>':'';
 	    		$cls = isset($value['cls']) ? ' class="'.$value['cls'].'"':'';
 				$ths .= '<th'.$cls.'>'.$ico.'<span>'.$label.'</span></th>';
@@ -47,8 +47,8 @@ class Item_BlogCategory_Ui extends Ui
 			$tr .= '<tr role="table__fixed">'.$ths.'</tr>';
 		}
 
-		
- 
+
+
 		foreach ($data as $key => $item) {
 			$seq ++;
 			$item = json_decode( json_encode($item), 1);
@@ -64,7 +64,7 @@ class Item_BlogCategory_Ui extends Ui
 
 					if( $label['id']=='name' ){
 
-						$val = $this->_media( $item );
+						$val = $this->_groupname( $item );
 					}
 
 				} else if($type=='index'){
@@ -79,14 +79,14 @@ class Item_BlogCategory_Ui extends Ui
 
 				} else if($type=='move'){
 					$val = '<div class="handle"></div>';
-				
+
 				} else if($type=='status'){
 					$val = $this->_status( $item );
 				} else if($type=='action'){
 					$val = $this->_action( $item );;
-					
+
 				}
-				
+
 
 	    		$cls = isset($label['cls']) ? ' class="'.$label['cls'].'"':'';
 				$tds .= '<td'.$cls.'>'.$val.'</td>';
@@ -94,15 +94,21 @@ class Item_BlogCategory_Ui extends Ui
 
 			$tr .= '<tr blog-category-id="'.$item['id'].'">'.$tds.'</tr>';
 		}
-    	
+
     	return $tr;
     }
 
 
-    public function _media($data)
+    public function _groupname($data)
     {
+			if($data['image']){
+				$picture = "<img src='".asset($data['image'])."'>";
+			}else{
+				$picture = "";
+			}
+
     	return '<div class="media">
-			<div class="pic-wrap mr-2"><div class="pic"></div></div>
+			<div class="pic-wrap mr-2"><div class="pic">'.$picture.'</div></div>
 			<div class="media-body">'.
 				'<a href="'.asset('blogs/category/'.$data['id']).'/edit" data-plugin="lightbox"><strong ref="name">'.$data['name'].'</strong></a>'.
 				'<div class="y-ellipsis clamp-2"><span ref="description">'. $this->fn->q('text')->more($data['description']).'</span></div>'.

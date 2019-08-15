@@ -50,7 +50,7 @@ class SettingsBlogsController extends Controller
                 "url" => '/blogs/category',
 
                 'filter' => $filters,
-                'actions_right' => '<a class="btn btn-primary ml-2" href="/blogs/category/create" data-plugin="lightbox"><svg class="svg-icon o__tiny o__by-text" xmlns="http://www.w3.org/2000/svg" width="12" height="12" viewBox="0 0 12 12"><path d="M2 5v2h3v3h2V7h3V5H7V2H5v3H2z"></path></svg> <span>เพิ่ม</span></a>'
+                'actions_right' => '<a class="btn btn-primary ml-2" href="/blogs/category/create" data-plugin="lightbox"><svg class="svg-icon o__tiny o__by-text" xmlns="http://www.w3.org/2000/svg" width="12" height="12" viewBox="0 0 12 12"><path d="M2 5v2h3v3h2V7h3V5H7V2H5v3H2z"></path></svg> <span>เพิ่มประเภทบทความ</span></a>'
             ],
             'page_current_tab' => '/settings/blogs/'.$tab
         ]);

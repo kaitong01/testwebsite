@@ -4,27 +4,16 @@ namespace App\Http\Controllers;
 
 use Illuminate\Http\Request;
 
-class SettingsToursController extends Controller
+class ToursRouteController extends Controller
 {
-
-    private $_tabs = [
-
-        'country' => [ 'id'=>'', 'name'=>'ประเทศ' ],
-        'route' => [ 'id'=>'', 'name'=>'เส้นทาง' ],
-        'wholesale' => [ 'id'=>'', 'name'=>'โฮลเซลล์' ],
-        'category' => [ 'id'=>'', 'name'=>'ประเภททัวร์' ],
-    ];
-
     /**
      * Display a listing of the resource.
      *
      * @return \Illuminate\Http\Response
      */
-    public function index( $tab=null )
+    public function index()
     {
-
-        // dd($this->_tabs);
-      
+        //
     }
 
     /**
