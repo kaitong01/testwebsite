@@ -133,15 +133,48 @@ $formLocation = $form->create()
         ->addClass('form-control input-title')
         // ->placeholder('')
         ->value( !empty($item['name'])? $item['name']:'' )
-->hr('<hr class="my-4">')
- ->field("description")
-        ->type( 'textarea' )
-        ->label( 'คำอธิบาย*' )
-        ->autocomplete('off')
-        ->addClass('form-control input-content')
-        ->placeholder('อธิบายเส้นทางเพื่อให้ผู้คนรู้ว่ามีเนื้อหาเกี่ยวกับอะไร')
-        ->attr('data-plugin', 'autosize')
-        ->value( !empty($item['description'])? $item['description']:'' )
+
+
+ ->field("Asia")
+        ->text("
+        <div class='row' style='overflow-y: scroll;height: 450px;position: relative;'>
+        <div class='col-12'>
+
+        <div class='row'>
+        <div class='col-12'><h4>Asia</h4></div>
+        </div>
+        <hr class='my-4'>
+
+        <div class='row'>
+        <div class='col-12'><h4>Europe</h4></div>
+        </div>
+        <hr class='my-4'>
+
+        <div class='row'>
+        <div class='col-12'><h4>North America</h4></div>
+        </div>
+        <hr class='my-4'>
+
+        <div class='row'>
+        <div class='col-12'><h4>South America</h4></div>
+        </div>
+        <hr class='my-4'>
+
+        <div class='row'>
+        <div class='col-12'><h4>Africa</h4></div>
+        </div>
+        <hr class='my-4'>
+
+        <div class='row'>
+        <div class='col-12'><h4>Australasia</h4></div>
+        </div>
+        <hr class='my-4'>
+
+        </div>
+        </div>
+        ")
+
+
 ->html();
 
 
