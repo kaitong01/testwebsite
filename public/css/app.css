@@ -14914,7 +14914,6 @@ svg {
   right: 0;
   top: 0;
   bottom: 0;
-  height: 100%;
   width: 100%;
 }
 
@@ -16280,6 +16279,10 @@ body.logged-out {
   color: #888;
   margin-top: 2px;
   font-size: 80%;
+}
+
+.datatable-table .td-name .pic {
+  border-radius: 4px;
 }
 
 .datatable-table .td-checkbox,

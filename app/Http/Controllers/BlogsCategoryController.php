@@ -3,13 +3,16 @@
 namespace App\Http\Controllers;
 
 use Illuminate\Http\Request;
+// use Illuminate\Http\UploadedFile;
 use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\Session;
 use Illuminate\Support\Facades\Validator;
 
 use DB;
-use App\Library\Fn;
-use App\Library\Form;
+use Faker\Provider\Image;
+use Illuminate\Support\Facades\Storage;
+// use App\Library\Fn;
+// use App\Library\Form;
 
 use App\Models\BlogsCategoryModel;
 
@@ -70,7 +73,7 @@ class BlogsCategoryController extends Controller
         $arr['data'] = $results;
         $arr['options'] = $ops;
 
-        $arr['items'] = $this->ui->req('Item_BlogCategory')->init($arr['data'], $arr['options']);
+        $arr['items'] = $this->ui->q('BlogCategoryUi')->init($arr['data'], $arr['options']);
 
         return response()->json($arr, 200);
     }
@@ -97,7 +100,7 @@ class BlogsCategoryController extends Controller
 
         $validator = Validator::make($request->all(), [
             'name' => 'required|max:75',
-            'description' => 'required',
+            // 'description' => 'required',
             'image' => 'required | mimes:jpeg,jpg,png | max:1000',
         ],[
             'name.required' => 'กรุณากรอกข้อมูลหัวเรื่อง',
@@ -115,27 +118,29 @@ class BlogsCategoryController extends Controller
         else{
 
 
-            $image =   $request->file('image');
-            $new_name = rand().'_'.time().'.' .$image->getClientOriginalExtension();
+            // store
 
-            $image->move(public_path('uploads/'.Session::get('cid').'/blogs/category'),$new_name);
-            $path = 'uploads/'.Session::get('cid').'/blogs/category/'.$new_name;
 
             $data = new BlogsCategoryModel;
 
             $data->name           = $request->name;
             $data->description    = $request->description;
             $data->status         = $request->status;
-            $data->image          = $path;
+
 
             $data->seo_title      = $request->seo_title;
             $data->seo_description= $request->seo_description;
-            $data->permalink      = $this->fn->q('text')->createPrimaryLink( $request->link );
+            $data->permalink      = $this->fn->q('text')->createPrimaryLink( $request->permalink );
 
             $data->created_uid    = Auth::user()->id;
             $data->updated_uid    = Auth::user()->id;
 
             $data->cid            = Session::get('cid');
+
+
+            if($request->has('image')){
+                $data->image = $request->file('image')->store( Session::get('cid'), 'public' );
+            }
 
             if( $data->save() ){
                 $arr['code'] = 200;
@@ -215,26 +220,17 @@ class BlogsCategoryController extends Controller
         else{
 
 
-          if(!empty($data->image)&&$request->file('image') || $request->_image&&!empty($data->image) ){
-            $pathname = public_path($data->image);
-            if(file_exists($pathname)){
 
-              unlink($pathname);
-              $data->image="";
+            // $folder_path =
+            if(!empty($data->image) && ($request->has('image') || $request->_image) ){
+
+                Storage::disk('public')->delete($data->image);
+                $data->image = '';
             }
-          }
 
-
-          if($request->file('image')){
-
-
-            $image =   $request->file('image');
-            $new_name = rand().'_'.time().'.' .$image->getClientOriginalExtension();
-
-            $image->move(public_path('uploads/'.Session::get('cid').'/blogs/category'),$new_name);
-            $path = '/uploads/'.Session::get('cid').'/blogs/category/'.$new_name;
-            $data->image = $path;
-          }
+            if($request->has('image')){
+                $data->image = $request->file('image')->store( Session::get('cid'), 'public' );
+            }
 
             $data->name           = $request->name;
             $data->description    = $request->description;
@@ -287,9 +283,12 @@ class BlogsCategoryController extends Controller
             return response()->json(["message" => 'Record not found!'], 404);
         }
 
-        $arr['update'] = ['[blog-category-id='.$id.']', $data];
+        // $arr['update'] = ['[blog-category-id='.$id.']', $data];
+        // $arr['call'] = 'refreshDatatable';
 
-        $arr['call'] = 'refreshDatatable';
+        if( !empty($data->image) ){
+            Storage::disk('public')->delete($data->image);
+        }
 
         $data->delete();
         return response()->json([

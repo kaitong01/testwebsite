@@ -10,8 +10,8 @@
 | contains the "web" middleware group. Now create something great!
 |
 */
-use App\Http\Controllers\CompanyController;
-use App\Http\Middleware\CheckCompany;
+// use App\Http\Controllers\CompanyController;
+// use App\Http\Middleware\CheckCompany;
 
 use Illuminate\Http\Request;
 use App\Library\Fn;
