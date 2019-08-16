@@ -72,6 +72,8 @@ Route::group(['middleware' => ['auth', 'company']], function () {
     Route::resource('/blogs/category', 'BlogsCategoryController');
     Route::get('/blogs/category/{id}/delete', 'BlogsCategoryController@delete');
 
+    Route::resource('/tours/route', 'ToursRouteController');
+
 
 
     Route::get('/createPrimaryLink', function ( Request $request ) {
