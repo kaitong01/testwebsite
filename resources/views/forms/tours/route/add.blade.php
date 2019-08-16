@@ -123,6 +123,12 @@ $formSEO = $form->create()
 ->html();
 
 $form = new Form();
+$country = $Fn->q('Location')->flagList();
+$output = "";
+ // dd($country);
+foreach ($country as $key => $row) {
+$output .= $row[$key]->name."<br>";
+}
 $formLocation = $form->create()
     // set From
     ->elem('div')
@@ -144,6 +150,9 @@ $formLocation = $form->create()
         <div class='col-12'><h4>Asia</h4></div>
         </div>
         <hr class='my-4'>
+        <div class='row'>
+        <div class='col-12'>".$output."</div>
+        </div>
 
         <div class='row'>
         <div class='col-12'><h4>Europe</h4></div>
