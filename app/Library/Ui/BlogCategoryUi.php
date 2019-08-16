@@ -1,6 +1,6 @@
 <?php
 
-class Item_BlogCategory_Ui extends Ui
+class BlogCategoryUi extends Ui
 {
 	function __construct() {
         parent::__construct();
@@ -101,11 +101,11 @@ class Item_BlogCategory_Ui extends Ui
 
     public function _groupname($data)
     {
-			if($data['image']){
-				$picture = "<img src='".asset($data['image'])."'>";
-			}else{
-				$picture = "";
-			}
+
+        $picture = !empty($data['image'])
+            ? '<img src="'. asset("storage/{$data['image']}").'" alt="" />'
+            : '';
+        //Storage::disk('locol')->url($data['image'])
 
     	return '<div class="media">
 			<div class="pic-wrap mr-2"><div class="pic">'.$picture.'</div></div>

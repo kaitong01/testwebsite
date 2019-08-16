@@ -16,7 +16,7 @@ $imageCoverOpt = array(
 if( !empty($item) ){
     $formAction = '/blogs/category/'.$item['id'];
     if(!empty($item['image'])){
-      $imageCoverOpt['src'] = asset($item['image']);
+      $imageCoverOpt['src'] = asset("storage/{$item['image']}");
     }
 
     $arr['hiddenInput'][] = array('name'=>'id', 'value'=>$item['id']);
@@ -91,7 +91,7 @@ $formSEO = $form->create()
         ->attr('data-plugins', 'autosize')
         ->value( !empty($item['seo_description']) ? $item['seo_description']:'' )
 
-    ->field("link")
+    ->field("permalink")
         ->label('ใส่ URL เพจของคุณ')
 
         ->text(
@@ -99,7 +99,7 @@ $formSEO = $form->create()
             '<div class="seourl-wrap d-flex justify-content-between align-items-center">'.
                 '<div class="seourl-base">/บทความ/</div>'.
                 '<div class="seourl-input">'.
-                    '<input id="link" class="form-control input-seo input-url-seo" autocomplete="off" type="text" name="link" value="'.(!empty($item['permalink'])? $item['permalink']:'').'" />'.
+                    '<input id="permalink" class="form-control input-seo input-url-seo" autocomplete="off" type="text" name="permalink" value="'.(!empty($item['permalink'])? $item['permalink']:'').'" />'.
                 '</div>'.
             '</div>'
         )

@@ -7,32 +7,29 @@ use App\Library\Fn;
 
 class Ui {
 
-    function __construct() { 
+    function __construct() {
         $this->fn = new Fn();
     }
 
+    private $_dataFun= array();
     private $_query = array();
-    public function frame($q='default')
+    public function q($name=null)
     {
+    	$name = ucfirst($name);
+        $path =  "Ui/{$name}.php";
 
+        // if( file_exists( $path ) ){
 
-    	$path = "Ui/{$q}.php";
-        // echo $path; die;
-    	// if( file_exists($path) ){
+            require_once $path;
 
-	    	if(array_key_exists($q, $this->_query)==false){
-	            require_once $path;
-	            $clsName = ucfirst($q) . '_Ui';
-	            $this->_query[$q] = new $clsName;
-	        }
-
-
-	        return $this->_query[$q];
+            if(array_key_exists($name, $this->_dataFun)==false){
+                $this->_dataFun[$name] = new $name;
+            }
         // }
 
+        return isset($this->_dataFun[$name]) ?$this->_dataFun[$name]: $this;
     }
 
-    private $_dataFun= array();
     public function req($filename='')
     {
         $filename = ucfirst($filename);
