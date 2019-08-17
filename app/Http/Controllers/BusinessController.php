@@ -172,14 +172,33 @@ class BusinessController extends Controller
 
 
             if( $tab=='officehours' ){
-
                 $data->officehours         = $request->officehours;
 
                 if( $request->has('officehours_days')  ){
                     $data->officehours_days = json_encode($request->officehours_days);
 
                 }
+            }
 
+            if( $tab=='seo' ){
+
+                $data->seo_title         = $request->seo_title;
+                $data->seo_description   = $request->seo_description;
+                $data->seo_keywords      = $request->seo_keywords;
+
+
+            }
+
+            if( $tab=='google_analytics' ){
+                $data->google_analytics_id         = $request->google_analytics_id;
+            }
+
+            if( $tab=='google_ads' ){
+                $data->google_conversion_id         = $request->google_conversion_id;
+            }
+
+            if( $tab=='facebook_pixel' ){
+                $data->facebook_pixel_code         = $request->facebook_pixel_code;
             }
 
             if( $data->update() ){

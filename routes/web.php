@@ -28,13 +28,12 @@ Route::group(['middleware' => ['auth', 'company']], function () {
 
 
     Route::get('/', function () {
-
         return view('pages.home');
-
     })->name('pages.home');
 
-    Route::get('/site/menu', 'SiteController@menu');
-    Route::post('/site/menu', 'SiteController@menu');
+
+    // Route::get('/site/menu', 'SiteController@menu');
+    // Route::post('/site/menu', 'SiteController@menu');
 
     Route::get('/home', function () {
 
@@ -42,24 +41,40 @@ Route::group(['middleware' => ['auth', 'company']], function () {
 
     })->name('pages.home');
 
-    Route::get('/about', function () {
-
-        return view('pages.about');
-    })->name('pages.about');
 
 
-    Route::get('/settings', function () {
 
-        return view('pages.settings');
-    })->name('pages.settings');
-
-
+    # Business
     Route::get('/business', 'BusinessController@index');
     Route::get('/business/{param}', 'BusinessController@index');
 
     Route::put('/business/update/{param}', 'BusinessController@update');
 
 
+
+    # Store
+    Route::get('/store', 'StoreController@index');
+    Route::get('/store/find', 'StoreController@find');
+    Route::get('/store/tours/{id}', 'StoreController@detail');
+
+
+    Route::get('/store/wholesale/find', 'StoreController@find');
+    Route::get('/store/wholesale/{id}', 'StoreController@find');
+    // Route::get('/store/wholesale/{id}/country', 'StoreController@wholesaleCountry');
+    Route::get('/store/wholesale/{id}/country/{country_id}', 'StoreController@find');
+
+
+    // Route::get('/store/sele/', 'StoreController@index');
+
+
+
+
+
+    # Settings
+    Route::get('/settings', function () {
+
+        return view('pages.settings');
+    })->name('pages.settings');
 
     // /settings/tours/
     Route::get('/settings/tours/{param?}', 'SettingsToursController@index')->name('pages.settings.tours');
@@ -82,11 +97,10 @@ Route::group(['middleware' => ['auth', 'company']], function () {
 
 
 
-    // account
+
+
+    # update back-end
     Route::post('/account/change_company', 'AccountController@changeCompany');
-
-
-
     Route::get('/createPrimaryLink', function ( Request $request ) {
         $Fn = new Fn;
 

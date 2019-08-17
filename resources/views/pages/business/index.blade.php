@@ -32,14 +32,14 @@
                             // ["id"=> "/business/authorization", "name" => "ผู้ใช้"],
                         ]
                     ],
-                    // [
-                    //     "name" => "การตั้งค่าขั้นสูง",
-                    //     "items" => [
-                    //         ["id"=> "/business/embeds", "name" => "ติดตาม & บทวิเคราะห์"],
-                    //         ["id"=> "/business/inbox/settings", "name" => "ตั้งค่ากล่องจดหมาย"],
-                    //         ["id"=> "/business/invoices/settings", "name" => "ใบเสนอราคา & ใบเรียกชำระเงิน"],
-                    //     ]
-                    // ],
+                    [
+                        "name" => "การตั้งค่าขั้นสูง",
+                        "items" => [
+                            ["id"=> "/business/embeds", "name" => "การติดตาม"], //วิเคราะห์
+                            // ["id"=> "/business/inbox/settings", "name" => "ตั้งค่ากล่องจดหมาย"],
+                            // ["id"=> "/business/invoices/settings", "name" => "ใบเสนอราคา & ใบเรียกชำระเงิน"],
+                        ]
+                    ],
                 ],
             ])
 
@@ -49,9 +49,12 @@
 
         <?php if( !empty( $page_current_tab ) ) { ?>
 
-
             <?php if( $page_current_tab=='/business/settings' ){ ?>
-                @include('pages.business.settings.sections.settings')
+                @include('pages.business.settings.index')
+            <?php } elseif( $page_current_tab=='/business/embeds' ){?>
+                @include('pages.business.embeds.index')
+            <?php } elseif( $page_current_tab=='/business/seo' ){?>
+                @include('pages.business.seo.index')
             <?php } ?>
 
         <?php } ?>
@@ -59,16 +62,5 @@
 
 
     @endcomponent
-
-
-@section('footer_scripts')
-<script type="text/javascript">
-    $(function () {
-
-        // console.log( 11 );
-        // $('.clock-standard').clockTimePicker();
-    });
-</script>
-@endsection
 
 @endsection
