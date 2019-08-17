@@ -6,9 +6,9 @@ use Illuminate\Http\Request;
 // use Illuminate\Session\Store;
 use Illuminate\Support\Facades\Session;
 use Illuminate\Support\Facades\Auth;
+use Illuminate\Support\Facades\DB;
 
-use DB;
-use App\Company;
+// use App\Company;
 // use App\Library\Business;
 
 class CompanyController extends Controller
@@ -22,28 +22,28 @@ class CompanyController extends Controller
             $id = Session::get('cid');
 
             if( !isset($id) ){
-                
+
                 $company = CompanyController::first();
                 // dd($company);
                 $id = $company->co_id;
-                Session::get('cid', $id);
+                // Session::put('cid', $id);
             }
-
 
             $company = CompanyController::get( $id );
             if( empty($company) ){
-
                 $company = CompanyController::first();
                 $id = $company->co_id;
-                // Session::put('cid', $id);
             }
         }
 
-        $results = CompanyController::get( $id );   
+        $results = CompanyController::get( $id );
 
         if( !empty($results) ){
 
+            // $request->session()->put('cid', $id);
             Session::put('cid', $id);
+            Session::put('cname', $results->name);
+            Session::put('cdomain', $results->domain);
             // $this->_company = $results;
             // Business::set($results);
             // dd(Business::get());
@@ -53,22 +53,20 @@ class CompanyController extends Controller
             return false;
         }
     }
-    
+
     public static function first()
     {
         return DB::table('companies')
-            ->where('co_status','=',1)
-            ->orderby( 'co_updated', 'desc' )
+            ->where('status','=',1)
+            ->orderby( 'updated_at', 'desc' )
             ->first();
     }
 
     public static function get($id)
     {
         return DB::table('companies')
-            ->where('co_status','=',1)
-            ->where('co_id','=', $id)
+            ->where('status','=',1)
+            ->where('id','=', $id)
             ->first();
     }
-
-
 }

@@ -20,8 +20,7 @@ if ( typeof Object.create !== 'function' ) {
 			self.method = self.$form.attr('method');
 
 			self.$submit.addClass('btn-submit');
-			self.alert = shotalert();
-
+            self.alert = shotalert();
 
 			self.$form.submit(function(e) {
 				e.preventDefault();
@@ -34,12 +33,12 @@ if ( typeof Object.create !== 'function' ) {
 
 			self.updateForm();
 
-			// 
+			//
 			self.$form.find(":input[name]").focus(function() {
 				$(this).removeClass('has-invalid');
 			}).blur(function(event) {
 				$(this).toggleClass('has-invalid', $(this).is(':invalid'));
-			});;
+			});
 
 			self.$form.find(":input[name]").bind('change keyup',function(e) {
 
@@ -65,9 +64,14 @@ if ( typeof Object.create !== 'function' ) {
 		changeData: function () {
 			var self = this;
 
-			var change = {};
-			$.each(self.$form.find(":input[name]"), function(index, el) {
-				
+            var inputChange = {};
+
+            var inputRequired = self.$form.find(":input[aria-label=required]");
+
+            // data-initial-value="ลาดพร้าว"
+
+			$.each(inputRequired, function(index, el) {
+
 				var type = $(this).attr('type');
 				var name = $(this).attr('name');
 				var val = $.trim($(this).val() );
@@ -78,42 +82,58 @@ if ( typeof Object.create !== 'function' ) {
 						val = self.$form.find(':input[name='+name+']:checked').val();
 					}
 
-					// 
+					//
 					if( self.inputs[name] != val ){
-						change[name] = val;
+						inputChange[name] = val;
 					}
 				}
-			}); 
+            });
 
-			// console.log( Object.keys(self.inputs).length, Object.keys(change).length, self.options.changeDataMax );
+            // var is_change = false;
+            // if( inputRequired.length > 0 ){
 
-			var _change = self._changeData(change);
-			self.$submit.prop('disabled', _change );
+            //     if( self.options.input_change_data_min ){
 
-			// console.log( _change, self.options.autosave, self.is_change );
+            //         if( Object.keys(inputChange).length>=self.options.input_change_data_min ){
+            //             is_change = true;
+            //         }
+            //     }
+            //     else if( inputRequired.length==Object.keys(inputChange).length ){
 
-			if( self.options.autosave && self.is_change ){
-				self.is_change = false;
+            //         is_change = true;
+            //     }
+            // }
+            // else{
+            //     is_change = true;
+            // }
 
-				if( !_change ){
-					self.save();
-				}
-			}
+
+            // self.$submit.prop('disabled', !is_change );
+
+
+            // if( self.options.autosave && self.is_change ){
+            //     self.is_change = false;
+
+            //     if( is_change ){
+            //         self.save();
+            //     }
+            // }
 		},
 
 		_autosave: function () {
-			
+
 		},
 
 		_changeData :function (change) {
 			var self = this;
 
-			// console.log( Object.keys(self.inputs).length, Object.keys(change).length, self.options.changeDataMax );
+			console.log( self.options.changeDataMax, Object.keys(self.inputs).length );
 
 			if( self.options.changeDataMax ){
 			 	return Object.keys(self.inputs).length>0 && Object.keys(change).length<self.options.changeDataMax;
 			}
 			else{
+
 				return Object.keys(self.inputs).length>0 && Object.keys(change).length==0;
 			}
 		},
@@ -139,7 +159,7 @@ if ( typeof Object.create !== 'function' ) {
 			self.$submit.removeClass('btn-error');
 
 			// set Data
-			self.formData = new FormData(self.$form[0]);			
+			self.formData = new FormData(self.$form[0]);
 
 			self.$form.addClass('has-loading');
 			self.$form.find(':input').not(':disabled').addClass('is-data').prop('disabled', true);
@@ -156,23 +176,22 @@ if ( typeof Object.create !== 'function' ) {
 
 				// console.log("success", res);
 				self.process( res ).then(function () { // doneCallbacks
-						
+
 					self.$form.find(':input[type=password]').val('');
 					// console.log('done');
 					self.updateForm();
 					self.changeData();
 
 				}, function () {
-					
+
 					// console.log('reject');
-				}); //failCallbacks		
+				}); //failCallbacks
 			});
 		},
 		fetch: function () {
 			var self = this;
 
 
-	
 			return $.ajax({
 				// async: true,
   				// crossDomain: true,
@@ -193,7 +212,6 @@ if ( typeof Object.create !== 'function' ) {
 				}
 			})
 			.fail(function(jqXHR, textStatus) {
-				
 
 				if( textStatus=='error' ){
 
@@ -207,11 +225,11 @@ if ( typeof Object.create !== 'function' ) {
 							// auto: false
 						}).show();
 					}
-					
+
 					if( res.errors ){
 						self._setErrorForm( res.errors );
 					}
-					
+
 					// console.log("error", jqXHR.responseJSON);
 				}
 
@@ -263,7 +281,7 @@ if ( typeof Object.create !== 'function' ) {
 
 					self.inputs[ name ] = val;
 				}
-			}); 
+			});
 
 			// console.log( self.inputs );
 		},
@@ -275,7 +293,7 @@ if ( typeof Object.create !== 'function' ) {
 				// shot message
 				if( res.message ){
 
-					self._showMessage( res.message, res.code==200 ? 'success': 'error' );					
+					self._showMessage( res.message, res.code==200 ? 'success': 'error' );
 				}
 
 
@@ -286,7 +304,7 @@ if ( typeof Object.create !== 'function' ) {
 					// self._setAlert( res.alert );
 					Swal.fire( self._setAlert( res.alert ) );
 				}
-	
+
 				// error form
 				if( res.error ){
 					self._setErrorForm( res.error );
@@ -303,7 +321,7 @@ if ( typeof Object.create !== 'function' ) {
 				if( res.update ){
 
 					var $el = $(res.update[0]);
-					
+
 					if( $el.length ){
 
 						$.each(res.update[1], function(key, val) {
@@ -357,7 +375,7 @@ if ( typeof Object.create !== 'function' ) {
 
 						// console.log( typeof res.update[1] );
 					}
-					
+
 				}
 
 				if ( res.delete ){
@@ -414,7 +432,7 @@ if ( typeof Object.create !== 'function' ) {
 		},
 
 		_setAlert: function ( ops ) {
-			
+
 			var options = {};
 			// console.log( typeof ops );
 
@@ -437,7 +455,7 @@ if ( typeof Object.create !== 'function' ) {
 				}
 
 				return options;
-				
+
 			}else if( typeof ops==='object' ){
 
 				if( ops.title ){
@@ -458,7 +476,7 @@ if ( typeof Object.create !== 'function' ) {
 							options.type = ops[2];
 						}
 					}
-					
+
 					return options;
 				}
 			}
@@ -489,7 +507,7 @@ if ( typeof Object.create !== 'function' ) {
 
 				var $box = $(self.options.contentMessage);
 				$box.html( text ).addClass('text-'+type).slideDown('100', function() {
-					
+
 					setTimeout(function () {
 						$box.slideUp('200', function() {
 							$box.removeClass( 'text-'+ type);
@@ -503,9 +521,9 @@ if ( typeof Object.create !== 'function' ) {
 			else{
 				self.alert.update(text, type).show();
 			}
-			
+
 		}
-		
+
 	}
 	$.fn.formSubmit = function( options ) {
 		return this.each(function() {
@@ -518,7 +536,6 @@ if ( typeof Object.create !== 'function' ) {
 		dataType: 'json',
 		// changeDataMax: 0
 	}
-	
+
 
 })( jQuery, window, document );
-	

@@ -9,7 +9,7 @@ use Illuminate\Support\Facades\Session;
 use Illuminate\Support\Facades\Validator;
 
 use DB;
-use Faker\Provider\Image;
+// use Faker\Provider\Image;
 use Illuminate\Support\Facades\Storage;
 // use App\Library\Fn;
 // use App\Library\Form;
@@ -66,7 +66,6 @@ class BlogsCategoryController extends Controller
         $sth->skip( ($ops['page']*$ops['limit'])- $ops['limit']);
         $sth->take( $ops['limit'] );
 
-
         $results = $sth->get();
         $arr['total'] = $total->count();
 
@@ -119,8 +118,6 @@ class BlogsCategoryController extends Controller
 
 
             // store
-
-
             $data = new BlogsCategoryModel;
 
             $data->name           = $request->name;
@@ -140,6 +137,9 @@ class BlogsCategoryController extends Controller
 
             if($request->has('image')){
                 $data->image = $request->file('image')->store( Session::get('cid'), 'public' );
+                // $data->image = Storage::putFile('public/'.Session::get('cid'), $request->file('image'));
+
+                //$request->file('image')->store( Session::get('cid'), 'public' );
             }
 
             if( $data->save() ){
@@ -218,8 +218,6 @@ class BlogsCategoryController extends Controller
             $arr['errors'] = $validator->errors();
         }
         else{
-
-
 
             // $folder_path =
             if(!empty($data->image) && ($request->has('image') || $request->_image) ){

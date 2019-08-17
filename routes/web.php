@@ -54,6 +54,12 @@ Route::group(['middleware' => ['auth', 'company']], function () {
     })->name('pages.settings');
 
 
+    Route::get('/business', 'BusinessController@index');
+    Route::get('/business/{param}', 'BusinessController@index');
+
+    Route::put('/business/update/{param}', 'BusinessController@update');
+
+
 
     // /settings/tours/
     Route::get('/settings/tours/{param?}', 'SettingsToursController@index')->name('pages.settings.tours');
@@ -73,6 +79,11 @@ Route::group(['middleware' => ['auth', 'company']], function () {
     Route::get('/blogs/category/{id}/delete', 'BlogsCategoryController@delete');
 
     Route::resource('/tours/route', 'ToursRouteController');
+
+
+
+    // account
+    Route::post('/account/change_company', 'AccountController@changeCompany');
 
 
 

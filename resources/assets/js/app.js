@@ -6,7 +6,7 @@
  */
 
 require('./bootstrap');
-// require('./custom');
+// require('./jquery-clock-timepicker'); //jquery-clock-timepicker.min.js
 
 window.Vue = require('vue');
 
