@@ -20,10 +20,9 @@
                     [
                         "name" => "ทัวร์",
                         "items" => [
-                            ["id"=> "/cart/series", "name" => "ซีรีย์ทัวร์"],
-                            // ["id"=> "/cart/imported", "name" => "นำเข้าแล้ว"],
-                            // ["id"=> "/settings/tours/wholesale", "name" => "โฮลเซลล์"],
-                            // ["id"=> "/settings/tours/category", "name" => "ประเภททัวร์"],
+                            ["id"=> "/cart/waitlist", "name" => "รอตรวจสอบ"],
+                            ["id"=> "/cart/published", "name" => "เผยแพร่แล้ว"],
+                            ["id"=> "/cart/cancel", "name" => "ยกเลิก"],
                         ]
                     ],
 

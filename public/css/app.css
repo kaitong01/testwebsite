@@ -15232,6 +15232,12 @@ svg {
   display: block;
 }
 
+.avatar {
+  background-size: cover;
+  background-repeat: no-repeat;
+  background-position: center;
+}
+
 .account-group .avatar {
   background-color: rgba(0, 0, 0, 0.5);
   border-radius: 50%;
@@ -15897,6 +15903,60 @@ body.logged-in .page-topbar > .navbar {
   margin-bottom: 0;
   line-height: 1;
   font-size: 10px;
+}
+
+.page-topbar .navbar-nav .nav-link.avatar {
+  padding: 0;
+  background-color: rgba(255, 255, 255, 0.5);
+  border-radius: 50%;
+  width: 32px;
+  height: 32px;
+}
+
+global-nav-profile .dropdown-menu {
+  min-width: 200px;
+}
+
+.global-notify__dropdown-menu {
+  min-width: 376px;
+  padding-top: 0;
+  padding-bottom: 0;
+}
+
+.global-notify__header {
+  border-bottom: solid 1px #dddfe2;
+  padding: 8px 12px 6px;
+  position: relative;
+  z-index: 100;
+  color: #5f6368;
+  font-weight: bold;
+  font-size: 13px;
+  letter-spacing: .07272727em;
+}
+
+.global-notify__item.head {
+  background-color: #f5f6f7;
+  border-bottom: 1px solid #dddfe2;
+  color: #90949c;
+  font-size: 13px;
+  font-weight: 500;
+  padding: 5px 12px;
+  letter-spacing: .07272727em;
+}
+
+.global-notify__footer a {
+  border-top: 1px solid #dddfe2;
+  display: block;
+  font-weight: 600;
+  padding: 8px 12px;
+  font-weight: bold;
+  font-size: 13px;
+  letter-spacing: .07272727em;
+  text-align: center;
+}
+
+.dropdown .elem-alert h1 {
+  font-size: 100%;
 }
 
 /**/

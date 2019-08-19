@@ -14,7 +14,7 @@
 
             $('body').toggleClass('is-pushed-left');
 
-            $.post( '/site/menu', {is_open: $('body').hasClass('is-pushed-left')? 1: 0}, function (res) {
+            $.post( '/site', {is_menu_open: $('body').hasClass('is-pushed-left')? 1: 0}, function (res) {
             	console.log( res );
             }, 'json');
         });

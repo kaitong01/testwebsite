@@ -14,7 +14,7 @@ class CartController extends Controller
      *
      * @return \Illuminate\Http\Response
      */
-    public function index($tab='series')
+    public function index($tab='waitlist')
     {
         $filters = '';
 
@@ -39,7 +39,7 @@ class CartController extends Controller
 
         return view('pages.cart.index')->with([
             'datatable' => [
-                'title' => 'นำเข้าข้อมูลซีรีย์ทัวร์',
+                'title' => 'นำเข้าข้อมูล',
 
                 'options' => [
                     // 'page' => 1,
