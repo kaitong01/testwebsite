@@ -8,15 +8,15 @@ use Illuminate\Support\Facades\Auth;
 
 class SiteController extends Controller
 {
-    public function menu(Request $request)
-    {
-    	// return is_null($method) ? $this->getRoutes() : Arr::get($this->routes, $method, []);
-    	$is = is_null($request->is_open) ? 0: $request->is_open;
-    	// $menuOpen = Session::get('site_menu_open');
+    // public function menu(Request $request)
+    // {
+    // 	// return is_null($method) ? $this->getRoutes() : Arr::get($this->routes, $method, []);
+    // 	$is = is_null($request->is_open) ? 0: $request->is_open;
+    // 	// $menuOpen = Session::get('site_menu_open');
 
-    	Session::put('site_menu_open', $is);
-    	return response()->json(['success'=>'Got Simple Ajax Request.', 'site_menu_open'=>$is]);
-    }
+    // 	Session::put('site_menu_open', $is);
+    // 	return response()->json(['success'=>'Got Simple Ajax Request.', 'site_menu_open'=>$is]);
+    // }
 
 
     /**
@@ -47,7 +47,17 @@ class SiteController extends Controller
      */
     public function store(Request $request)
     {
-        //
+
+        // return is_null($method) ? $this->getRoutes() : Arr::get($this->routes, $method, []);
+
+        if($request->has('is_menu_open')){
+
+            $is = is_null($request->is_menu_open) ? 0: $request->is_menu_open;
+            Session::put('site_menu_open', $is);
+        }
+    	// $menuOpen = Session::get('site_menu_open');
+
+    	return response()->json(['success'=>'Got Simple Ajax Request.'], 200);
     }
 
     /**

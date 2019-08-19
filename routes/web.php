@@ -32,8 +32,7 @@ Route::group(['middleware' => ['auth', 'company']], function () {
     })->name('pages.home');
 
 
-    // Route::get('/site/menu', 'SiteController@menu');
-    // Route::post('/site/menu', 'SiteController@menu');
+
 
     Route::get('/home', function () {
 
@@ -116,4 +115,6 @@ Route::group(['middleware' => ['auth', 'company']], function () {
             'data' => $Fn->q('text')->createPrimaryLink( $request->text )
         ]);
     });
+    // Route::get('/site/menu', 'SiteController@menu');
+    Route::post('/site', 'SiteController@store');
 });

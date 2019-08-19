@@ -58,6 +58,16 @@ svg{
 
 .textbox-wrap{position:relative}.form-textbox:focus{box-shadow:none}.form-textbox~.form-label{left:.75rem;color:#888;pointer-events:none;padding:0;z-index:1;-webkit-transition-timing-function:ease-in;transition-timing-function:ease-in;-webkit-transition-duration:.125s;transition-duration:.125s;pointer-events:none;margin:0;position:absolute;top:8px;font-size:100%}.form-textbox:focus~.form-label,.form-textbox:valid[required]~.form-label{font-size:10px;letter-spacing:-.01em;top:-8px;color:#666;background:linear-gradient(0deg,transparent,transparent 42%,var(--input-background,#fff) 0,var(--input-background,#fff) 51%,transparent 0)}.form-textbox.form-icon-left{padding-left:36px}.form-textbox:required{padding-right:36px}.form-textbox~.textbox-icon{position:absolute;width:18px;height:18px;left:.75rem;z-index:5;top:50%;margin-top:-9px}.form-textbox~.textbox-clear{right:.375rem;z-index:1;display:none;text-transform:uppercase;color:#0057ff;font-size:12px;font-weight:600;position:absolute;top:50%;padding:0;margin-top:-12px;color:#b8b8b8}.form-textbox:valid[required]~.textbox-clear{display:block}
 
+
+.avatar {
+    background-size: cover;
+    background-repeat: no-repeat;
+    background-position: center;
+}
+.avatar-9 {
+    // background-image: url(../images/avatar/9.svg);
+}
+
 .account-group .avatar {
     background-color: rgba(0,0,0,.5);
     border-radius: 50%;
@@ -301,6 +311,58 @@ body.logged-in .page-topbar>.navbar{
     font-size: 10px;
 }
 
+.page-topbar .navbar-nav .nav-link.avatar {
+    padding: 0;
+    background-color: rgba(255,255,255,.5);
+    border-radius: 50%;
+    width: 32px;
+    height: 32px;
+}
+
+global-nav-profile .dropdown-menu{
+	min-width: 200px;
+}
+
+
+.global-notify__dropdown-menu {
+    min-width: 376px;
+    padding-top: 0;
+    padding-bottom: 0;
+}
+.global-notify__header {
+    border-bottom: solid 1px #dddfe2;
+    padding: 8px 12px 6px;
+    position: relative;
+    z-index: 100;
+    color: #5f6368;
+    font-weight: bold;
+    font-size: 13px;
+    letter-spacing: .07272727em;
+}
+
+.global-notify__item.head{
+    background-color: #f5f6f7;
+    border-bottom: 1px solid #dddfe2;
+    color: #90949c;
+    font-size: 13px;
+    font-weight: 500;
+    padding: 5px 12px;
+    letter-spacing: .07272727em;
+}
+.global-notify__footer a{
+    border-top: 1px solid #dddfe2;
+    display: block;
+    font-weight: 600;
+    padding: 8px 12px;
+    font-weight: bold;
+    font-size: 13px;
+    letter-spacing: .07272727em;
+    text-align: center;
+}
+
+.dropdown .elem-alert h1{
+  font-size: 100%;
+}
 
 /**/
 /* page navigation */
