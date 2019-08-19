@@ -58,6 +58,7 @@ Route::group(['middleware' => ['auth', 'company']], function () {
     Route::get('/store/tours/{id}', 'StoreController@detail');
 
 
+
     Route::get('/store/wholesale/find', 'StoreController@find');
     Route::get('/store/wholesale/{id}', 'StoreController@find');
     // Route::get('/store/wholesale/{id}/country', 'StoreController@wholesaleCountry');
@@ -65,6 +66,10 @@ Route::group(['middleware' => ['auth', 'company']], function () {
 
 
     // Route::get('/store/sele/', 'StoreController@index');
+
+    # cart
+    Route::get('/cart', 'CartController@index');
+    Route::get('/cart/{param}', 'CartController@index');
 
 
 

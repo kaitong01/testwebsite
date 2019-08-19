@@ -7,8 +7,8 @@ use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\Session;
 use Illuminate\Support\Facades\Validator;
+use Illuminate\Support\Facades\DB;
 
-use DB;
 // use Faker\Provider\Image;
 use Illuminate\Support\Facades\Storage;
 // use App\Library\Fn;

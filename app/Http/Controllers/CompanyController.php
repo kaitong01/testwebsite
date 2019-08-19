@@ -25,14 +25,14 @@ class CompanyController extends Controller
 
                 $company = CompanyController::first();
                 // dd($company);
-                $id = $company->co_id;
+                $id = $company->id;
                 // Session::put('cid', $id);
             }
 
             $company = CompanyController::get( $id );
             if( empty($company) ){
                 $company = CompanyController::first();
-                $id = $company->co_id;
+                $id = $company->id;
             }
         }
 

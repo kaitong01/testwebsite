@@ -6,10 +6,9 @@
 use Illuminate\Support\Facades\Schema;
 fu boot -> Schema::defaultStringLength(191);
 
-# php artisan migrate
-
-# php artisan make:seeder UsersTablesSeeder
+# php artisan make:seeder UsersTableSeeder
 ----- update: fun run -----
+use App\User;
 User::create([
     'name'    => 'Chong',
     'email'    => 'chong.bkksoft@gmail.com',
@@ -18,18 +17,20 @@ User::create([
     'remember_token' =>  str_random(10),
 ]);
 
+-----  databaase\seeds\DatabaseSeeder  -----
+- update: fun run: $this->call(UsersTableSeeder::class);
 
-# php artisan migrate:fresh
-# php artisan make:migration create_users_roles_table --create=users_roles
+
+# php artisan migrate
 # php artisan db:seed
+
+php artisan make:auth
 
 
 # npm install --save
 # npm i font-awesome --save
 # npm run dev
 
-# php artisan make:auth
--- remove register, password/reset, password/reset => vendor\laravel\framework\src\Illuminate\Routing
 
 -- update Error page => \resources\views\errors
 - 403 Error
