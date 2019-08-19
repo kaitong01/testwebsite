@@ -100,7 +100,8 @@ Route::group(['middleware' => ['auth', 'company']], function () {
 
     Route::resource('/tours/route', 'ToursRouteController');
 
-
+    Route::get('install/country','SetupDbController@install_country');
+    Route::get('install/con','SetupDbController@install_con');
 
 
 

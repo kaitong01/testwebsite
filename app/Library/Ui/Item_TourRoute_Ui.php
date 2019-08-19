@@ -101,11 +101,9 @@ class Item_TourRoute_Ui extends Ui
 
     public function _groupname($data)
     {
-			if($data['image']){
-				$picture = "<img src='".asset($data['image'])."'>";
-			}else{
-				$picture = "";
-			}
+			$picture = !empty($data['image'])
+					? '<img src="'. asset("storage/{$data['image']}").'" alt="" />'
+					: '';
 
     	return '<div class="media">
 			<div class="pic-wrap mr-2"><div class="pic">'.$picture.'</div></div>
@@ -142,8 +140,8 @@ class Item_TourRoute_Ui extends Ui
 
     public function _action($data)
     {
-    	$val = '<a href="'.asset('blogs/category/'.$data['id']).'/edit" data-plugin="lightbox" class="btn btn-sm btn-primary"><span>แก้ไข</span></a>';
-		$val .= '<a href="'.asset('blogs/category/'.$data['id'].'/delete').'" data-plugin="lightbox" class="btn btn-sm btn-danger ml-2"><span>ลบ</span></a>';
+    	$val = '<a href="'.asset('tours/route/'.$data['id']).'/edit" data-plugin="lightbox" class="btn btn-sm btn-primary"><span>แก้ไข</span></a>';
+		$val .= '<a href="'.asset('tours/route/'.$data['id'].'/delete').'" data-plugin="lightbox" class="btn btn-sm btn-danger ml-2"><span>ลบ</span></a>';
 
 		return $val;
     }

@@ -265,7 +265,7 @@ class Location_Fn extends Fn
 
       public function flagCategory($id='')
       {
-          $items[] = array("id"=>0,"name"=>'World');
+          
           $items[] = array("id"=>1,"name"=>'Africa');
           $items[] = array("id"=>2,"name"=>'Asia');
           $items[] = array("id"=>3,"name"=>'Europe');

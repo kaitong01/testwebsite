@@ -28,7 +28,7 @@ class ToursRouteController extends Controller
           'sort' => isset($request->sort)? $request->sort: 'updated_at',
           'dir' => isset($request->dir)? $request->dir: 'desc',
 
-          'limit' => isset($request->limit)? $request->limit: 2,
+          'limit' => isset($request->limit)? $request->limit: 10,
           'page' => isset($request->page)? $request->page: 1,
 
           'ts' => time(),
@@ -87,7 +87,79 @@ class ToursRouteController extends Controller
      */
     public function store(Request $request)
     {
-        //
+
+        $validator = Validator::make($request->all(), [
+            'name' => 'required|max:75',
+            'country_id' => 'required',
+            'image' => 'required | mimes:jpeg,jpg,png | max:1000',
+        ],[
+            'name.required' => 'กรุณากรอกชื่อเส้นทาง',
+            'description.required' => 'กรุณากรอกคำอธิบาย',
+            'image.required' => 'กรุณาใส่รูปภาพ',
+            'image.max' => 'ขนาดไฟล์เกินกำหนด',
+            'image.mimes' => 'ชนิดของไฟล์ต้องเป็น jpeg,jpg,png เท่านั้น',
+            'country_id.required' => 'กรุณาเลือกประเทศ',
+
+        ]);
+
+        if ( $validator->fails() ) {
+
+            $arr['code'] = 422;
+            $arr['errors'] = $validator->errors();
+        }
+        else{
+
+            $c_id ="";
+            foreach ($request->country_id as $key =>  $row) {
+              if($key==0){
+                $c_id .= $request->country_id[$key];
+              }else{
+                $c_id .= ",".$request->country_id[$key];
+              }
+            }
+            $c_id ="[".$c_id."]";
+
+
+            // store
+            $data = new ToursRoute;
+
+            $data->name           = $request->name;
+            $data->description    = $request->description;
+            // $data->status         = $request->status;
+
+
+            $data->seo_title      = $request->seo_title;
+            $data->seo_description= $request->seo_description;
+            $data->permalink      = $this->fn->q('text')->createPrimaryLink( $request->permalink );
+
+            $data->created_uid    = Auth::user()->id;
+            $data->updated_uid    = Auth::user()->id;
+            $data->country        = $c_id;
+            $data->cid            = Session::get('cid');
+            $data->seq            = 0;
+
+
+            if($request->has('image')){
+                $data->image = $request->file('image')->store( Session::get('cid'), 'public' );
+                // $data->image = Storage::putFile('public/'.Session::get('cid'), $request->file('image'));
+
+                //$request->file('image')->store( Session::get('cid'), 'public' );
+            }
+
+            if( $data->save() ){
+                $arr['code'] = 200;
+                $arr['message'] = 'บันทึกเรียบร้อย';
+                // $arr['redirect'] = 'refresh';
+
+                $arr['call'] = 'refreshDatatable';
+            }
+            else{
+                $arr['code'] = 422;
+                $arr['message'] = 'บันทึกข้อมูลล้มเหล่ว, กรุณาลองใหม่';
+            }
+        }
+
+        return response()->json($arr, $arr['code']);
     }
 
     /**
@@ -109,7 +181,7 @@ class ToursRouteController extends Controller
      */
     public function edit($id)
     {
-        //
+        
     }
 
     /**

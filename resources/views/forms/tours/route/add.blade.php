@@ -14,7 +14,7 @@ $imageCoverOpt = array(
 
 
 if( !empty($item) ){
-    $formAction = '/blogs/category/'.$item['id'];
+    $formAction = '/tours/route/'.$item['id'];
     if(!empty($item['image'])){
       $imageCoverOpt['src'] = asset($item['image']);
     }
@@ -33,6 +33,7 @@ else{
 }
 
 $arr['hiddenInput'][] = array('name'=>'_token', 'value'=>csrf_token());
+
 
 
 
@@ -122,23 +123,66 @@ $formSEO = $form->create()
     '</div>' )
 ->html();
 
-$form = new Form();
-$country = $Fn->q('Location')->flagList();
-$output = "";
- // dd($country);
-foreach ($country as $key => $row) {
-$output .= $row[$key]->name."<br>";
+$db = DB::table('country_route')->get();
+$Africa = "";
+$Asia = "";
+$Europe = "";
+$North_America = "";
+$South_America = "";
+$Oceania = "";
+$Antarctica = "";
+
+foreach ($db as $row) {
+  if($row->category_id =='1'){
+  $Africa   .=  '<div style="margin-top:10px;" data-country="'.$row->id.'"  class="btn-group mr-2" role="group" aria-label="First group">
+  <button  type="button" class="btn btn-sm btn-success">'.$row->name.'</button>
+
+</div>' ;
+  }
+  if($row->category_id =='2'){
+  $Asia   .=  '<div style="margin-top:10px;" class="btn-group mr-2" role="group" aria-label="First group" data-country="'.$row->id.'" >
+  <button  type="button" class="btn btn-sm btn-success">'.$row->name.' </button>
+</div>' ;
+  }
+  if($row->category_id =='3'){
+  $Europe   .=  '<div style="margin-top:10px;" class="btn-group mr-2" role="group" aria-label="First group" data-country="'.$row->id.'" >
+  <button  type="button" class="btn btn-sm btn-success">'.$row->name.' +</button>
+</div>' ;
+  }
+  if($row->category_id =='4'){
+  $North_America   .=  '<div style="margin-top:10px;" class="btn-group mr-2" role="group" aria-label="First group" data-country="'.$row->id.'">
+  <button  type="button" class="btn btn-sm btn-success">'.$row->name.' +</button>
+</div>' ;
+  }
+  if($row->category_id =='5'){
+  $South_America   .=  '<div style="margin-top:10px;" class="btn-group mr-2" role="group" aria-label="First group" data-country="'.$row->id.'" >
+  <button  type="button" class="btn btn-sm btn-success">'.$row->name.' +</button>
+</div>' ;
+  }
+  if($row->category_id =='6'){
+  $Oceania   .=  '<div style="margin-top:10px;" class="btn-group mr-2" role="group" aria-label="First group" data-country="'.$row->id.'" >
+  <button  type="button" class="btn btn-sm btn-success">'.$row->name.' +</button>
+</div>' ;
+  }
+
+  if($row->category_id =='7'){
+  $Antarctica   .=  '<div style="margin-top:10px;" class="btn-group mr-2" role="group" aria-label="First group" data-country="'.$row->id.'">
+  <button  type="button" class="btn btn-sm btn-success">'.$row->name.' +</button>
+</div>' ;
+  }
+
+
 }
+
 $formLocation = $form->create()
     // set From
     ->elem('div')
     ->addClass('form-insert')
- ->field("serch")
+ ->field("country_id")
+
         ->label( 'ประเทศ' )
-        ->autocomplete('off')
-        ->addClass('form-control input-title')
-        // ->placeholder('')
-        ->value( !empty($item['name'])? $item['name']:'' )
+        ->text("<input type='hidden' name='country_id'>
+        <div class='row show-country'> </div>")
 
 
  ->field("Asia")
@@ -151,16 +195,23 @@ $formLocation = $form->create()
         </div>
         <hr class='my-4'>
         <div class='row'>
-        <div class='col-12'>".$output."</div>
+        <div class='col-12'>".$Asia."</div>
         </div>
-
+        <hr class='my-4'>
         <div class='row'>
         <div class='col-12'><h4>Europe</h4></div>
         </div>
         <hr class='my-4'>
-
+        <div class='row'>
+        <div class='col-12'>".$Europe."</div>
+        </div>
+        <hr class='my-4'>
         <div class='row'>
         <div class='col-12'><h4>North America</h4></div>
+        </div>
+        <hr class='my-4'>
+        <div class='row'>
+        <div class='col-12'>".$North_America."</div>
         </div>
         <hr class='my-4'>
 
@@ -168,16 +219,22 @@ $formLocation = $form->create()
         <div class='col-12'><h4>South America</h4></div>
         </div>
         <hr class='my-4'>
+        <div class='row'>
+        <div class='col-12'>".$South_America."</div>
+        </div>
+        <hr class='my-4'>
 
         <div class='row'>
         <div class='col-12'><h4>Africa</h4></div>
         </div>
         <hr class='my-4'>
-
         <div class='row'>
-        <div class='col-12'><h4>Australasia</h4></div>
+        <div class='btn-toolbar' role='toolbar' aria-label='Toolbar with button groups'>".$Africa."</div>
         </div>
         <hr class='my-4'>
+
+
+
 
         </div>
         </div>
@@ -218,7 +275,7 @@ $arr['body'] = '<div data-plugins="formstaps|formseo" class="form-staps row no-g
 
 '</div>';
 
-$arr['form'] = '<form class="model-body-p0" method="post" action="'.asset( $formAction ).'" data-plugin="formSubmit"></form>';
+$arr['form'] = '<form class="model-body-p0" method="post" action="'.asset( $formAction ).'" data-plugins="formSubmit|choose_country"></form>';
 
 
 $statusCurr = !empty($item['status'])? $item['status']: 1;
