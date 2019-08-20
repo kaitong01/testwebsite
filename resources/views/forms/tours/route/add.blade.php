@@ -16,7 +16,7 @@ $imageCoverOpt = array(
 if( !empty($item) ){
     $formAction = '/tours/route/'.$item['id'];
     if(!empty($item['image'])){
-      $imageCoverOpt['src'] = asset($item['image']);
+      $imageCoverOpt['src'] = asset("storage/{$item['image']}");
     }
 
     $arr['hiddenInput'][] = array('name'=>'id', 'value'=>$item['id']);
@@ -146,28 +146,28 @@ foreach ($db as $row) {
   }
   if($row->category_id =='3'){
   $Europe   .=  '<div style="margin-top:10px;" class="btn-group mr-2" role="group" aria-label="First group" data-country="'.$row->id.'" >
-  <button  type="button" class="btn btn-sm btn-success">'.$row->name.' +</button>
+  <button  type="button" class="btn btn-sm btn-success">'.$row->name.' </button>
 </div>' ;
   }
   if($row->category_id =='4'){
   $North_America   .=  '<div style="margin-top:10px;" class="btn-group mr-2" role="group" aria-label="First group" data-country="'.$row->id.'">
-  <button  type="button" class="btn btn-sm btn-success">'.$row->name.' +</button>
+  <button  type="button" class="btn btn-sm btn-success">'.$row->name.' </button>
 </div>' ;
   }
   if($row->category_id =='5'){
   $South_America   .=  '<div style="margin-top:10px;" class="btn-group mr-2" role="group" aria-label="First group" data-country="'.$row->id.'" >
-  <button  type="button" class="btn btn-sm btn-success">'.$row->name.' +</button>
+  <button  type="button" class="btn btn-sm btn-success">'.$row->name.' </button>
 </div>' ;
   }
   if($row->category_id =='6'){
   $Oceania   .=  '<div style="margin-top:10px;" class="btn-group mr-2" role="group" aria-label="First group" data-country="'.$row->id.'" >
-  <button  type="button" class="btn btn-sm btn-success">'.$row->name.' +</button>
+  <button  type="button" class="btn btn-sm btn-success">'.$row->name.' </button>
 </div>' ;
   }
 
   if($row->category_id =='7'){
   $Antarctica   .=  '<div style="margin-top:10px;" class="btn-group mr-2" role="group" aria-label="First group" data-country="'.$row->id.'">
-  <button  type="button" class="btn btn-sm btn-success">'.$row->name.' +</button>
+  <button  type="button" class="btn btn-sm btn-success">'.$row->name.' </button>
 </div>' ;
   }
 
@@ -245,7 +245,12 @@ $formLocation = $form->create()
 
 
 # body
-$arr['body'] = '<div data-plugins="formstaps|formseo" class="form-staps row no-gutters">'.
+$arr['body'] = '<div data-plugin="choose_country " data-options="'.$Fn->_stringify([
+    'data' => isset( $item['country'] )? json_decode($item['country'],1): [],
+    
+    'token' => csrf_token(),
+]).'">
+<div data-plugins="formstaps|formseo" class="form-staps row no-gutters">'.
     '<div class="col-12 col-sm-8"><div class="form-staps-content">'.
         '<div data-stap-section="basic" class="form-staps-section active">'.$formBasic.'</div>'.
         '<div data-stap-section="location" class="form-staps-section">'.$formLocation.'</div>'.
@@ -272,10 +277,10 @@ $arr['body'] = '<div data-plugins="formstaps|formseo" class="form-staps row no-g
             '</li>'.
         '</ul>'.
     '</div>'.
-
+'</div>'.
 '</div>';
 
-$arr['form'] = '<form class="model-body-p0" method="post" action="'.asset( $formAction ).'" data-plugins="formSubmit|choose_country"></form>';
+$arr['form'] = '<form class="model-body-p0" method="post" action="'.asset( $formAction ).'" data-plugins="formSubmit"></form>';
 
 
 $statusCurr = !empty($item['status'])? $item['status']: 1;

@@ -71,6 +71,10 @@ class SettingsToursController extends Controller
         ]);
       }
 
+      if($tab=='country'){
+      return   redirect()->route('country.index');
+      }
+
 
 
     }

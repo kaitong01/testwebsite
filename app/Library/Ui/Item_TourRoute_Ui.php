@@ -140,8 +140,8 @@ class Item_TourRoute_Ui extends Ui
 
     public function _action($data)
     {
-    	$val = '<a href="'.asset('tours/route/'.$data['id']).'/edit" data-plugin="lightbox" class="btn btn-sm btn-primary"><span>แก้ไข</span></a>';
-		$val .= '<a href="'.asset('tours/route/'.$data['id'].'/delete').'" data-plugin="lightbox" class="btn btn-sm btn-danger ml-2"><span>ลบ</span></a>';
+    	$val = '<a href="'.asset('tours/route/'.$data['id']).'/edit" data-plugin="lightbox" class="btn btn-sm btn-primary" title="แก้ไข"><i class="fa fa-pencil"></i></a>';
+		$val .= '<a href="'.asset('tours/route/'.$data['id'].'/delete').'" data-plugin="lightbox" class="btn btn-sm btn-danger ml-2" title="ลบ"><i class="fa fa-remove"></i></a>';
 
 		return $val;
     }

@@ -30,6 +30,20 @@ if ( typeof Object.create !== 'function' ) {
 					self.$elem.find('[data-country='+country+']').show();
 					$(this).remove();
 				});
+
+			if(options.data){
+				$.each(options.data, function(index, el) {
+
+					self.$elem.find('[data-country='+options.data[index]+']').hide();
+					const newClone = self.$elem.find('[data-country='+options.data[index]+']').clone();
+						self.$elem.find('.show-country').append(newClone);
+						$(newClone).attr('data-type',2);
+						$(newClone).append('<input type="hidden" name="country_id[]" value="'+options.data[index]+'">')
+						$(newClone).show();
+
+				});
+			}
+
 			console.log( self.options );
 		}
 

@@ -12,11 +12,11 @@ if( !empty($site_menu_open) ){
 
 if( Auth::guest() ){
     $bodyCls .= $bodyCls!=''? ' ':'';
-    $bodyCls .= 'logged-out';   
+    $bodyCls .= 'logged-out';
 }
 else{
     $bodyCls .= $bodyCls!=''? ' ':'';
-    $bodyCls .= 'logged-in';   
+    $bodyCls .= 'logged-in';
 }
 
 if( !empty($bodyCls) ){
