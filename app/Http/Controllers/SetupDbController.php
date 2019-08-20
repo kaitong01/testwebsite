@@ -26,6 +26,7 @@ class SetupDbController extends Controller
 
             foreach ($country as $key => $row) {
               $DB = new Country_route([
+            'code_flag' =>  $country[$key]['id'],    
             'name' =>  $country[$key]['name'],
             'category_id' => $country[$key]['category_id'],
             'capital' => $country[$key]['capital'],

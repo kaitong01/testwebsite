@@ -13,7 +13,8 @@ class TourCountry extends Model
   protected $fillable = [
     'country',
     'created_uid',
-    'updated_uid'
+    'updated_uid',
+      'seq',
   ];
 
 }

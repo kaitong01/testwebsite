@@ -12,7 +12,7 @@ use App\Library\Fn;
 
 use App\Library\Form;
 use Illuminate\Support\Facades\Storage;
-use App\Models\ToursCountry;
+use App\Models\TourCountry;
 
 class TourCountryController extends Controller
 {
@@ -38,7 +38,7 @@ class TourCountryController extends Controller
      */
     public function create()
     {
-        //
+          return view('forms.tours.country.add');
     }
 
     /**
@@ -49,7 +49,66 @@ class TourCountryController extends Controller
      */
     public function store(Request $request)
     {
-        //
+
+      $validator = Validator::make($request->all(), [
+          'country_id' => 'required',
+      ],[
+          'country_id.required' => 'กรุณาเลือกประเทศ',
+      ]);
+
+      if ( $validator->fails() ) {
+
+          $arr['code'] = 422;
+          $arr['errors'] = $validator->errors();
+      }
+      else
+      {
+
+          $c_id = json_encode($request->country_id);
+          // store
+
+
+
+
+          if($request->cid){
+
+          }else{
+            $data = new TourCountry;
+
+
+            // $data->status         = $request->status;
+
+            $data->created_uid    = Auth::user()->id;
+            $data->updated_uid    = Auth::user()->id;
+            $data->country        = $c_id;
+            $data->cid            = Session::get('cid');
+            $data->seq        = 0;
+
+
+
+            if($request->has('image')){
+                $data->image = $request->file('image')->store( Session::get('cid'), 'public' );
+                // $data->image = Storage::putFile('public/'.Session::get('cid'), $request->file('image'));
+
+                //$request->file('image')->store( Session::get('cid'), 'public' );
+            }
+
+            if( $data->save() ){
+                $arr['code'] = 200;
+                $arr['message'] = 'บันทึกเรียบร้อย';
+                // $arr['redirect'] = 'refresh';
+
+                $arr['call'] = 'refreshDatatable';
+            }
+            else{
+                $arr['code'] = 422;
+                $arr['message'] = 'บันทึกข้อมูลล้มเหล่ว, กรุณาลองใหม่';
+            }
+        }
+
+            return response()->json($arr, $arr['code']);
+          }
+
     }
 
     /**

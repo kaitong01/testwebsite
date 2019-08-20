@@ -14,8 +14,8 @@
   </div>
   <div class="row" style="margin-top:30px;">
       <div class="col-12 text-center">
-        <button type="button" class="btn btn-primary" style="width:150px;">เลือกประเทศ</button>
 
+        <a class="btn btn-primary" href="/tours/country/create" data-plugin="lightbox"  style="width:150px;"> <span>เลือกประเทศ</span></a>
       </div>
   </div>
 
@@ -29,9 +29,7 @@
   <div class="row" style="margin-top:30px;">
       <div class="col-4">
 
-        111 ---------
-        <span class="flag-icon flag-icon-gr"></span>
-        <span class="flag-icon flag-icon-gr flag-icon-squared"></span>
+        <!-- <span class="flag-icon flag-icon-th"></span> -->
 
       </div>
       <div class="col-4">
