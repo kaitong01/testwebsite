@@ -27,19 +27,24 @@
   </div>
 
   <div class="row" style="margin-top:30px;">
-      <div class="col-4">
+      <div class='col-12 btn-toolbar' role='toolbar' aria-label='Toolbar with button groups'>
 
-        <!-- <span class="flag-icon flag-icon-th"></span> -->
+        @if($data!==null)
+
+
+        @foreach($data as $key => $row)
+        <?php
+        $flag = strtolower($data[$key]->code_flag);
+        ?>
+        <div style="margin-top:10px;"  class="col-1">
+        <span class="flag-icon flag-icon-{{$flag}}"></span>
+        <span>{{$data[$key]->name}}</span>
+      </div>
+        @endforeach
+        @endif
 
       </div>
-      <div class="col-4">
 
-
-      </div>
-      <div class="col-4">
-
-
-      </div>
   </div>
 
 </div>

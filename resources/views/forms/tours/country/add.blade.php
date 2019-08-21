@@ -7,9 +7,20 @@ $Fn = new Fn;
     $arr['hiddenInput'][] = array('name'=>'_method', 'value'=>'post');
     $arr['title'] = 'เลือกประเทศ';
 
-if( !empty($data) ){
-  $arr['hiddenInput'][] = array('name'=>'cid', 'value'=>'');
+    $db = DB::table('tour_country')
+    ->where('cid','=',Session::get('cid'))
+    ->first();
+
+if($db!=null){
+  $cid = Session::get('cid');
+  $arr['hiddenInput'][] = array('name'=>'cid', 'value'=>$cid);
+  $senddata = $db->country;
 }
+
+
+
+
+
 
 $arr['hiddenInput'][] = array('name'=>'_token', 'value'=>csrf_token());
 
@@ -155,7 +166,7 @@ $formLocation = $form->create()
 
 # body
 $arr['body'] = '<div data-plugin="choose_country " data-options="'.$Fn->_stringify([
-    'data' => isset( $item['country'] )? json_decode($item['country'],1): [],
+    'data' => isset( $senddata )? json_decode($senddata,1): [],
 
     'token' => csrf_token(),
 ]).'">

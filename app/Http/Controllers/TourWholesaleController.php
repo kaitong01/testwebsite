@@ -12,11 +12,10 @@ use App\Library\Fn;
 
 use App\Library\Form;
 use Illuminate\Support\Facades\Storage;
-use App\Models\TourCountry;
+use App\Models\TourWholesale;
 
-class TourCountryController extends Controller
+class TourWholesaleController extends Controller
 {
-    // protected $table = 'tour_country';
     /**
      * Display a listing of the resource.
      *
@@ -24,21 +23,20 @@ class TourCountryController extends Controller
      */
     public function index()
     {
-        $db = TourCountry::where('cid','=',Session::get('cid'))->first();
-        if($db!==null){
-          $arr = json_decode($db->country);
-          $data = DB::table('country_route')
-          ->whereIn('id',$arr)
-          ->get();
-        }else{
-          $data = null;
-        }
-
-        return view('pages.settings')->with([
-            'data' => $data,
-            'country' =>'' ,
-            'page_current_tab' => '/settings/tours/country'
-        ]);
+      $db = TourWholesale::where('cid','=',Session::get('cid'))->first();
+      if($db!==null){
+        $arr = json_decode($db->wholesale);
+        $data = DB::table('wholesales')
+        ->whereIn('id',$arr)
+        ->get();
+      }else{
+        $data = null;
+      }
+      return view('pages.settings')->with([
+          'data' => $data,
+          'wholesale' =>'' ,
+          'page_current_tab' => '/settings/tours/wholesale'
+      ]);
     }
 
     /**
@@ -48,7 +46,7 @@ class TourCountryController extends Controller
      */
     public function create()
     {
-          return view('forms.tours.country.add');
+        return view('forms.tours.wholesale.add');
     }
 
     /**
@@ -59,56 +57,56 @@ class TourCountryController extends Controller
      */
     public function store(Request $request)
     {
-
       $validator = Validator::make($request->all(), [
-          'country_id' => 'required',
+          'wholesale_id' => 'required',
       ],[
-          'country_id.required' => 'กรุณาเลือกประเทศ',
+          'wholesale_id.required' => 'กรุณาเลือกโฮลเซลล์',
       ]);
 
       if ( $validator->fails() ) {
-
           $arr['code'] = 422;
           $arr['errors'] = $validator->errors();
       }
       else
       {
+        //กำหนดจำนวนโฮลเซล
+        $limit_wholesale = 10;
+        if(count($request->wholesale_id)>$limit_wholesale){
 
-          $c_id = json_encode($request->country_id);
+          $arr['code'] = 422;
+          $arr['message'] = 'โฮลเซลล์ที่เลือกต้องไม่เกินจำนวน '.$limit_wholesale.' โฮลเซลล์';
+        }else{
+          $w_id = json_encode($request->wholesale_id);
           // store
-
-
-
-
           if($request->cid){
-            $data = DB::table('tour_country')
+            $data = DB::table('tour_wholesale')
             ->where('cid','=',$request->cid)
             ->first();
             $id_ = $data->id;
-            $data = TourCountry::find($id_);
+            $data = TourWholesale::find($id_);
             $data->created_uid    = Auth::user()->id;
             $data->updated_uid    = Auth::user()->id;
-            $data->country        = $c_id;
+            $data->wholesale        = $w_id;
             if( $data->save() ){
                 $arr['code'] = 200;
                 $arr['message'] = 'บันทึกเรียบร้อย';
                 // $arr['redirect'] = 'refresh';
 
-                  $arr['redirect'] = 'refresh';
+              $arr['redirect'] = 'refresh';
             }
             else{
                 $arr['code'] = 422;
                 $arr['message'] = 'บันทึกข้อมูลล้มเหลว, กรุณาลองใหม่';
             }
           }else{
-            $data = new TourCountry;
+            $data = new TourWholesale;
 
 
             // $data->status         = $request->status;
 
             $data->created_uid    = Auth::user()->id;
             $data->updated_uid    = Auth::user()->id;
-            $data->country        = $c_id;
+            $data->wholesale        = $w_id;
             $data->cid            = Session::get('cid');
             $data->seq        = 0;
 
@@ -121,13 +119,17 @@ class TourCountryController extends Controller
                 $arr['message'] = 'บันทึกเรียบร้อย';
                 // $arr['redirect'] = 'refresh';
 
-                  $arr['redirect'] = 'refresh';
+                $arr['redirect'] = 'refresh';
             }
             else{
                 $arr['code'] = 422;
                 $arr['message'] = 'บันทึกข้อมูลล้มเหลว, กรุณาลองใหม่';
             }
         }
+        }
+
+
+
 
             return response()->json($arr, $arr['code']);
           }

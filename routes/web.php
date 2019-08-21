@@ -106,6 +106,11 @@ Route::group(['middleware' => ['auth', 'company']], function () {
 
     Route::resource('/tours/country', 'TourCountryController');
 
+    Route::resource('/tours/wholesale', 'TourWholesaleController');
+
+    Route::resource('/tours/category', 'TourCategoryController');
+    Route::get('/tours/category/{id}/delete', 'TourCategoryController@delete');
+
     # update back-end
     Route::post('/account/change_company', 'AccountController@changeCompany');
     Route::get('/createPrimaryLink', function ( Request $request ) {

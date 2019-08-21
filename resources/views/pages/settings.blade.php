@@ -65,6 +65,10 @@
         @include('pages.setting.country')
         @endisset
 
+        @isset($wholesale)
+        @include('pages.setting.wholesale')
+        @endisset
+
 
     @endcomponent
 
