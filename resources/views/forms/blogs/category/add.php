@@ -66,9 +66,6 @@ $formBasic = $form->create()
 ->html();
 
 
-
-
-
 $form = new Form();
 $formSEO = $form->create()
     // set From

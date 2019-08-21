@@ -103,7 +103,6 @@ Route::group(['middleware' => ['auth', 'company']], function () {
     Route::get('install/con','SetupDbController@install_con');
 
 
-
     # update back-end
     Route::post('/account/change_company', 'AccountController@changeCompany');
     Route::get('/createPrimaryLink', function ( Request $request ) {

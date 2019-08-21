@@ -15,8 +15,6 @@ class BlogsCategoryModel extends Model
 
     protected $fillable = ['name', 'description'];
 
-
-
     private $_findKeyword = ['q', 'status'];
     private $_sort = 'updated_at';
     private $_dir = 'desc';

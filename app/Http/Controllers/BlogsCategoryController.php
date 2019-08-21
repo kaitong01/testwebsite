@@ -198,7 +198,6 @@ class BlogsCategoryController extends Controller
         $data = BlogsCategoryModel::find( $id );
 
 
-
         if( is_null( $data ) ){
             return response()->json(["message" => 'Record not found!'], 404);
         }
