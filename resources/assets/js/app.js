@@ -7,6 +7,7 @@
 window.$ = window.jQuery = require('jquery')
 require('./bootstrap');
 require('selectize');
+require('flatpickr');
 // require('./jquery-clock-timepicker'); //jquery-clock-timepicker.min.js
 
 window.Vue = require('vue');
@@ -22,4 +23,3 @@ Vue.component('example-component', require('./components/ExampleComponent.vue'))
 const app = new Vue({
     el: '#doc'
 });
-

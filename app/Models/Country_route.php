@@ -12,7 +12,8 @@ class Country_route extends Model
 
   protected $fillable = [
     'name',
+    'code_flag',
     'category_id',
-    'capital',    
+    'capital',
     'status'];
 }

@@ -97,11 +97,19 @@ Route::group(['middleware' => ['auth', 'company']], function () {
     Route::resource('/blogs/category', 'BlogsCategoryController');
     Route::get('/blogs/category/{id}/delete', 'BlogsCategoryController@delete');
 
+
     Route::resource('/tours/route', 'ToursRouteController');
+    Route::get('/tours/route/{id}/delete', 'ToursRouteController@delete');
 
     Route::get('install/country','SetupDbController@install_country');
-    Route::get('install/con','SetupDbController@install_con');
+    // Route::get('install/con','SetupDbController@install_con');
 
+    Route::resource('/tours/country', 'TourCountryController');
+
+    Route::resource('/tours/wholesale', 'TourWholesaleController');
+
+    Route::resource('/tours/category', 'TourCategoryController');
+    Route::get('/tours/category/{id}/delete', 'TourCategoryController@delete');
 
     # update back-end
     Route::post('/account/change_company', 'AccountController@changeCompany');

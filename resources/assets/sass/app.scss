@@ -2,14 +2,22 @@
 // Fonts
 // @import url('https://fonts.googleapis.com/css?family=Nunito');
 
+
+
 // Bootstrap
 @import '~bootstrap/scss/bootstrap';
 
 // Font Awesome
 @import '~font-awesome/scss/font-awesome';
 
+@import '~flag-icon-css/sass/flag-icon';
+
+@import '~flatpickr/dist/flatpickr';
+
+//@import '~selectize/dist/less/selectize';
+
 // Main
 // @import 'variables';
-@import 'selectize';
+// @import 'selectize';
 
 @import 'main';

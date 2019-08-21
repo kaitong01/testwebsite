@@ -1,0 +1,19 @@
+!_TAG_FILE_FORMAT	2	/extended format; --format=1 will not append ;" to lines/
+!_TAG_FILE_SORTED	0	/0=unsorted, 1=sorted, 2=foldcase/
+!_TAG_PROGRAM_AUTHOR	Darren Hiebert	/dhiebert@users.sourceforge.net/
+!_TAG_PROGRAM_NAME	Exuberant Ctags	//
+!_TAG_PROGRAM_URL	http://ctags.sourceforge.net	/official site/
+!_TAG_PROGRAM_VERSION	5.8	//
+TourCountryController	C:\xampp2\htdocs\easywebtour\app\Http\Controllers\TourCountryController.php	/^class TourCountryController extends Controller$/;"	class	line:17
+table	C:\xampp2\htdocs\easywebtour\app\Http\Controllers\TourCountryController.php	/^    \/\/ protected $table = 'tour_country';$/;"	variable	line:19
+table	C:\xampp2\htdocs\easywebtour\app\Http\Controllers\TourCountryController.php	/^    \/\/ protected $table = 'tour_country';$/;"	variable	line:19
+index	C:\xampp2\htdocs\easywebtour\app\Http\Controllers\TourCountryController.php	/^    public function index()$/;"	function	line:25
+create	C:\xampp2\htdocs\easywebtour\app\Http\Controllers\TourCountryController.php	/^    public function create()$/;"	function	line:39
+store	C:\xampp2\htdocs\easywebtour\app\Http\Controllers\TourCountryController.php	/^    public function store(Request $request)$/;"	function	line:50
+validator	C:\xampp2\htdocs\easywebtour\app\Http\Controllers\TourCountryController.php	/^      $validator = Validator::make($request->all(), [$/;"	variable	line:53
+c_id	C:\xampp2\htdocs\easywebtour\app\Http\Controllers\TourCountryController.php	/^          $c_id = json_encode($request->country_id);$/;"	variable	line:67
+data	C:\xampp2\htdocs\easywebtour\app\Http\Controllers\TourCountryController.php	/^            $data = new TourCountry;$/;"	variable	line:76
+show	C:\xampp2\htdocs\easywebtour\app\Http\Controllers\TourCountryController.php	/^    public function show($id)$/;"	function	line:120
+edit	C:\xampp2\htdocs\easywebtour\app\Http\Controllers\TourCountryController.php	/^    public function edit($id)$/;"	function	line:131
+update	C:\xampp2\htdocs\easywebtour\app\Http\Controllers\TourCountryController.php	/^    public function update(Request $request, $id)$/;"	function	line:143
+destroy	C:\xampp2\htdocs\easywebtour\app\Http\Controllers\TourCountryController.php	/^    public function destroy($id)$/;"	function	line:154

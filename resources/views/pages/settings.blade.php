@@ -3,8 +3,8 @@
 @section('title', 'การตั้งค่า')
 
 @section('content')
-    
-    
+
+
     @component('components.columns', [
         'navleft'=> ''
     ])
@@ -55,14 +55,18 @@
                 $datatable->tabs
                 @endslot
             @endisset
-            
+
 
         @endcomponent
         @endisset
 
 
-        @isset( $se )
-        Hello
+        @isset( $country )
+        @include('pages.setting.country')
+        @endisset
+
+        @isset($wholesale)
+        @include('pages.setting.wholesale')
         @endisset
 
 

@@ -11,7 +11,7 @@ use DB;
 use App\Library\Fn;
 
 use App\Library\Form;
-
+use Illuminate\Support\Facades\Storage;
 use App\Models\ToursRoute;
 
 class ToursRouteController extends Controller
@@ -107,7 +107,8 @@ class ToursRouteController extends Controller
             $arr['code'] = 422;
             $arr['errors'] = $validator->errors();
         }
-        else{
+        else
+        {
 
             $c_id ="";
             foreach ($request->country_id as $key =>  $row) {
@@ -181,7 +182,12 @@ class ToursRouteController extends Controller
      */
     public function edit($id)
     {
-        
+      $data = ToursRoute::find( $id );
+      if( is_null( $data ) ){
+          return response()->json(["message" => 'Record not found!'], 404);
+      }
+
+      return view('forms.tours.route.add')->with('item', $data);
     }
 
     /**
@@ -193,7 +199,90 @@ class ToursRouteController extends Controller
      */
     public function update(Request $request, $id)
     {
-        //
+
+      $data = ToursRoute::find( $id );
+      if( is_null( $data ) ){
+          return response()->json(["message" => 'Record not found!'], 404);
+      }
+
+
+
+      $validator = Validator::make($request->all(), [
+          'name' => 'required|max:75',
+          'country_id' => 'required',
+          'image' => 'mimes:jpeg,jpg,png | max:1000',
+      ],[
+          'name.required' => 'กรุณากรอกชื่อเส้นทาง',
+          'description.required' => 'กรุณากรอกคำอธิบาย',
+
+          'image.max' => 'ขนาดไฟล์เกินกำหนด',
+          'image.mimes' => 'ชนิดของไฟล์ต้องเป็น jpeg,jpg,png เท่านั้น',
+          'country_id.required' => 'กรุณาเลือกประเทศ',
+
+      ]);
+
+      if ( $validator->fails() ) {
+
+          $arr['code'] = 422;
+          $arr['errors'] = $validator->errors();
+      }
+      else{
+
+          // $folder_path =
+          if(!empty($data->image) && ($request->has('image') || $request->_image) ){
+
+              Storage::disk('public')->delete($data->image);
+              $data->image = '';
+          }
+
+          if($request->has('image')){
+              $data->image = $request->file('image')->store( Session::get('cid'), 'public' );
+          }
+
+          $c_id ="";
+          foreach ($request->country_id as $key =>  $row) {
+            if($key==0){
+              $c_id .= $request->country_id[$key];
+            }else{
+              $c_id .= ",".$request->country_id[$key];
+            }
+          }
+          $c_id ="[".$c_id."]";
+
+
+          // store
+          $data->name           = $request->name;
+          $data->description    = $request->description;
+          // $data->status         = $request->status;
+
+
+          $data->seo_title      = $request->seo_title;
+          $data->seo_description= $request->seo_description;
+          $data->permalink      = $this->fn->q('text')->createPrimaryLink( $request->permalink );
+
+          $data->created_uid    = Auth::user()->id;
+          $data->updated_uid    = Auth::user()->id;
+          $data->country        = $c_id;
+          $data->cid            = Session::get('cid');
+          $data->seq            = 0;
+
+
+
+
+          if( $data->save() ){
+              $arr['code'] = 200;
+              $arr['message'] = 'บันทึกเรียบร้อย';
+              // $arr['redirect'] = 'refresh';
+
+              $arr['call'] = 'refreshDatatable';
+          }
+          else{
+              $arr['code'] = 422;
+              $arr['message'] = 'บันทึกข้อมูลล้มเหล่ว, กรุณาลองใหม่';
+          }
+      }
+
+      return response()->json($arr, $arr['code']);
     }
 
     /**
@@ -202,8 +291,39 @@ class ToursRouteController extends Controller
      * @param  int  $id
      * @return \Illuminate\Http\Response
      */
+     public function delete($id)
+     {
+         $data = ToursRoute::find( $id );
+         if( is_null( $data ) ){
+             return response()->json(["message" => 'Record not found!'], 404);
+         }
+ 
+         return view('forms.tours.route.delete')->with('item', $data);
+     }
+
     public function destroy($id)
     {
-        //
+      $data = ToursRoute::find($id);
+      if( is_null( $data ) ){
+          return response()->json(["message" => 'Record not found!'], 404);
+      }
+
+      // $arr['update'] = ['[blog-category-id='.$id.']', $data];
+      // $arr['call'] = 'refreshDatatable';
+
+      if( !empty($data->image) ){
+          Storage::disk('public')->delete($data->image);
+      }
+
+      $data->delete();
+      return response()->json([
+          "message" => 'ลบข้อมูลเรียบร้อย',
+          'code' => 200,
+          'info' => 'Successfully deleted.',
+
+          // 'delete' => '[blog-category-id='.$id.']',
+          'call' => 'refreshDatatable',
+
+      ], 200);
     }
 }
