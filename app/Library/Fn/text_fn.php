@@ -1,7 +1,7 @@
 <?php
 
 class Text_Fn extends Fn {
-    
+
     public function example($text){
         return "example:".$text;
     }
@@ -13,7 +13,7 @@ class Text_Fn extends Fn {
     public function characters($str){
         if(eregi("[\~\!\`\#\%\^\$\&\*\+-,\;\/\@\{\}\\\'\"\:\<\>\(\)\?]|\]|\[|\||฿", $str) )
         return false;
-        
+
         else
         return true;
     }
@@ -34,7 +34,7 @@ class Text_Fn extends Fn {
         $replace = "'";
         $newstr = str_replace($order, $replace, $newstr);
 
-        
+
         $order = array("\r\n", "\n", "\r");
         $replace = '<br />';
         $newstr = str_replace($order, $replace, $newstr);
@@ -62,14 +62,14 @@ class Text_Fn extends Fn {
             }
             else{
                 $newstr = preg_replace('~(?:(https?)://([^\s<]+)|(www\.[^\s<]+?\.[^\s<]+))(?<![\.,:])~i', '<a href="//$0" target="_blank" title="$0">$0</a>', $newstr);
-                
+
             }
         }*/
 
         return trim($newstr);
     }
-    
-    public function strip_tags_br($text) { 
+
+    public function strip_tags_br($text) {
 
         $order = "<p>&nbsp;</p>";
         $replace = '<br>';
@@ -97,28 +97,28 @@ class Text_Fn extends Fn {
     public function strip_tags_editor($text, $allowed_tags = "<a><p><strong><b><ul><ol><li><u><blockquote><img>"){
 
         mb_regex_encoding('UTF-8');
-        
+
         $text = nl2br(trim($text));
         $text = strip_tags($text, $allowed_tags);
-        
+
         //replace MS special characters first
         $search = array('/&lsquo;/u', '/&rsquo;/u', '/&ldquo;/u', '/&rdquo;/u', '/&mdash;/u');
         $replace = array('\'', '\'', '"', '"', '-');
         $text = preg_replace($search, $replace, $text);
-        
+
         $attribute = array('style','onclick','onload');
         foreach($attribute as $attr){
             $text = preg_replace("/(<[^>]+) {$attr}=\".*?\"/i", '$1', $text);
         }
-        
+
         // $text = preg_replace('/<img src="(.+?)">(.+?)<\/p>/i', "$2", $text);
         // $text = preg_replace('/<img', '$2', $text);
         // $text = stripArgumentFromTags($text);
 
-        return $this->strip_tags_br($text); 
+        return $this->strip_tags_br($text);
     }
 
-    public function mb_ucfirst($str, $enc = 'utf-8') { 
+    public function mb_ucfirst($str, $enc = 'utf-8') {
         return mb_strtoupper(mb_substr($str, 0, 1, $enc), $enc).mb_substr($str, 1, mb_strlen($str, $enc), $enc);
     }
 
@@ -164,9 +164,9 @@ class Text_Fn extends Fn {
             if($data['street']!='-'){
                 $str.= " ถ.{$data['street']}";
             }
-            
+
         }
-        
+
 
         // ตำบล
         $str.= " ต.{$data['district']}";
@@ -190,7 +190,7 @@ class Text_Fn extends Fn {
 
         $i = 0;
         while ($i < $arrc) {
-            
+
             if(substr($arr[$i], 0, 1) === $htag){
                 $arr[$i] = '<a href="/hashtag/">'.$arr[$i].'</a>';
             }
@@ -221,7 +221,7 @@ class Text_Fn extends Fn {
         }
 
         $title = strtolower($title);
-        
+
         if ( 'save' == $context ) {
             // Convert nbsp, ndash and mdash to hyphens
             $title = str_replace( array( '%c2%a0', '%e2%80%93', '%e2%80%94' ), '-', $title );
@@ -251,7 +251,7 @@ class Text_Fn extends Fn {
             $title = str_replace( '%c3%97', 'x', $title );
         }
 
-        // 
+        //
         $title = preg_replace('/&.+?;/', '', $title); // kill entities
         $title = str_replace('.', '-', $title);
 
@@ -340,7 +340,7 @@ class Text_Fn extends Fn {
         if(!$url || !is_string($url)){
             return false;
         }
-        // quick check url is roughly a valid http request: ( http://blah/... ) 
+        // quick check url is roughly a valid http request: ( http://blah/... )
         if( ! preg_match('/^http(s)?:\/\/[a-z0-9-]+(.[a-z0-9-]+)*(:[0-9]+)?(\/.*)?$/i', $url) ){
             return false;
         }
@@ -352,7 +352,7 @@ class Text_Fn extends Fn {
         // all good!
         return true;
     }
-    
+
     function getHttpResponseCode_using_curl($url, $followredirects = true){
         // returns int responsecode, or false (if url does not exist or connection timeout occurs)
         // NOTE: could potentially take up to 0-30 seconds , blocking further code execution (more or less depending on connection, target site, and local timeout settings))
@@ -417,7 +417,7 @@ class Text_Fn extends Fn {
     }
 
     public function initials($text) {
-        
+
         $initials = '';
 
         if( preg_match("/^[a-zA-Z0-9]+$/i", $text)){
@@ -439,7 +439,7 @@ class Text_Fn extends Fn {
 
             $text = preg_replace('/[^[:alnum:]]/ui', '', $text);
             $initials = mb_substr($text,0,2);
-            
+
         }
 
         return  $initials;
@@ -459,5 +459,18 @@ class Text_Fn extends Fn {
             if( $c==10 ) break;
         };
         return $val;
+    }
+
+    public function type_blogs($text) {
+        $db = DB::table('blog_category')
+        ->where('id','=',$text)
+        ->first();
+        if($db==null){
+          $sms = "ไม่พบประเภทบทความ";
+        }else{
+          $sms = $db->name;
+        }
+
+        return $sms;
     }
 }

@@ -24,6 +24,7 @@
         "flatpickr": "^4.6.2",
         "font-awesome": "^4.7.0",
         "jquery-clock-timepicker": "^2.3.1",
-        "selectize": "^0.12.6"
+        "selectize": "^0.12.6",
+        "simditor": "^2.3.28"
     }
 }

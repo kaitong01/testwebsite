@@ -24,8 +24,8 @@ class form_Fn extends Fn{
 		}
 
 		$city = array(
-            'id' => 'address_city', 
-            'name' => $name.'[city]', 
+            'id' => 'address_city',
+            'name' => $name.'[city]',
             'label' => 'จังหวัด',
             'value' => !empty($data['city']) ? $data['city']:''
         );
@@ -35,42 +35,42 @@ class form_Fn extends Fn{
             	$city['options'] = $options['city'];
             }
         }
-        
-        $fields = array( 0=> 
-            array( 0 => 
+
+        $fields = array( 0=>
+            array( 0 =>
                 array(
-                    'id' => 'address_street', 
-                    'name' => $name.'[street]', 
+                    'id' => 'address_street',
+                    'name' => $name.'[street]',
                     'label' => 'Street',
                     'value' => !empty($data['street']) ? $data['street']:''
                 ),
             ),
 
-            array( 0 => 
+            array( 0 =>
                 array(
-                    'id' => 'address_city', 
-                    'name' => $name.'[city]', 
+                    'id' => 'address_city',
+                    'name' => $name.'[city]',
                     'label' => 'City',
                     'value' => !empty($data['city']) ? $data['city']:''
                 ),
                 array(
-                    'id' => 'address_district', 
-                    'name' => $name.'[district]', 
+                    'id' => 'address_district',
+                    'name' => $name.'[district]',
                     'label' => 'State',
                     'value' => !empty($data['district']) ? $data['district']:''
                 ),
                 array(
-                    'id' => 'address_amphur', 
-                    'name' => $name.'[amphur]', 
+                    'id' => 'address_amphur',
+                    'name' => $name.'[amphur]',
                     'label' => 'Zip',
                     'value' => !empty($data['amphur']) ? $data['amphur']:''
                 ),
             ),
 
-            array( 0 => 
+            array( 0 =>
                 array(
-                    'id' => 'address_zip', 
-                    'name' => $name.'[zip]', 
+                    'id' => 'address_zip',
+                    'name' => $name.'[zip]',
                     'label' => 'Country',
                     'value' => !empty($data['zip']) ? $data['zip']:''
                 ),
@@ -86,20 +86,20 @@ class form_Fn extends Fn{
             $str .= '<table cellspacing="0" class="table-address"><tr>';
             // cell
             foreach ($rows as $cell => $value) {
-                
+
                 $type = isset($value['type']) ? $value['type'] : 'text';
                 $id = isset($value['id']) ? $value['id'] : '';
                 $name = isset($value['name']) ? $value['name'] : $id;
                 $label = isset($value['label']) ? $value['label'] : '';
-                
+
                 if($type=='select'){
-                    
+
                     $option = '<option value="">-</option>';
                     $val = isset($value['value']) ? $value['value'] : '';
                     foreach ($value['options'] as $data) {
 
                         $active = $val==$data['id'] ? ' selected="1"':'';
-                        
+
                         $option .= '<option'.$active.' value="'.$data['id'].'">'.$data['name'].'</option>';
                     }
 
@@ -120,10 +120,10 @@ class form_Fn extends Fn{
         }
 
         return $str;
-	} 
+	}
 
 	public function fullname( $data=array(), $options=null ) {
-	
+
 		$options = array_merge( array(
 			'field_first_name' => '',
 			'field_last_name' => '',
@@ -132,10 +132,10 @@ class form_Fn extends Fn{
 		), $options);
 
 
-		$fields = array_merge( array( 
-			'prefix_name' => array('id'=>'prefix_name','label'=> Translate::Val('Prefix Name'),'type'=>'select', 'options'=>$this->_prefixName($options['prefix_name']), 'addClass'=>'input-prefix'), 
-			'first_name'  => array('id'=>'first_name','label'=> Translate::Val('First Name') ), 
-			'last_name'  => array('id'=>'last_name','label'=> Translate::Val('Last Name') ), 
+		$fields = array_merge( array(
+			'prefix_name' => array('id'=>'prefix_name','label'=> Translate::Val('Prefix Name'),'type'=>'select', 'options'=>$this->_prefixName($options['prefix_name']), 'addClass'=>'input-prefix'),
+			'first_name'  => array('id'=>'first_name','label'=> Translate::Val('First Name') ),
+			'last_name'  => array('id'=>'last_name','label'=> Translate::Val('Last Name') ),
 			'nickname'  => array('id'=>'nickname','label'=> Translate::Val('Nickname') ,'addClass' => 'input-nickname')
 		), $options['fields'] );
 
@@ -162,7 +162,7 @@ class form_Fn extends Fn{
 		return '<div class="u-table-wrap u-table-fullname">'. $this->uTableCell( $_fields) .'</div>';
 	}
 	private function _prefixName( $options=array() ) {
-		
+
         $a['Mr.'] = array('id'=>'Mr.', 'name'=> Translate::Val('Mr.') );
         $a['Mrs.'] = array('id'=>'Mrs.', 'name'=> Translate::Val('Mrs.') );
         $a['Ms.'] = array('id'=>'Ms.', 'name'=> Translate::Val('Ms.') );
@@ -181,14 +181,14 @@ class form_Fn extends Fn{
 		if( $data==null ) $data = $options;
 
 		$days[] = array('id'=>'00', 'name'=> '--'.Translate::Val('Date').'--' );
-		for ($i=1; $i <= 31; $i++) { 
+		for ($i=1; $i <= 31; $i++) {
 			$d = $i < 10 ? "0{$i}":$i;
 		    $days[] = array('id'=>$d, 'name'=> $i);
 		}
 
-		$fields[] = array( 
+		$fields[] = array(
 		    'id' => $options['field_first_name'] . '_date',
-		    'name' => $options['field_first_name'] . '[date]', 
+		    'name' => $options['field_first_name'] . '[date]',
 		    'label' => Translate::Val('Day'),
 		    'type' => 'select',
 		    'options' => $days,
@@ -196,13 +196,13 @@ class form_Fn extends Fn{
 		);
 
 		$months[] = array('id'=>'00', 'name'=> '--'.Translate::Val('Month').'--' );
-		for ($i=1; $i <= 12; $i++) { 
+		for ($i=1; $i <= 12; $i++) {
 			$m = $i < 10 ? "0{$i}":$i;
 		    $months[] = array('id'=>$m, 'name'=> $this->q('time')->month( $i, 0, $this->lang->getCode() ));
 		}
-		$fields[] = array( 
+		$fields[] = array(
 		    'id' =>  $options['field_first_name'] . '_month',
-		    'name' => $options['field_first_name'].'[month]', 
+		    'name' => $options['field_first_name'].'[month]',
 		    'label' => Translate::Val('Month'),
 		    'type' => 'select',
 		    'options' => $months,
@@ -217,9 +217,9 @@ class form_Fn extends Fn{
 		    $y--;  $i++;
 		} while ($i <= 70);
 
-		$fields[] = array( 
-		    'id' =>  $options['field_first_name'] . '_year', 
-		    'name' => $options['field_first_name'].'[year]', 
+		$fields[] = array(
+		    'id' =>  $options['field_first_name'] . '_year',
+		    'name' => $options['field_first_name'].'[year]',
 		    'label' => Translate::Val('Year'),
 		    'type' => 'select',
 		    'options' => $years,
@@ -232,10 +232,10 @@ class form_Fn extends Fn{
 
 	/*
 		$type: email, phone, social
-		data: 
+		data:
 	*/
 	public function contacts($type, $data=array(), $options=array()) {
-		
+
 		$options = array_merge( array(
 			'field_first_name' => '',
 			'field_last_name' => '',
@@ -287,7 +287,7 @@ class form_Fn extends Fn{
 		return $labels;
 	}
 	public function _contacts($type, $options=array(), $name='', $label='', $value='' ) {
-		
+
 		$labelselect = '';
 		foreach ($this->{"_contact_label_{$type}"}() as $val) {
 			$active = $label == $val['text'] ? ' selected="1"':'';
@@ -296,7 +296,7 @@ class form_Fn extends Fn{
 
     	if( empty($name) ) $name = 'contacts['.$type.']';
 
-    	$actions = !empty($options['has_add']) 
+    	$actions = !empty($options['has_add'])
     		? '<div class="controls-actions">'.
     			'<a class="btn-add js-add-field"><i class="icon-plus"></i><span>เพิ่ม</span></a>'.
     			'<a class="btn-add js-remove-field remove"><i class="icon-remove"></i><span>ลบ</span></a>'.
@@ -341,16 +341,16 @@ class form_Fn extends Fn{
 
 
 	public function checkboxList( $data=array(), $options=array() ) {
-		
+
 		$options = array_merge( array(
 			'checked' => '',
 			'name' => '',
 		), $options);
 		$li = '';
 		foreach ($data as $key => $value) {
-			
+
 			$checked = $options['checked']==$value['id'] ? ' checked':'';
-			
+
 
 			$cls = '';
 			if( !empty($value['addClass']) ){
@@ -377,8 +377,8 @@ class form_Fn extends Fn{
 			case 'arrival':$labelText = 'เที่ยวบินขากลับ'; break;
 		}
 		return '<tr>'.
-	            	
-            '<td class="td-label"><span class="text">'.$labelText.'</span></td>'. 
+
+            '<td class="td-label"><span class="text">'.$labelText.'</span></td>'.
 
 
             '<td class="td-input">'.
@@ -403,7 +403,7 @@ class form_Fn extends Fn{
             	'<button type="button" class="btn" data-action="remove"><i class="icon-remove"></i></button>'.
             '</td>'.
         '</tr>';
-	} 
+	}
 
 	//
 	public function table_flight($options=array())
@@ -435,24 +435,24 @@ class form_Fn extends Fn{
 
 			'<thead>'.
 				'<tr>'.
-					'<th class="td-label"></th>'. 
-					'<th class="td-label">Flight No.</th>'. 
-					'<th class="td-label tac">เส้นทางไป-กลับ</th>'. 
-					'<th class="td-label">เวลา</th>'. 
-					'<th class="td-action"></th>'. 
+					'<th class="td-label"></th>'.
+					'<th class="td-label">Flight No.</th>'.
+					'<th class="td-label tac">เส้นทางไป-กลับ</th>'.
+					'<th class="td-label">เวลา</th>'.
+					'<th class="td-action"></th>'.
 				'</tr>'.
 			'</thead>'.
 
 			'<tbody class="table-flight-box" data-type="departure">'.$departure.'</tbody>'.
             '<tbody class="divider"><tr><td colspan="6"><hr /></td></tr></tbody>'.
             '<tbody class="table-flight-box" data-type="arrival">'.$arrival.'</tbody>'.
-        
+
         '</table>';
 	}
 
 	public function imageCover($options=array())
-	{	
-		
+	{
+
 		if( !is_array($options) ){
 			$options['name'] = $options;
 		}
@@ -465,13 +465,13 @@ class form_Fn extends Fn{
 			'size' => 'auto',
 
 			'dropzoneText' => 'แนบไฟล์รูป',
-			
+
 		), $options);
 
 		if( !isset($options['dropzoneSubtext']) ){
 			$options['dropzoneSubtext'] = "{$options['width']}x{$options['height']}";
 		}
-		
+
 
 		$attr = '';
 		$cls = 'uiCoverImageContainer preview-image has-empty';
@@ -484,7 +484,7 @@ class form_Fn extends Fn{
 			// $cls .= ' has-empty';
 		}
 
-		// 
+		//
 		return '<div data-plugin="input__image" data-options="'.$this->_stringify( $options ).'" class="'.$cls.'"'.$attr.' data-width="'.$options['width'].'" data-height="'.$options['height'].'" style="width:'.$options['width'].'px;height:'.$options['height'].'px">'.
 
 		'<div class="uiCoverImage_empty">'.
@@ -513,7 +513,7 @@ class form_Fn extends Fn{
 
 	public function table_code($data)
 	{
-		
+
 		return '<div class="table-code-wrap" data-plugin="tableCode">'.
 
 			'<div class="row no-gutters table-code-input"><tbody><tr>'.
@@ -607,7 +607,7 @@ class form_Fn extends Fn{
 	public function banner($value='')
 	{
 		return '<div class="uiCoverImageContainer has-empty preview-image" data-width="260" data-height="260" style="width:260px;height:260px">'.
-		    
+
 		    '<div class="uiCoverImage_empty"><i class="icon-image"></i></div>'.
 		    '<div class="uiCoverImage_image" role="preview"></div>'.
 		    // '<div class="uiCoverImage_loader"><div class="progress-bar mini"><span class="blue"></span></div></div>'.
@@ -615,10 +615,26 @@ class form_Fn extends Fn{
 		        '<a data-action="change" onclick="PreviewImage.trigger(this)"><i class="icon-camera"></i></a>'.
 		        '<a data-action="remove" onclick="PreviewImage.remove(this)"><i class="icon-remove"></i></a>'.
 		    '</div>'.
-		    
+
 		    '<div class="uiCoverImage_overlay"><input role="button" type="file" accept="image/jpeg,image/png" name="file_image" onchange="PreviewImage.change(this)"></div>'.
 		    '<div class="uiCoverImage_loaderspin"><div class="loader-spin-wrap"><div class="loader-spin"></div></div></div>'.
 
 		'</div>';
 	}
+
+
+	public function select_category_blogs()
+	{
+		$cid = Session::get('cid');
+		$db = DB::table('blog_category')->where('cid','=',$cid)->get();
+		$option ="";
+		foreach ($db as $row) {
+			$option .='<option value="'.$row->id.'">'.$row->name.'</option>';
+		}
+		$html = '<select class="form-control" name="category_id">'.$option.'</select>';
+		return $html;
+	}
+
+
+
 }

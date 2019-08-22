@@ -83,6 +83,7 @@ Route::group(['middleware' => ['auth', 'company']], function () {
     // /settings/tours/
     Route::get('/settings/tours/{param?}', 'SettingsToursController@index')->name('pages.settings.tours');
 
+
     // /settings/blogs/
     Route::get('/settings/blogs/{param?}', 'SettingsBlogsController@index')->name('pages.settings.blogs');
 
@@ -94,6 +95,20 @@ Route::group(['middleware' => ['auth', 'company']], function () {
     // Route::get('/blogs/category/{id}/edit', 'BlogsCategoryController@edit');
     // Route::put('/blogs/category/{id}', 'BlogsCategoryController@update');
     // Route::delete('/blogs/category/{id}', 'BlogsCategoryController@destroy');
+    # Settings
+    Route::get('/blogs', function () {
+
+        return view('pages.blogs');
+    })->name('pages.blogs');
+
+    //blogs
+    Route::get('/blogs/post/{param?}', 'BlogsPostController@index')->name('pages.blogs.post');
+    Route::resource('/blogs/add', 'BlogsAddController');
+    Route::get('/blogs/add/{id}/delete', 'BlogsAddController@delete');
+
+
+
+
     Route::resource('/blogs/category', 'BlogsCategoryController');
     Route::get('/blogs/category/{id}/delete', 'BlogsCategoryController@delete');
 
