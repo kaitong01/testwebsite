@@ -9,7 +9,7 @@ use Illuminate\Support\Facades\Session;
 
 class BlogsPostController extends Controller
 {
-  private $_tabs = array('add');
+  private $_tabs = ['add','category'];
 
   public function index( $tab=null )
   {
@@ -39,30 +39,54 @@ class BlogsPostController extends Controller
 
           </div>';
 
-      $db = BlogsCategoryModel::where('cid','=',Session::get('cid'))->first();
 
-      if($db==null){
-        return view('pages.blogs')->with([
-            'none' =>"",
-            'page_current_tab' => '/blogs/post/'.$tab
-        ]);
-      }else{
-        return view('pages.blogs')->with([
-            'datatable' => [
-                'title' => 'บทความ',
+              if($tab=='add'){
+                $db = BlogsCategoryModel::where('cid','=',Session::get('cid'))->first();
 
-                'options' => [
-                    // 'page' => 1,
-                    'limit' => 24
-                ],
-                "url" => '/blogs/add',
+                if($db==null){
+                  return view('pages.blogs')->with([
+                      'none' =>"",
+                      'page_current_tab' => '/blogs/post/'.$tab
+                  ]);
+                }else{
+                  return view('pages.blogs')->with([
+                      'datatable' => [
+                          'title' => 'บทความ',
 
-                'filter' => $filters,
-                'actions_right' => '<a class="btn btn-primary ml-2" href="/blogs/add/create" data-plugin="lightbox"><svg class="svg-icon o__tiny o__by-text" xmlns="http://www.w3.org/2000/svg" width="12" height="12" viewBox="0 0 12 12"><path d="M2 5v2h3v3h2V7h3V5H7V2H5v3H2z"></path></svg> <span>เพิ่มบทความ</span></a>'
-            ],
-            'page_current_tab' => '/blogs/post/'.$tab
-        ]);
-      }
+                          'options' => [
+                              // 'page' => 1,
+                              'limit' => 24
+                          ],
+                          "url" => '/blogs/add',
+
+                          'filter' => $filters,
+                          'actions_right' => '<a class="btn btn-primary ml-2" href="/blogs/add/create" data-plugin="lightbox"><svg class="svg-icon o__tiny o__by-text" xmlns="http://www.w3.org/2000/svg" width="12" height="12" viewBox="0 0 12 12"><path d="M2 5v2h3v3h2V7h3V5H7V2H5v3H2z"></path></svg> <span>เพิ่มบทความ</span></a>'
+                      ],
+                      'page_current_tab' => '/blogs/post/'.$tab
+                  ]);
+                }
+              }
+
+              if($tab=='category'){
+                return view('pages.blogs')->with([
+                    'datatable' => [
+                        'title' => 'ประเภทบทความ',
+
+                        'options' => [
+                            // 'page' => 1,
+                            'limit' => 24
+                        ],
+                        "url" => '/blogs/category',
+
+                        'filter' => $filters,
+                        'actions_right' => '<a class="btn btn-primary ml-2" href="/blogs/category/create" data-plugin="lightbox"><svg class="svg-icon o__tiny o__by-text" xmlns="http://www.w3.org/2000/svg" width="12" height="12" viewBox="0 0 12 12"><path d="M2 5v2h3v3h2V7h3V5H7V2H5v3H2z"></path></svg> <span>เพิ่มประเภทบทความ</span></a>'
+                    ],
+                    'page_current_tab' => '/blogs/post/'.$tab
+                ]);
+              }
+
+
+
 
   }
 
