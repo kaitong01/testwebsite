@@ -43,15 +43,15 @@
                         </ol>
                         <div class="carousel-inner">
                             <div class="carousel-item">
-                                <img src="https://probookingcenter.com/img/banners/hero/pro-incentive.jpg" alt="" >
+                                <img src="http://localhost/img/store/programe.jpg" alt="" >
                             </div>
                             <div class="carousel-item active">
 
-                                <img src="https://probookingcenter.com/img/banners/hero/pro-banner-1.jpg" alt="" >
+                                <img src="http://localhost/img/store/design.jpg" alt="" >
 
                             </div>
                             <div class="carousel-item">
-                                <img src="https://probookingcenter.com/img/banners/hero/pro-banner-2.jpg" alt="" >
+                                <img src="http://localhost/img/store/web.jpg" alt="" >
                             </div>
                         </div>
                         <a class="carousel-control-prev" href="#carouselExampleIndicators" role="button" data-slide="prev">

@@ -6,6 +6,9 @@ use Illuminate\Database\Eloquent\Model;
 
 class ToursSeries extends Model
 {
+    protected $table = 'tours_series';
+    public $primatyKey = 'id';
+
     public static function status($id='')
     {
         $status = array();
