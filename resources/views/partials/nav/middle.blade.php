@@ -68,6 +68,3 @@ foreach ($navs as $val) {
 
     echo '</ul>';
 } ?>
-
-
-

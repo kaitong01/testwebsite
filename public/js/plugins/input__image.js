@@ -23,7 +23,7 @@ if ( typeof Object.create !== 'function' ) {
 				height: 230,
 				name: 'file1',
 			}, options );
-			
+
 			if( options.size=='auto' ){
 				self.options.height = (self.options.height * self.$elem.parent().outerWidth()) / self.options.width;
 				self.options.width = self.$elem.parent().outerWidth();
@@ -32,7 +32,7 @@ if ( typeof Object.create !== 'function' ) {
 
 			self.$input = self.$elem.find(':input[type=file]');
 			self.$preview = self.$elem.find('[role=preview]');
-			
+
 
 			// console.log( self.options );
 
@@ -46,18 +46,18 @@ if ( typeof Object.create !== 'function' ) {
 				width: self.options.width,
 				height: self.options.height,
 			});
-			
+
 
 			if( self.options.src ){
 
 				var name_cancel = options.name_cancel || '_'+self.options.name;
-				
+
 
 				self.$inputHas = $('<input type="hidden" name="'+ name_cancel +'" value="1" autocomplete="off" >');
 				self.$elem.append(self.$inputHas);
 				self.$inputHas.val( 0 ).addClass('disabled').prop('disabled', true);
 
-				self.$refresh =  $('<button type="button" class="uiCoverImage_refresh" data-action="refresh">').html( '<i class="icon-refresh"></i>' );
+				self.$refresh =  $('<button type="button" class="uiCoverImage_refresh" data-action="refresh">').html( '<i class="fa fa-refresh"></i>' );
 				self.$elem.append( self.$refresh );
 
 				self.loadImage( self.options.src );
@@ -72,7 +72,7 @@ if ( typeof Object.create !== 'function' ) {
 			} );
 
 			self.$elem.find('[data-action=remove]').click(function() {
-				
+
 				self.$input.val('');
 				self.$elem.css({
 		    		height: self.options.height,
@@ -155,7 +155,7 @@ if ( typeof Object.create !== 'function' ) {
 			    //display error
 			}
 		},
-	
+
 	};
 
 
@@ -166,5 +166,5 @@ if ( typeof Object.create !== 'function' ) {
 			$.data( this, 'input__image', $this );
 		});
 	};
-	
+
 })( jQuery, window, document );

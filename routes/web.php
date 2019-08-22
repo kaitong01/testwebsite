@@ -26,21 +26,18 @@ Auth::routes([
 
 Route::group(['middleware' => ['auth', 'company']], function () {
 
-
+    # Home
     Route::get('/', function () {
-        return view('pages.home');
-    })->name('pages.home');
+        return redirect('/products');
+    });
+
+    # Booking
+    Route::resource('/booking', 'BookingController');
 
 
-
-
-    Route::get('/home', function () {
-
-        return view('pages.home');
-
-    })->name('pages.home');
-
-
+    # Products
+    Route::get('/products/create', 'ProductsController@create');
+    Route::get('/products/{param?}', 'ProductsController@index');
 
 
     # Business
@@ -107,8 +104,6 @@ Route::group(['middleware' => ['auth', 'company']], function () {
     Route::get('/blogs/add/{id}/delete', 'BlogsAddController@delete');
 
 
-
-
     Route::resource('/blogs/category', 'BlogsCategoryController');
     Route::get('/blogs/category/{id}/delete', 'BlogsCategoryController@delete');
 
@@ -138,5 +133,8 @@ Route::group(['middleware' => ['auth', 'company']], function () {
         ]);
     });
     // Route::get('/site/menu', 'SiteController@menu');
+    Route::get('/site', function () {
+        return view('errors.404');
+    });
     Route::post('/site', 'SiteController@store');
 });

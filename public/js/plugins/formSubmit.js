@@ -11,13 +11,13 @@ if ( typeof Object.create !== 'function' ) {
 
 	var formSubmit = {
 		init: function (options, elem) {
-			var self = this;
+            var self = this;
 
 			self.options = $.extend( {}, $.fn.formSubmit.defaults, options );
 			self.$form = $(elem);
 			self.$submit = self.$form.find('[type=submit]');
 			self.url = self.$form.attr('action');
-			self.method = self.$form.attr('method');
+            self.method = self.$form.attr('method');
 
 			self.$submit.addClass('btn-submit');
             self.alert = shotalert();
@@ -31,42 +31,61 @@ if ( typeof Object.create !== 'function' ) {
 				self.save();
 			});
 
-			self.updateForm();
+            self.updateForm();
+
+            self.$form.delegate(":input", 'keyup change', self._change_input);
+
+            self.$form.find(":input").focus(function() {
+                // console.log( $(this).is(':valid') );
+                // $(this).removeClass('dirty');
+            }).blur(function() {
+                // console.log( $(this).is() );
+                // $(this).toggleClass('dirty', $(this).is(':invalid'));
+            });
+
 
 			//
-			self.$form.find(":input[name]").focus(function() {
-				$(this).removeClass('has-invalid');
-			}).blur(function(event) {
-				$(this).toggleClass('has-invalid', $(this).is(':invalid'));
-			});
+			// self.$form.find(":input[name]").focus(function() {
+			// 	$(this).removeClass('has-invalid');
+			// }).blur(function(event) {
+			// 	$(this).toggleClass('has-invalid', $(this).is(':invalid'));
+			// });
 
-			self.$form.find(":input[name]").bind('change keyup',function(e) {
+			// self.$form.find(":input[name]").bind('change keyup',function(e) {
 
-				self.is_change = true;
-				// check error
-				var $parent = $(this).closest('.control-group');
-				if( $parent.hasClass('has-error') && $.trim($(this).val())!='' ){
+			// 	self.is_change = true;
+			// 	// check error
+			// 	var $parent = $(this).closest('.control-group');
+			// 	if( $parent.hasClass('has-error') && $.trim($(this).val())!='' ){
 
-					$parent.removeClass('has-error');
-					// $parent.find('.notification').empty();
-				}
+			// 		$parent.removeClass('has-error');
+			// 		// $parent.find('.notification').empty();
+			// 	}
 
-				/*if( $(this).is(':invalid') && e.type=='change' ){
-					$(this).addClass('has-invalid');
-				}*/
 
-				self.changeData();
-			});
+			// 	self.changeData();
+			// });
 
 			self.changeData();
 			// self.autosave = self.options.autosave;
-		},
+        },
+        _change_input: function(e){
+
+            if( $(this).hasClass('form-textbox') ){
+                $(this).toggleClass('dirty', $(this).val()!='' );
+            }
+
+
+        },
 		changeData: function () {
 			var self = this;
+
+            return false;
 
             var inputChange = {};
 
             var inputRequired = self.$form.find(":input[aria-label=required]");
+
 
             // data-initial-value="ลาดพร้าว"
 
@@ -89,26 +108,25 @@ if ( typeof Object.create !== 'function' ) {
 				}
             });
 
-            // var is_change = false;
-            // if( inputRequired.length > 0 ){
+            var is_change = false;
+            if( inputRequired.length > 0 ){
 
-            //     if( self.options.input_change_data_min ){
+                if( self.options.input_change_data_min ){
 
-            //         if( Object.keys(inputChange).length>=self.options.input_change_data_min ){
-            //             is_change = true;
-            //         }
-            //     }
-            //     else if( inputRequired.length==Object.keys(inputChange).length ){
+                    if( Object.keys(inputChange).length>=self.options.input_change_data_min ){
+                        is_change = true;
+                    }
+                }
+                else if( inputRequired.length==Object.keys(inputChange).length ){
 
-            //         is_change = true;
-            //     }
-            // }
-            // else{
-            //     is_change = true;
-            // }
+                    is_change = true;
+                }
+            }
+            else{
+                is_change = true;
+            }
 
-
-            // self.$submit.prop('disabled', !is_change );
+            self.$submit.prop('disabled', !is_change );
 
 
             // if( self.options.autosave && self.is_change ){
@@ -127,7 +145,7 @@ if ( typeof Object.create !== 'function' ) {
 		_changeData :function (change) {
 			var self = this;
 
-			console.log( self.options.changeDataMax, Object.keys(self.inputs).length );
+			// console.log( self.options.changeDataMax, Object.keys(self.inputs).length );
 
 			if( self.options.changeDataMax ){
 			 	return Object.keys(self.inputs).length>0 && Object.keys(change).length<self.options.changeDataMax;
@@ -158,8 +176,27 @@ if ( typeof Object.create !== 'function' ) {
 
 			self.$submit.removeClass('btn-error');
 
-			// set Data
-			self.formData = new FormData(self.$form[0]);
+            // set Data
+            if( self.formData ){
+
+                // var formData = new FormData();
+                var formData = self.formData;
+
+                // set :input
+                $.each(self.$form.serializeArray(), function (i, field) {
+                    formData.append(field.name, field.value);
+                });
+
+                // set file
+                $.each( self.$form.find('input[type=file]'), function (i, field) {
+                    $.each(this.files, function(index, file) {
+                        formData.append(field.name, file);
+                    });
+                });
+            }
+            else{
+                var formData = new FormData(self.$form[0]);
+            }
 
 			self.$form.addClass('has-loading');
 			self.$form.find(':input').not(':disabled').addClass('is-data').prop('disabled', true);
@@ -172,7 +209,7 @@ if ( typeof Object.create !== 'function' ) {
 			self.$submit.addClass('loading');
 
 
-			self.fetch().done(function( res ) {
+			self.fetch( formData ).done(function( res ) {
 
 				// console.log("success", res);
 				self.process( res ).then(function () { // doneCallbacks
@@ -188,7 +225,7 @@ if ( typeof Object.create !== 'function' ) {
 				}); //failCallbacks
 			});
 		},
-		fetch: function () {
+		fetch: function ( formData ) {
 			var self = this;
 
 
@@ -198,7 +235,7 @@ if ( typeof Object.create !== 'function' ) {
 				url: self.url,
 				type: 'POST',
 				dataType: self.options.dataType,
-				data: self.formData,
+				data: formData,
 
 				// method: self.$form.find(':input[name=_method]').val() || 'POST',
 
@@ -266,22 +303,22 @@ if ( typeof Object.create !== 'function' ) {
 		updateForm: function (data) {
 			var self = this;
 
-			self.inputs = {};
-			$.each(self.$form.find(":input[name]"), function(index, el) {
+			// self.inputs = {};
+			// $.each(self.$form.find(":input[name]"), function(index, el) {
 
-				var val = $.trim($(this).val() );
-				var name = $.trim($(this).attr('name') );
-				var type = $.trim($(this).attr('type') );
+			// 	var val = $.trim($(this).val() );
+			// 	var name = $.trim($(this).attr('name') );
+			// 	var type = $.trim($(this).attr('type') );
 
-				if( self._type(type) ){
+			// 	if( self._type(type) ){
 
-					if( self._checked(type) ){
-						val = self.$form.find(":input[name="+ name +"]:checked").val();
-					}
+			// 		if( self._checked(type) ){
+			// 			val = self.$form.find(":input[name="+ name +"]:checked").val();
+			// 		}
 
-					self.inputs[ name ] = val;
-				}
-			});
+			// 		self.inputs[ name ] = val;
+			// 	}
+			// });
 
 			// console.log( self.inputs );
 		},
@@ -292,9 +329,12 @@ if ( typeof Object.create !== 'function' ) {
 
 				// shot message
 				if( res.message ){
-
 					self._showMessage( res.message, res.code==200 ? 'success': 'error' );
-				}
+                }
+
+                if( res.clearFormData && self.formData ){
+                    delete self.formData;
+                }
 
 
 				// alert
@@ -335,10 +375,10 @@ if ( typeof Object.create !== 'function' ) {
 								if( typeof val === 'object' ){
 
 									if( type=='status' ){
-
 										$elem.css({backgroundColor: val.color}).text( val.name );
 									}
 									else{
+
 										$.each(val, function(i, a) {
 											if( typeof $elem[i] === 'function'  ) $elem[i](a);
 										});
@@ -358,8 +398,44 @@ if ( typeof Object.create !== 'function' ) {
 										}
 									}
 									else{
-										oldVal = $elem.text();
-										$elem.html( val );
+
+                                        if( type=='status' ){
+
+                                            switch (parseInt(val)) {
+                                                case 0:
+                                                    val = '<div class="ui-status" data-ref="status" data-type="status">แบบร่าง</div>';
+                                                    break;
+
+                                                case 1:
+                                                    val = '<div class="ui-status primary" data-ref="status" data-type="status">ใช้งาน</div>';
+                                                    break;
+
+                                                case 2:
+                                                    val = '<div class="ui-status danger" data-ref="status" data-type="status">ระงับ</div>';
+                                                    break;
+                                            }
+
+                                            $elem.replaceWith(val);
+                                        }
+                                        else if( type=='image' ){
+
+                                            if( nodeName=='img' ){
+                                                $elem.attr('src', val);
+                                            }
+                                            else if( val!='' ){
+
+                                                $elem.html( $('<img>', {src: val}) );
+                                            }
+                                            else{
+                                                $elem.empty();
+                                            }
+
+                                        }
+                                        else{
+                                            oldVal = $elem.text();
+                                            $elem.html( val );
+                                        }
+
 									}
 
 

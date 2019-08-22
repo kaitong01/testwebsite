@@ -17767,11 +17767,16 @@ svg {
   fill: currentColor;
 }
 
+table {
+  width: 100%;
+}
+
 .textbox-wrap {
   position: relative;
 }
 
-.form-textbox:focus {
+.form-textbox:focus,
+.form-textbox:hover {
   -webkit-box-shadow: none;
           box-shadow: none;
 }
@@ -17794,7 +17799,8 @@ svg {
 }
 
 .form-textbox:focus ~ .form-label,
-.form-textbox:valid[required] ~ .form-label {
+.form-textbox:valid[required] ~ .form-label,
+.form-textbox.dirty:valid ~ .form-label {
   font-size: 10px;
   letter-spacing: -.01em;
   top: -8px;
@@ -17872,6 +17878,10 @@ svg {
 /* pics */
 
 /**/
+
+.pic-wrap {
+  width: 128px;
+}
 
 .pic {
   position: relative;
@@ -19186,66 +19196,6 @@ body.is-pushed-left .nav-primary-body .account-group .content {
   position: relative;
 }
 
-.form-textbox {
-  padding-top: 18px;
-  height: auto;
-}
-
-/* .form-textbox:focus, .form-textbox:hover{
-    box-shadow: none
-} */
-
-.form-textbox ~ .form-label {
-  position: absolute;
-  top: 12px;
-  left: 0.75rem;
-  color: #888;
-  pointer-events: none;
-  padding: 0;
-  z-index: 1;
-  -webkit-transition-timing-function: ease-in;
-  transition-timing-function: ease-in;
-  -webkit-transition-duration: .125s;
-  transition-duration: .125s;
-  pointer-events: none;
-}
-
-.form-textbox.form-icon-left ~ .form-label {
-  left: 50px;
-}
-
-.form-textbox:not([disabled]):focus ~ .form-label,
-.form-textbox:not([disabled]):valid[required] ~ .form-label,
-.form-textbox:not([disabled])[placeholder] ~ .form-label {
-  top: 4px;
-  color: #666;
-  font-size: 12px;
-  font-weight: bold;
-}
-
-.form-textbox.form-icon-left {
-  padding-left: 39px;
-}
-
-.form-textbox ~ .form-icons-wrapper {
-  position: absolute;
-  top: .94118rem;
-  line-height: 0;
-  right: 1.11765rem;
-  z-index: 1;
-  vertical-align: middle;
-  text-align: center;
-}
-
-.form-textbox.form-icon-left ~ .form-icons-wrapper-left {
-  top: 50%;
-  left: 11px;
-  width: 30px;
-  right: auto;
-  -webkit-transform: translateY(-50%);
-  transform: translateY(-50%);
-}
-
 .form-icons-wrapper .fa {
   font-size: 18px;
 }
@@ -19426,10 +19376,6 @@ body.logged-out {
   background-color: #229a3d;
   color: #fff;
   border-color: #0b8c28;
-}
-
-.datatable-table .pic-wrap {
-  width: 128px;
 }
 
 .datatable-table-skeleton {
@@ -21684,5 +21630,483 @@ body.logged-out {
 
 .carousel-inner {
   height: 100%;
+}
+
+.form-hr {
+  margin-top: 20px;
+  margin-bottom: 15px;
+  position: relative;
+  height: 1px;
+  background-color: #ccc;
+}
+
+.form-hr > span {
+  position: absolute;
+  left: 5px;
+  padding: 2px 4px;
+  top: -10px;
+  background-color: #fff;
+  font-size: 11px;
+}
+
+.form-series #days_fieldset,
+.form-series #nights_fieldset,
+.form-series #price_at_fieldset {
+  float: left;
+  margin-right: 20px;
+}
+
+.form-series #description_fieldset {
+  clear: both;
+}
+
+.travel-plan {
+  position: relative;
+}
+
+.travel-plan:before {
+  content: '';
+  width: 2px;
+  position: absolute;
+  bottom: 0;
+  top: 0;
+  left: 25px;
+  border-width: 0 2px 0 0;
+  border-style: dashed;
+  border-color: var(--color-code-3, #000);
+  /*background-color: var(--color-code-3, #6189f8);*/
+  opacity: 0.4;
+}
+
+.travel-plan > li {
+  padding-bottom: 15px;
+}
+
+.travel-plan > li + li {
+  padding-top: 25px;
+}
+
+.travel-plan-header {
+  margin-bottom: 15px;
+}
+
+.travel-plan-days-wrap {
+  width: 50px;
+  position: relative;
+  z-index: 1;
+}
+
+.travel-plan-days {
+  border: 1px solid var(--color-code-3, #6189f8);
+  width: 50px;
+  min-width: 50px;
+  text-align: center;
+  background-color: #fff;
+  border-radius: 2px;
+  /*overflow: hidden;*/
+}
+
+.travel-plan-days > span {
+  display: block;
+  padding: 2px 4px;
+  background-color: var(--color-code-3, #6189f8);
+  font-size: 80%;
+  color: #fff;
+  border-radius: 1px 1px 0 0;
+}
+
+.travel-plan-days > strong {
+  padding-top: 4px;
+  padding-bottom: 6px;
+  font-size: 120%;
+  display: block;
+  color: var(--color-code-3, #6189f8);
+}
+
+.travel-plan-title {
+  width: calc(100% - 65px);
+  padding: 4px 8px 8px;
+  position: relative;
+  margin-left: 15px;
+  z-index: 5;
+}
+
+.travel-plan-title:before {
+  content: '';
+  position: absolute;
+  top: 0;
+  left: 0;
+  right: 0;
+  bottom: 0;
+  background-color: var(--color-code-3, #6189f8);
+  opacity: .2;
+  border-radius: 4px;
+}
+
+.travel-plan-title:after {
+  content: '';
+  position: absolute;
+  right: 100%;
+  top: 10px;
+  opacity: .2;
+  border-color: transparent var(--color-code-3, #6189f8);
+  border-style: solid;
+  border-width: 12px 12px 12px 0;
+}
+
+.travel-plan-textbox {
+  position: relative;
+  z-index: 1;
+}
+
+.travel-plan-textbox textarea,
+.travel-plan-textbox input {
+  width: 100%;
+}
+
+.travel-plan-textbox textarea:focus {
+  -webkit-box-shadow: none;
+          box-shadow: none;
+}
+
+.travel-plan-textbox label {
+  letter-spacing: .07272727em;
+  font-size: 80%;
+  font-weight: 500;
+  text-transform: uppercase;
+  color: #5f6368;
+  margin-bottom: 4px;
+}
+
+.travel-plan-content li:first-child [data-time-action=up] {
+  display: none;
+}
+
+.travel-plan-content li:last-child [data-time-action=down] {
+  display: none;
+}
+
+.travel-plan-content li {
+  margin-left: 40px;
+  padding-bottom: 20px;
+  margin-top: 5px;
+  position: relative;
+  padding: 8px;
+  border: 1px solid #ccc;
+  border-radius: 4px;
+  background-color: #eee;
+}
+
+.travel-plan-content li:before {
+  content: '';
+  position: absolute;
+  left: -23px;
+  top: 8px;
+  width: 16px;
+  height: 16px;
+  background: #eee;
+  border-radius: 50%;
+  border: 2px solid #999;
+}
+
+.travel-plan-content li + li {
+  margin-top: 15px;
+}
+
+.travel-plan-content li:after {
+  content: '';
+  position: absolute;
+  width: 8px;
+  height: 2px;
+  top: 15px;
+  background: #999;
+  left: -9px;
+}
+
+.travel-plan-content-group {
+  /*background-color: #f2f2f2;*/
+  /*padding: 3px;*/
+}
+
+.travel-plan-content-button {
+  /*width: 50px;*/
+  white-space: nowrap;
+}
+
+.travel-plan-content-button > button {
+  padding: 0;
+  width: 24px;
+  height: 24px;
+  font-size: 11px;
+  border-color: #ddd;
+  border-radius: 50%;
+  color: #666;
+  background-color: #f5f6f7;
+  border-color: #ccd0d5;
+  /*opacity: */
+}
+
+.travel-plan-title-button > button {
+  padding: 0;
+  width: 24px;
+  height: 24px;
+  font-size: 11px;
+  border-radius: 50%;
+  opacity: .8;
+}
+
+.travel-plan-footer .btn {
+  border-radius: 15px;
+  padding-left: 20px;
+  padding-right: 20px;
+  font-size: 11px;
+}
+
+/* .travel-plan-content-group .form-textbox:focus ~ .form-label,.travel-plan-content-group .form-textbox:valid[required] ~ .form-label{
+    opacity: 0;
+    display: none;
+  } */
+
+.table-meal th,
+.table-meal td {
+  padding: 6px 15px;
+  border: 1px solid #ccc;
+  text-align: center;
+  background: #fff;
+}
+
+.table-meal .td-index {
+  width: 10px;
+  white-space: nowrap;
+}
+
+.table-hotel th,
+.table-hotel td {
+  padding: 6px 15px;
+  border: 1px solid #ccc;
+}
+
+.table-hotel .td-index {
+  width: 100px;
+}
+
+.table-period-form th,
+.table-period-form td {
+  padding: 6px 15px 6px 0;
+}
+
+.table-period-form th {
+  letter-spacing: .07272727em;
+  font-size: 80%;
+  font-weight: 500;
+  text-transform: uppercase;
+  color: #5f6368;
+  white-space: nowrap;
+}
+
+.table-period-form td {
+  border-top: 1px dashed #ddd;
+}
+
+.table-period-form tr th:last-child,
+.table-period-form tr td:last-child {
+  padding-right: 0;
+}
+
+.table-period-form .td-index {
+  width: 10px;
+  white-space: nowrap;
+  text-align: center;
+}
+
+.table-period-form .td-checkbox {
+  white-space: nowrap;
+  text-align: center;
+  width: 80px;
+}
+
+.table-period-form .td-start-date {
+  padding-right: 0;
+}
+
+.table-period-form .td-end-date {
+  padding-left: 5px;
+}
+
+.table-period-form .td-action {
+  text-align: right;
+}
+
+.table-period-form tr:first-child td [data-action=up] {
+  display: none;
+}
+
+.table-period-form tr:last-child td [data-action=down] {
+  display: none;
+}
+
+.g-btns {
+  white-space: nowrap;
+}
+
+.g-btns > .btn {
+  padding: 0;
+  width: 24px;
+  height: 24px;
+  font-size: 11px;
+  border-color: #ddd;
+  border-radius: 50%;
+  color: #666;
+  background-color: #f5f6f7;
+  border-color: #ccd0d5;
+}
+
+.section-nav-item {
+  margin-bottom: 2px;
+}
+
+.section-nav-link {
+  padding: 4px 12px;
+  border-left: 3px solid #ddd;
+  font-size: 14px;
+}
+
+.section-nav-link:hover {
+  color: #0057ff;
+  border-color: #0057ff;
+  cursor: pointer;
+}
+
+.inputnum {
+  text-align: right;
+}
+
+.inputnum:focus {
+  text-align: left;
+}
+
+.datepicker {
+  padding: 5px;
+}
+
+.datepicker th.dow {
+  font-size: 14px;
+  border-bottom: 1px solid #ddd;
+  color: #636363;
+}
+
+.datepicker td.day {
+  width: 30px;
+  height: 30px;
+  border-radius: 50%;
+}
+
+.datepicker table tr td.active:hover,
+.datepicker table tr td.active.hover,
+.datepicker table tr td.active.active {
+  background: #2196f3;
+}
+
+table .td-code,
+table .td-status {
+  text-align: center;
+}
+
+table .td-danger-light {
+  background: #fde5e7;
+}
+
+table .td-light {
+  background: rgba(0, 0, 0, 0.02);
+}
+
+table .td-primary-light {
+  background: #cce5ff;
+}
+
+table tr.disabled td {
+  background: #eee;
+  opacity: .8;
+}
+
+table tr.disabled td.td-danger-light {
+  background: rgba(51, 3, 6, 0.1);
+}
+
+table tr.disabled td.td-light {
+  background: rgba(0, 0, 0, 0.1);
+}
+
+.table-period-form .form-control {
+  background: rgba(255, 255, 255, 0.8);
+  padding-left: 7px;
+  padding-right: 7px;
+  /* border-width: 0 0 1px;
+    border-radius:0;
+    box-shadow: none */
+}
+
+.table-period-form .td-number {
+  width: 120px;
+}
+
+.table-period-form .td-bus {
+  width: 80px;
+}
+
+.input-status.primary {
+  background: #007bff;
+  color: #fff;
+  border-color: #007bff;
+}
+
+.input-status.success {
+  background: #28a745;
+  color: #fff;
+  border-color: #28a745;
+}
+
+.input-status.danger {
+  background: #dc3545;
+  color: #fff;
+  border-color: #dc3545;
+}
+
+.input-status.outline.primary {
+  color: #007bff;
+  background: #fff;
+  border-color: #007bff;
+}
+
+.input-status.outline.success {
+  color: #28a745;
+  background: #fff;
+  border-color: #28a745;
+}
+
+.input-status.outline.danger {
+  color: #dc3545;
+  background: #fff;
+  border-color: #dc3545;
+}
+
+.input-status option {
+  background: #fff;
+  color: #000;
+}
+
+.toggle-dropzone-upload h3 {
+  color: #162d3d;
+}
+
+.toggle-dropzone-upload p {
+  color: #32536a;
+}
+
+.toggle-dropzone-upload {
+  height: 200px;
+  border: 2px dashed #87a3f3;
+  background-color: #dfe7fe;
+  border-radius: 8px;
 }
 
