@@ -106,7 +106,7 @@ class ProductsController extends Controller
           ['publish','draft','soldout','disable', 'yourself', 'wholesale'];
           $sth = DB::table('tours_series')
           ->select('tours_series.id','tours_series.master_id','tours_series.updated_at','tours_series.status','tours_series.gallery','tours_series.code','tours_series.name','wholesales.name as wholesales')
-          ->join('wholesales','wholesales.id','=','tours_series.wholesale_id');
+          ->leftjoin('wholesales','wholesales.id','=','tours_series.wholesale_id');
           $sth->where( 'company_id', '=', Session::get('cid') );
           if($page=='publish'){
             $sth->where( 'tours_series.status', '=', 1 );
