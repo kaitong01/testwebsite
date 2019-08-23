@@ -18,10 +18,10 @@ if ( typeof Object.create !== 'function' ) {
             self.$container = $( self.options.container );
             self.$listsbox = self.$elem.find('[role=listsbox]');
 
-
             self.$listsbox.empty();
 
-            if(self.options.data.length==0){
+            console.log( self.options.data );
+            if(!self.options.data || self.options.data.length==0){
                 self.addDay();
                 self.calDay();
             }

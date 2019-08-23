@@ -36,6 +36,7 @@
 
                             <?php
 
+                            $file_id = '';
                             if( !empty( $data->files ) ){
 
                                 $_files = json_decode($data->files, 1);
@@ -44,21 +45,30 @@
                                 if( !empty($_files) ){
 
                                     foreach ($_files as $key => $value) {
+                                        $file_id = isset($value['id'])? $value['id']: $key;
 
 
                                         if( $value['key']==$item['key'] ){
 
+                                            if( !empty($value['path']) ){
+                                                $item['src'] = asset("storage/{$value['path']}");
 
-                                            $item['src'] = asset("storage/{$value['path']}");
-                                            $item['path'] = $value['path'];
-                                            $item['name'] = $value['name'];
+                                                $item['path'] = $value['path'];
+                                            }
+                                            elseif( !empty($value['url']) ){
+                                                $item['src'] = $value['url'];
+                                            }
 
-
+                                            if( !empty($value['name']) ){
+                                                $item['name'] = $value['name'];
+                                            }
                                         }
                                     }
                                 }
                                 // {{-- $ops['data'] = asset( "storage/{$data->file_word}" ); --}}
                             }
+
+
 
                             // dd($item);
                             ?>
@@ -76,7 +86,6 @@
 
                                     <input disabled type="hidden" role="remove" name="docs[{{$i}}][remove]" value="1" autocomplete="off" />
                                     <input type="hidden" name="docs[{{$i}}][key]" value="{{$item['key']}}" autocomplete="off" />
-
 
                                 </td>
 

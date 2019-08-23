@@ -40,8 +40,6 @@ class ProductsController extends Controller
 
         if( in_array($id, $this->_tabs) ){
 
-
-
             $pageTitle = 'แพ็คเกจทัวร์ออนไลน์';
 
             return view('pages.products.index')->with([
@@ -69,11 +67,14 @@ class ProductsController extends Controller
             }
 
 
+            $periods = ToursPeriod::where('series_id','=', $id)->orderby('start_date', 'asc')->get();
+
             return view('pages.products.create')->with([
 
                 // 'wholesaleLists' => json_decode($wholesales, 1),
                 'statusList' => ToursSeries::status(),
-                'data' => $data
+                'data' => $data,
+                'periods' => $periods,
             ]);
 
         }
@@ -90,7 +91,7 @@ class ProductsController extends Controller
         ]);
     }
 
-    public function set_data($page)
+    public function set_data(Request $request, $page)
     {
 
           $ops = array(
@@ -105,8 +106,19 @@ class ProductsController extends Controller
 
           ['publish','draft','soldout','disable', 'yourself', 'wholesale'];
           $sth = DB::table('tours_series')
-          ->select('tours_series.id','tours_series.master_id','tours_series.updated_at','tours_series.status','tours_series.gallery','tours_series.code','tours_series.name','wholesales.name as wholesales')
-          ->leftjoin('wholesales','wholesales.id','=','tours_series.wholesale_id');
+
+            ->select(
+                'tours_series.*'
+              , 'wholesales.id as wholesale_id'
+              , 'wholesales.name as wholesale_name'
+            )
+
+            ->leftJoin('wholesales','wholesales.id','=','tours_series.wholesale_id')
+
+
+            ;
+
+
           $sth->where( 'company_id', '=', Session::get('cid') );
           if($page=='publish'){
             $sth->where( 'tours_series.status', '=', 1 );
@@ -121,11 +133,13 @@ class ProductsController extends Controller
           }
 
           if($page=='yourself'){
-            $sth->where( 'tours_series.master_id', '=', 0 );
+            $sth->where( 'tours_series.master_id', '=', null )
+            ->orWhere('tours_series.master_id', '=', 0);
           }
 
           if($page=='wholesale'){
-            $sth->where( 'tours_series.master_id', '!=', 0 );
+            $sth->where( 'tours_series.master_id', '!=', null )
+            ->orWhere('tours_series.master_id', '!=', 0);
           }
 
           if( isset($request->q) ){
@@ -139,18 +153,23 @@ class ProductsController extends Controller
               $sth->where( 'status', '=', $ops['status'] );
           }
 
-
-          $total = $sth;
+        //   $total = $sth;
+        //   $arr['total'] = $this->count();
 
           $sth->orderby( $ops['sort'], $ops['dir'] );
           $sth->skip( ($ops['page']*$ops['limit'])- $ops['limit']);
           $sth->take( $ops['limit'] );
 
-          $results = $sth->get();
-          $arr['total'] = $total->count();
 
-          $arr['data'] = $results;
+
+        //   $results = $sth->get();
+          $results = $sth->paginate();
+
+
+
           $arr['options'] = $ops;
+          $arr['total'] = $results->total();
+          $arr['data'] = $results->items();
 
           $arr['items'] = $this->ui->q('ProductsUi')->init($arr['data'], $arr['options']);
 

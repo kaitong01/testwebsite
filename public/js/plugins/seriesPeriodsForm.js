@@ -20,7 +20,7 @@ if ( typeof Object.create !== 'function' ) {
 
             // console.log( self.options.data );
 
-            self.$listsbox.empty();
+            // self.$listsbox.empty();
 
             if( self.options.data.length==0 ){
                 var $item = self.setItem();
@@ -44,7 +44,7 @@ if ( typeof Object.create !== 'function' ) {
                 evt.preventDefault();
 
                 var action = $(this).attr('data-action');
-                var $parent = $(this).closest('tr');
+                var $parent = $(this).closest('tbody');
 
                 if( action=='add' ){
 
@@ -105,9 +105,6 @@ if ( typeof Object.create !== 'function' ) {
                     _d.update( theDate );
 
                     is_update = false;
-
-
-
 
                 }
 
@@ -204,7 +201,7 @@ if ( typeof Object.create !== 'function' ) {
                     class: 'form-control',
                     'data-name': "period[index][prices_options][]",
                     'data-plugin': 'input__number'
-                }).val( pricesOps[0] ? PHP.number_format( pricesOps[0]): '' ) )
+                }).val(  pricesOps[0] ? PHP.number_format(pricesOps[0]): '' ) )
 
 
                 , $('<td>', {class: 'td-number td-light'}).html( $('<input>', {
@@ -216,20 +213,20 @@ if ( typeof Object.create !== 'function' ) {
                 }).val(  pricesOps[1] ? PHP.number_format(pricesOps[1]): '' ) )
 
 
-                , $('<td>', {class: 'td-number td-danger-light'}).css('padding-left', 15).append(
+                // , $('<td>', {class: 'td-number td-danger-light'}).css('padding-left', 15).append(
 
-                    $('<input>', {
-                        type: 'text',
-                        maxLength: 8,
-                        class: 'form-control',
-                        'data-name': "period[index][discount]",
-                        'data-plugin': 'input__number'
-                    }).val( data.discount ? PHP.number_format( data.discount): '' )
-                    , ( data.id
-                        ? $('<input>', {type: 'hidden', 'class':'form-id', 'data-name': 'period[index][id]', value: data.id})
-                        : ''
-                    )
-                )
+                //     $('<input>', {
+                //         type: 'text',
+                //         maxLength: 8,
+                //         class: 'form-control',
+                //         'data-name': "period[index][discount]",
+                //         'data-plugin': 'input__number'
+                //     }).val( data.discount ? PHP.number_format( data.discount): '' )
+                //     , ( data.id
+                //         ? $('<input>', {type: 'hidden', 'class':'form-id', 'data-name': 'period[index][id]', value: data.id})
+                //         : ''
+                //     )
+                // )
 
                 , $('<td>', {class: 'td-status'}).css({'padding-left': 15}).html( self.selectStatus( data.status?data.status:1 ) )
 
@@ -239,7 +236,7 @@ if ( typeof Object.create !== 'function' ) {
             //  data-plugin="datepicker" data-options=\''+ OpsStr +'\'
             // $tr.find('.form-datepicker').datepicker();
 
-            return $tr;
+            return $('<tbody>').append( $tr );
         },
 
         selectStatus:function ( data ) {
@@ -264,7 +261,7 @@ if ( typeof Object.create !== 'function' ) {
         convert:function () {
             var self = this;
 
-            $.each( self.$listsbox.find('>tr'), function (index) {
+            $.each( self.$listsbox.find('>tbody'), function (index) {
 
                 $(this).find('.td-index').text( index+1 );
 
@@ -281,6 +278,11 @@ if ( typeof Object.create !== 'function' ) {
 
             // $('.js-flatpickr').flatpickr();
         },
+
+
+        groupPrices: function () {
+
+        }
 	}
 	$.fn.seriesPeriodsForm = function( options ) {
 		return this.each(function() {

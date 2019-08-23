@@ -26,6 +26,7 @@ $formHtml = $form->create()
  ->field("description")->type( 'textarea' )->label( 'ไฮไลท์' )->autocomplete('off')->addClass('form-control')->attr('data-plugin', 'autosize')
 ->html();
 
+// dd($data->plans);
 
 ?>
 

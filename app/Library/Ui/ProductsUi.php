@@ -19,10 +19,10 @@ class ProductsUi extends Ui
 
 			$key[] = array('id'=>'status', 'label'=>'สถานะ', 'cls'=>'td-status', 'type'=>'status');
 			$key[] = array('id'=>'name', 'label'=>'แพ็คเกจทัวร์', 'cls'=>'td-name');
-    	$key[] = array('id'=>'updated_at', 'label'=>'แก้ไขล่าสุด', 'cls'=>'td-date td-light', 'type'=>'date');
+    	    $key[] = array('id'=>'updated_at', 'label'=>'แก้ไขล่าสุด', 'cls'=>'td-date td-light', 'type'=>'date');
 
-			$key[] = array('id'=>'wholesales', 'label'=>'โฮลเซลล์', 'cls'=>'');
-			$key[] = array('id'=>'action', 'cls'=>'td-action', 'type'=>'action');
+			// $key[] = array('id'=>'wholesales', 'label'=>'โฮลเซลล์', 'cls'=>'');
+			// $key[] = array('id'=>'action', 'cls'=>'td-action', 'type'=>'action');
 
     	return $key;
     }
@@ -50,7 +50,6 @@ class ProductsUi extends Ui
 			}
 			$tr .= '<tr role="table__fixed">'.$ths.'</tr>';
 		}
-
 
 
 		foreach ($data as $key => $item) {
@@ -121,14 +120,14 @@ class ProductsUi extends Ui
             : '';
         //Storage::disk('locol')->url($data['image'])
 
-    	return '<div class="media">
-			<div class="pic-wrap mr-2"><div class="pic">'.$picture.'</div></div>
-			<div><span style="font-size:16px;font-weight:bold">CODE:'.$data['code'].'</span></div>.
-			<div class="media-body">'.
-
-				'<a href="'.asset('products/'.$data['id']).'/edit" data-plugin="lightbox"><strong ref="name">'.$data['name'].'</strong></a>'.
-			'</div>
-		</div>';
+    	return '<div class="media">'.
+			'<div class="pic-wrap mr-2"><div class="pic">'.$picture.'</div></div>'.
+			'<div class="media-body">'.
+                '<span class="box-code">'.$data['code'].'</span>'.
+                '<div><a href="'.asset('products/'.$data['id']).'"><strong ref="name">'.$data['name'].'</strong></a></div>'.
+                //  data-plugin="lightbox"
+			'</div>'.
+		'</div>';
     }
 
     public function _status($data)

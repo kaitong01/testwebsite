@@ -17,9 +17,9 @@ $formHtml = $form->create()
  ->field("name")->label( 'ชื่อ' )->autocomplete('off')->addClass('form-control')->value( !empty( $data['name'] )? $data['name']: '' )
 
 
-->field("days")->label( 'จำนวนวัน*' )->autocomplete('off')->addClass('form-control')->value( !empty( $data['days'] )? $data['days']: '' )
-->field("nights")->label( 'จำนวนคืน*' )->autocomplete('off')->addClass('form-control')->value( !empty( $data['nights'] )? $data['nights']: '' )
-->field("price_at")->label( 'ราคาเริ่มต้น*' )->autocomplete('off')->addClass('form-control')->value( !empty( $data['price_at'] )? $data['price_at']: '' )
+->field("days")->label( 'จำนวนวัน*' )->autocomplete('off')->addClass('form-control')->attr('data-plugin', 'input__number')->maxlength(2)->value( !empty( $data['days'] )? $data['days']: '' )
+->field("nights")->label( 'จำนวนคืน*' )->autocomplete('off')->addClass('form-control')->attr('data-plugin', 'input__number')->maxlength(2)->value( !empty( $data['nights'] )? $data['nights']: '' )
+->field("price_at")->label( 'ราคาเริ่มต้น*' )->autocomplete('off')->addClass('form-control')->attr('data-plugin', 'input__number')->value( !empty( $data['price_at'] )? $data['price_at']: '' )
 
 
  ->field("description")->type( 'textarea' )->label( 'ไฮไลท์' )->autocomplete('off')->addClass('form-control')->attr('data-plugin', 'autosize')->value( !empty( $data['description'] )? $data['description']: '' )

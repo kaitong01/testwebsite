@@ -64,12 +64,12 @@ $nav = json_decode( json_encode($nav) );
                         <div class="d-flex align-items-center justify-content-between" role="actions">
                             <div>
                                 @isset ( $data )
-                                <a href="{{asset('/por/'.$data->id.'/delete')}}" data-plugin="lightbox" class="btn btn-danger" style="white-space: nowrap;">ลบถาวร</a>
+                                <a href="{{asset('/products/'.$data->id.'/delete')}}" data-plugin="lightbox" class="btn btn-danger" style="white-space: nowrap;">ลบถาวร</a>
 
                                 @endif
                             </div>
                             <div class="d-flex align-items-center">
-                                <select class="form-control input-group-text" name="status">
+                                <select class="form-control input-group-text outline" name="status" data-plugin="input__status">
                                     @foreach ($statusList as $val)
 
                                     <option value="{{$val->id}}"@isset($data)
@@ -85,9 +85,9 @@ $nav = json_decode( json_encode($nav) );
                                 </select>
 
                                 @isset ( $data )
-                                <button type="submit" class="btn btn-primary ml-2" style="white-space: nowrap;">บันทึก</button>
+                                <button type="submit" class="btn btn-primary ml-2" style="white-space: nowrap;padding-left: 25px;padding-right: 25px;">บันทึก</button>
                                 @else
-                                <button type="submit" class="btn btn-success ml-2" style="white-space: nowrap;">เพิ่มแพ็คเกจทัวร์</button>
+                                <button type="submit" class="btn btn-success ml-2" style="white-space: nowrap;padding-left: 25px;padding-right: 25px;">เพิ่มแพ็คเกจทัวร์</button>
                                 @endif
 
                             </div>

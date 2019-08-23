@@ -18,7 +18,7 @@ if ( typeof Object.create !== 'function' ) {
 			self.$elem = $(elem);
 			self.$container = $( self.settings.container );
 
-			
+
 			self.$total = self.$elem.find( '[ref=total]' );
 			self.$title = self.$elem.find( '[ref=title]' );
 
@@ -78,7 +78,7 @@ if ( typeof Object.create !== 'function' ) {
 				self._reData();
 				self.refresh(200);
 			});
-			
+
 			self.$elem.find('[data-action=tryagain]').click(function(evt) {
 				evt.preventDefault();
 
@@ -94,7 +94,7 @@ if ( typeof Object.create !== 'function' ) {
 
 
 			$( window ).scroll(function(event) {
-				
+
 				var st = $(this).scrollTop();
 
 				var dh = ($(document).height()*90) /100;
@@ -107,14 +107,14 @@ if ( typeof Object.create !== 'function' ) {
 				}
 				// console.log( st, $(document).height() - $(window).height(), dh - wh, self.data.options.more,  );
 			});
-			
+
 
 			if( self.$el.filter ){
 				self.$input__search = self.$el.filter.find(':input[data-action=search]');
 
 				self.$el.filter.delegate('[data-action=multichecked]', 'change', function(event) {
-					
-					
+
+
 					var name = $(this).attr('name');
 					var c_checked = 0;
 
@@ -154,7 +154,7 @@ if ( typeof Object.create !== 'function' ) {
 					var name = $(this).attr('name');
 
 					self.data.options[ name ] = $.trim($(this).val());
-					
+
 					self.data.options.page = 1;
 					self.refresh(200);
 				});
@@ -175,8 +175,8 @@ if ( typeof Object.create !== 'function' ) {
 					else{
 						self.data.options[ data.name ] = data.value;
 					}
-					
-					
+
+
 					self.data.options.page = 1;
 					self.refresh(200);
 				});
@@ -186,18 +186,18 @@ if ( typeof Object.create !== 'function' ) {
 			if( self.$input__search ){
 
 				self.$input__search.keyup(function(evt) {
-					
+
 					var value = $.trim($(this).val()) || '';
 
 					if (self.lastValue !== value) {
 						self.lastValue = value;
-						
+
 						self.onSearchChange(value);
 					}
-					
+
 				}).keypress(function(evt) {
 					var value = $.trim($(this).val()) || '';
-					
+
 					if( value!=='' && evt.keyCode===13){
 						self.data.options.q = value;
 						self.is_input__search = true;
@@ -222,7 +222,7 @@ if ( typeof Object.create !== 'function' ) {
 				});
 			}
 
-			
+
 			// console.log( 'datatable', self.$el );
 		},
 
@@ -243,14 +243,14 @@ if ( typeof Object.create !== 'function' ) {
 
 			if( self.$el.filter ){
 
-				$.each(self.$el.filter.find('[data-action=checked]'), function() {	
+				$.each(self.$el.filter.find('[data-action=checked]'), function() {
 					var name = $(this).attr('name');
 					if( $(this).prop('checked') ){
 						self.data.options[ name ] = 1;
 					}
 				});
 
-				$.each(self.$el.filter.find('[data-action=multichecked]'), function() {	
+				$.each(self.$el.filter.find('[data-action=multichecked]'), function() {
 
 					var name = $(this).attr('name');
 					if( $(this).prop('checked') ){
@@ -275,16 +275,16 @@ if ( typeof Object.create !== 'function' ) {
 
 						var data = $(this).data();
 						if( data.value!='' ){
-							self.data.options[ data.name ] = data.value;							
+							self.data.options[ data.name ] = data.value;
 						}
 					}
 				});
-				
+
 			}
 		},
 		_reData: function () {
 			var self = this;
-			
+
 			self.data.options.page = 1;
 			self.data.options.seq = 0;
 
@@ -377,9 +377,6 @@ if ( typeof Object.create !== 'function' ) {
 
 				self.fetch().done(function( res ) {
 
-
-
-
 					if( res.error ){
 
 						self.$el.container.addClass('has-error');
@@ -388,7 +385,7 @@ if ( typeof Object.create !== 'function' ) {
 
 
 					if( res.options ){
-						self.data.options = $.extend({}, self.data.options, res.options);	
+						self.data.options = $.extend({}, self.data.options, res.options);
 					}
 
 
@@ -431,7 +428,7 @@ if ( typeof Object.create !== 'function' ) {
 						if( res.update_filter ){
 							self._updateFilter( res.update_filter );
 						}
-						
+
 
 						self.$el.container.toggleClass('has-more', self.data.options.more);
 
@@ -442,7 +439,7 @@ if ( typeof Object.create !== 'function' ) {
 					 	if( self.$el.header__table ){
 					 		self.$el.header__table.addClass('show');
 					 	}
-						
+
 					}
 				});
 
@@ -455,7 +452,7 @@ if ( typeof Object.create !== 'function' ) {
 				self.$el.filter.find(':input').not('.disabled').prop('disabled', true);
 			}
 
-			
+
 			return $.ajax({
 				url: self.data.url,
 				data: self.data.options,
@@ -471,10 +468,10 @@ if ( typeof Object.create !== 'function' ) {
 
 					self.$input__search.focus();
 				}
-				
+
 
 				self.$el.container.removeClass('has-loading');
-			}).fail(function() { 
+			}).fail(function() {
 
 
 				self.$el.container.addClass('has-error');
@@ -516,7 +513,7 @@ if ( typeof Object.create !== 'function' ) {
 						$el.append( $item );*/
 					});
 				}
-								
+
 			});
 		},
 
@@ -526,7 +523,7 @@ if ( typeof Object.create !== 'function' ) {
 
 
 			if( self.$el.container.hasClass('has-loading') )  return;
-			
+
 			// var fn = self.settings.load;
 			if( value=='' && self.data.options.q ){
 				delete self.data.options.q;
@@ -555,10 +552,10 @@ if ( typeof Object.create !== 'function' ) {
 		},
 
 		infinite: 'scrolling', //Scrolling Vs. Pagination https://medium.com/@dalpattapaniya/infinite-scrolling-vs-pagination-f237592f339a
-	
+
 		triggerMenu: '#page-navigation-trigger',
 
 		loadThrottle: 300
 	};
-	
+
 })( jQuery, window, document );

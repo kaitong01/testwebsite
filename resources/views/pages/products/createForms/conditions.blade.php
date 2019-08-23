@@ -9,7 +9,7 @@
 
         <div id="conditions_fieldset" class="control-group">
             <div class="controls">
-                <textarea id="conditions" autocomplete="off" class="form-control" name="conditions" data-plugin="autosize" rows="5">{{ isset($data['conditions'])? $data['conditions']:'' }}</textarea>
+                <textarea id="conditions" autocomplete="off" class="form-control" name="conditions" data-plugin="autosize" rows="5">{{ isset($data['conditions'])? strip_tags( $data['conditions']):'' }}</textarea>
                 <div class="notification"></div>
             </div>
         </div>

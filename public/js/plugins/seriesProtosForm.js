@@ -32,11 +32,12 @@ if ( typeof Object.create !== 'function' ) {
 
                 let $items = $.map( self.options.data, function (obj) {
                     let $item = self.setItem();
-                    // console.log( obj.src );
+                    // console.log( obj );
                     self.loadImage($item, obj.src);
 
                     $item.find('.form-caption').append( obj.caption ? obj.caption: '' );
-                    $item.find('.td-data').append( $('<input>', {type: 'hidden', 'data-name': 'images[index][name]', value: obj.name}) );
+                    // $item.find('.td-data').append( $('<input>', {type: 'hidden', 'data-name': 'images[index][name]', value: obj.name}) );
+                    $item.find('.td-data').append( $('<input>', {type: 'hidden', 'data-name': 'images[index][id]', value: obj.id}) );
                     return $item;
                 } );
 

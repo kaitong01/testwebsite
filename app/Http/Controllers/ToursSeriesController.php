@@ -86,7 +86,7 @@ class ToursSeriesController extends Controller
 
             $data->days           = $request->days;
             $data->nights         = $request->nights;
-            $data->price_at       = $request->price_at;
+            $data->price_at       = str_replace(',', '', $request->price_at);
 
 
             $data->conditions     = $request->conditions;
@@ -147,23 +147,30 @@ class ToursSeriesController extends Controller
 
             if( $data->save() ){
 
+
+                // set: gallery
                 $gallery = array();
                 if($request->has('images')){
 
                     // dd( $request->images );
                     foreach ($request->images as $img) {
 
+                        $dataImage = array();
                         if( !empty($img['upload']) ) {
-                            $image = $img['upload']->store(Session::get('cid'), 'public');
-                        }
-                        else if( !empty($img['name']) ){
-                            $image = $img['name'];
+
+                            $dataImage['path'] = $img['upload']->store(Session::get('cid'), 'public');
+                            $dataImage['name'] = $img['upload']->getClientOriginalName();
+
+                            if( isset($img['caption']) ){
+                                $dataImage['caption'] = $img['caption'];
+                            }
+
+                            $gallery[] = $dataImage;
                         }
 
-                        $gallery[] = [$image, $img['caption']];
+
                     }
                 }
-
                 if( !empty($gallery) ){
                     $data->gallery = json_encode($gallery);
                     $data->update();
@@ -182,13 +189,13 @@ class ToursSeriesController extends Controller
                                 'exten' => $value['upload']->getClientOriginalExtension(),
                                 'size' => $value['upload']->getClientSize(),
                                 'key' => $value['key'],
-                                'path' => $value['upload']->store(Session::get('cid'), 'public')
+                                'path' => $value['upload']->store(Session::get('cid'), 'public'),
+
                             );
 
                         }
                     }
                 }
-
                 if( !empty($files) ){
                     $data->files = json_encode($files);
                     $data->update();
@@ -224,7 +231,7 @@ class ToursSeriesController extends Controller
                     }
 
                     $period->prices_options = !empty($prices)? json_encode($prices): '';
-                    $period->discount = $item['discount'];
+                    // $period->discount = $item['discount'];
                     $period->created_uid = Auth::user()->id;
                     $period->updated_uid = Auth::user()->id;
 
@@ -306,7 +313,7 @@ class ToursSeriesController extends Controller
 
             $data->days           = $request->days;
             $data->nights         = $request->nights;
-            $data->price_at       = $request->price_at;
+            $data->price_at       = str_replace(',', '', $request->price_at);
 
 
             $data->conditions     = $request->conditions;
@@ -361,8 +368,6 @@ class ToursSeriesController extends Controller
             $data->periods_note   = $request->periods_note;
 
 
-            // dd( $request->files_word );
-
             if( $data->update() ){
 
                 // set: gallery
@@ -374,39 +379,44 @@ class ToursSeriesController extends Controller
                     // dd( $request->images );
                     foreach ($request->images as $img) {
 
+                        $dataImage = array();
                         if( !empty($img['upload']) ) {
-                            $image = $img['upload']->store(Session::get('cid'), 'public');
-                        }
-                        else if( !empty($img['name']) ){
-                            $image = $img['name'];
+                            $dataImage['path'] = $img['upload']->store(Session::get('cid'), 'public');
+                            $dataImage['name'] = $img['upload']->getClientOriginalName();
+                            $dataImage['size'] = $img['upload']->getClientSize();
                         }
 
-                        if( !empty($oldGallery) ){
+                        if( isset($img['id']) && !empty($oldGallery) ){
                             foreach ($oldGallery as $i => $value) {
-                                if( $value[0]==$image ){
+                                $img_id = isset($value['id']) ? $value['id']: $i;
+                                if( $img_id==$img['id'] ){
+
+                                    $dataImage = $value;
                                     unset( $oldGallery[$i] );
                                 }
                             }
                         }
 
-                        $gallery[] = [$image, $img['caption']];
+
+                        if( !empty( $img['caption'] ) ){
+                            $dataImage['caption'] = $img['caption'];
+                        }
+                        else if( isset($dataImage['caption']) ) {
+                            unset($dataImage['caption']);
+                        }
+
+                        $gallery[] = $dataImage;
                     }
                 }
 
                 if( !empty($oldGallery) ){
                     foreach ($oldGallery as $key => $value) {
-                        Storage::disk('public')->delete($value[0]);
+                        if( isset($value['path']) ){
+                            Storage::disk('public')->delete($value['path']);
+                        }
                     }
                 }
-
-                if( !empty($gallery) ){
-                    $data->gallery = json_encode($gallery);
-                }
-                else{
-                    $data->gallery = '';
-                }
-
-
+                $data->gallery = !empty($gallery)? json_encode($gallery): null;
 
                 // set: files
                 $files = array();
@@ -420,10 +430,11 @@ class ToursSeriesController extends Controller
                     // dd( $request->docs );
                     foreach ($request->docs as $key => $value) {
 
+                        // dd($value);
                         if( !empty($value['remove']) && !empty($oldFiles) ){
                             foreach ($oldFiles as $i => $val) {
 
-                                if( $val['key']==$value['key'] ){
+                                if( $val['key']==$value['key'] && !empty($val['path']) ){
                                     Storage::disk('public')->delete($val['path']);
                                 }
                             }
@@ -455,8 +466,8 @@ class ToursSeriesController extends Controller
                     }
                 }
 
-                $data->files = !empty($files) ? json_encode($files): NULL;
 
+                $data->files = !empty($files) ? json_encode($files): NULL;
 
                 //
                 $data->update();
@@ -503,19 +514,21 @@ class ToursSeriesController extends Controller
                     }
 
                     $period->prices_options = !empty($prices)? json_encode($prices): '';
-                    $period->discount = $item['discount'];
+                    // $period->discount = $item['discount'];
                     $period->created_uid = Auth::user()->id;
                     $period->updated_uid = Auth::user()->id;
 
                     $period->save();
                 }
 
-                // dd($hasPeriodIds);
-                foreach ($oldPeriods as $item) {
-                    if( !in_array($item->id, $hasPeriodIds) ){
 
-                        $period = ToursPeriod::find( $item->id );
-                        $period->delete();
+                if( !empty($oldPeriods) ){
+                    foreach ($oldPeriods as $item) {
+                        if( !in_array($item->id, $hasPeriodIds) ){
+
+                            $period = ToursPeriod::find( $item->id );
+                            $period->delete();
+                        }
                     }
                 }
 

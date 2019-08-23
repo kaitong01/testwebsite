@@ -5,16 +5,29 @@ $gallery = array();
 if( !empty($data['gallery']) ){
 
     $dataGallery = json_decode($data['gallery'], 1);
+    // dd( $dataGallery );
     // dd( json_decode($data['gallery'], 1) );
     if(  !empty($dataGallery) ){
-        // dd( $dataGallery );
 
-        foreach ($dataGallery as $value) {
-            $gallery[] = array(
-                'name' => $value[0],
-                'src' => asset("storage/{$value[0]}"),
-                'caption' => isset( $value[1] ) ? $value[1]: ''
-            );
+        foreach ($dataGallery as $key => $value) {
+
+            // $dGallery = array(
+            //     'name' => isset($value['caption'])? $value['caption']: '', $value['name'],
+            //     'caption' => isset($value['caption'])? $value['caption']: '',
+            //     'id' => isset($value['id'])? $value['id']: $key
+            // );
+            if( !isset($value['id']) ){
+                $value['id'] = $key;
+            }
+
+            if( !empty($value['path']) ){
+                $value['src'] = asset("storage/{$value['path']}");
+
+            } else if( isset($value['url']) ){
+                $value['src'] = $value['url'];
+            }
+
+            $gallery[] = $value;
         }
     }
 }
