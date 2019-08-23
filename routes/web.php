@@ -39,6 +39,8 @@ Route::group(['middleware' => ['auth', 'company']], function () {
     Route::get('/products/create', 'ProductsController@create');
     Route::get('/products/{param?}', 'ProductsController@index');
 
+    Route::get('/products/show/{param?}', 'ProductsController@set_data');
+
     # tours -> series
     Route::resource('/tours/series', 'ToursSeriesController');
     // ->only(['store', 'update', 'destroy']);

@@ -466,7 +466,7 @@ class Text_Fn extends Fn {
         ->where('id','=',$text)
         ->first();
         if($db==null){
-          $sms = "ไม่พบประเภทบทความ";
+          $sms = "";
         }else{
           $sms = $db->name;
         }
