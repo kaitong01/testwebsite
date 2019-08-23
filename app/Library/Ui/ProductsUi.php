@@ -148,6 +148,10 @@ class ProductsUi extends Ui
 	    		case 2:
 	    			$val = '<div class="ui-status danger" data-ref="status_arr" data-type="status">ระงับ</div>';
 	    			break;
+
+						case 0:
+		    			$val = '<div class="ui-status secondary" data-ref="status_arr" data-type="status">แบบร่าง</div>';
+		    			break;
 	    	}
     	}
 
