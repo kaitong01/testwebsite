@@ -1,4 +1,4 @@
-@extends('index')
+@extends('layouts.admin')
 
 @section('title', 'คลังแพคเกจทัวร์')
 
@@ -19,7 +19,7 @@
                             <nav class="bread-crumps">
                                 <ul>
                                     <li><a href="/store"><i class="fa fa-home mr-1"></i><span>คลังแพคเกจทัวร์</span></a></li>
-                                    <li><a href="/store/wholesale/1">Pro booking Center</a></li>
+                                    <li><a href="/store/wholesale/1">{{''}}</a></li>
                                     <li><a href="/store/wholesale/1/country/1">Japan</a></li>
                                     <li>ฮานอย-ซาปา-ฟานซีปัน-นิงห์บิงห์-จ่างอาน 4วัน TG (ปีใหม่)</li>
                                 </ul>

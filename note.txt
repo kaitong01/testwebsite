@@ -44,3 +44,28 @@ php artisan make:auth
 **/
 # composer require laravel/passport
 # php artisan passport:install
+
+
+
+// Laravel and JWT
+// https://blog.pusher.com/laravel-jwt/
+1. Run the following command:
+<pre> composer require tymon/jwt-auth:dev-develop --prefer-source </pre>
+2. Open config/app.php and add the following provider to the providers array:
+<pre>
+[...]
+Tymon\JWTAuth\Providers\LaravelServiceProvider::class,
+[...]
+</pre>
+3. Add the following facades to the aliases array:
+<pre>
+[...]
+'JWTAuth' => Tymon\JWTAuth\Facades\JWTAuth::class,
+'JWTFactory' => Tymon\JWTAuth\Facades\JWTFactory::class,
+[...]
+</pre>
+
+4. You need to publish the config file for JWT using the following command:
+<pre> $ php artisan vendor:publish --provider="Tymon\JWTAuth\Providers\LaravelServiceProvider" </pre>
+5. When that is done, set the jwt-auth secret by running the following command:
+<pre> $ php artisan jwt:secret </pre>

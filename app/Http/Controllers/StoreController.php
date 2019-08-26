@@ -3,20 +3,33 @@
 namespace App\Http\Controllers;
 
 use Illuminate\Http\Request;
+use Illuminate\Support\Facades\Session;
+
+
+use App\Models\Companies;
+use App\Models\WholesaleSeries;
 
 class StoreController extends Controller
 {
-    /**
-     * Display a listing of the resource.
-     *
-     * @return \Illuminate\Http\Response
-     */
-    public function index($tab='')
-    {
 
-        return view('pages.store.index')->with([
-            'page_current_tab' => '/settings/blogs/'.$tab
-        ]);
+    public function index()
+    {
+        $wholesales = Companies::followedWholesale( Session::get('cid') );
+        $wholesalesIds = array();
+        foreach ($wholesales as $key => $value) {
+            $wholesalesIds[] = $value->id;
+        }
+
+        $pecent = WholesaleSeries::get( ['sort'=> 'created_at', 'dir'=>'desc', 'limit'=>12, 'wholesales'=>$wholesales] );
+        $periodLastWeek = WholesaleSeries::periodLastWeek( ['limit'=>6, 'wholesales'=>$wholesales] );
+        // $discount = WholesaleSeries::discount( ['sort'=> 'created_at', 'dir'=>'desc', 'limit'=>6, 'wholesales'=>$wholesales] );
+        // $popular = WholesaleSeries::search( ['sort'=> 'download_total', 'dir'=>'desc', 'limit'=>6, 'wholesales'=>$wholesales] );
+
+        // dd($pecent);
+        // $festival = WholesaleSeries::festival( ['limit'=>6] ); // เทศกาล
+        // $holiday = WholesaleSeries::holiday( ['limit'=>6] ); // ตรงกับกวันหยุดไทย
+
+        return view('pages.store.index')->with(compact('wholesales', 'periodLastWeek', 'pecent'));
     }
     public function find($tab='')
     {
@@ -39,9 +52,14 @@ class StoreController extends Controller
             return view('pages.store.find');
         }
         else{
+            $data = WholesaleSeries::once( $id );
+            if( is_null( $data ) ){
+                return view('errors/404');
+                // return response()->json(["message" => 'Record not found!'], 404);
+            }
 
-
-            return view('pages.store.detail');
+            dd($data);
+            return view('pages.store.detail')->with(compact('data'));
         }
 
     }

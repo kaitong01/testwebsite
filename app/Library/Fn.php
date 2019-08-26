@@ -45,4 +45,24 @@ class Fn
 
         return $error;
     }
+
+
+    public static function periodDate($start, $end)
+    {
+        $months = array(1=>"ม.ค.", "ก.พ.", "มี.ค.", "เม.ย.", "พ.ค.", "มิ.ย.", "ก.ค.", "ส.ค.", "ก.ย.", "ต.ค.", "พ.ย.", "ธ.ค.");
+        $startTime = strtotime($start);
+        $endTime = strtotime($end);
+
+        if( $startTime==$endTime ){
+            $text = date('j', $startTime);
+        }
+        else{
+            $text = date('j', $startTime).'-'.date('j', $endTime);
+        }
+
+        $text .= ' '. $months[ date('n', $endTime) ];
+        $text .= ' '. date('Y', $endTime);
+
+        return $text;
+    }
 }

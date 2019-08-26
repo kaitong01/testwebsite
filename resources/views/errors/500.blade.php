@@ -1,4 +1,5 @@
-@extends('index')
+@extends('layouts.admin')
+
 
 @section('title', 'Error 500: Internal Server Error')
 

@@ -3,6 +3,7 @@
 namespace App\Models;
 
 use Illuminate\Database\Eloquent\Model;
+use Illuminate\Support\Facades\DB;
 
 class Companies extends Model
 {
@@ -41,5 +42,15 @@ class Companies extends Model
         return $data;
     }
 
+    // followed followers
+    public static function followedWholesale($id)
+    {
+        $sth = DB::table("companies_wholesale_permit as permit");
+        $sth->leftJoin('wholesales', 'wholesales.id', '=', 'permit.whole_id');
+        $sth->select( 'wholesales.*' );
+        $sth->where( 'permit.company_id', '=', $id );
+        $sth->orderBy( 'sequence', 'asc' );
+        return $sth->get();
+    }
 
 }

@@ -160,6 +160,10 @@ return [
         App\Providers\EventServiceProvider::class,
         App\Providers\RouteServiceProvider::class,
 
+
+        // JWT
+        Tymon\JWTAuth\Providers\LaravelServiceProvider::class,
+
     ],
 
     /*
@@ -212,7 +216,10 @@ return [
         'Fn'   => App\Library\Fn::class,
         'Form'   => App\Library\Form::class,
         'Ui'   => App\Library\Ui::class,
-        'Business'   => App\Library\Business::class,
+        // 'Business'   => App\Library\Business::class,
+
+        'JWTAuth' => Tymon\JWTAuth\Facades\JWTAuth::class,
+        'JWTFactory' => Tymon\JWTAuth\Facades\JWTFactory::class,
     ],
 
 ];

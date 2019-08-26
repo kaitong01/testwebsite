@@ -1,4 +1,4 @@
-@extends('index')
+@extends('layouts.admin')
 
 @section('title', 'Error 419: The page has expired')
 

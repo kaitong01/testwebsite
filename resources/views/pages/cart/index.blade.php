@@ -1,4 +1,4 @@
-@extends('index')
+@extends('layouts.admin')
 
 @section('title', 'ตะกร้า')
 
