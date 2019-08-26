@@ -58,7 +58,7 @@ class StoreController extends Controller
                 // return response()->json(["message" => 'Record not found!'], 404);
             }
 
-            dd($data);
+            // dd($data);
             return view('pages.store.detail')->with(compact('data'));
         }
 

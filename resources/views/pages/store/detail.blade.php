@@ -4,6 +4,12 @@
 
 @section('content')
 
+<?php
+
+// $periodConclusion = Fn::getPeriodConclusion( $data->period_start, $data->period_end );
+// dd($periodConclusion);
+?>
+
 <div style="background: linear-gradient(135deg,#e4e6f5,#ecf6ff 39%,#ddecff);background-size: 100% 302px;background-repeat: no-repeat;    padding-bottom: 56px;">
         <div class="business-settings-container" style="margin-left: auto;margin-right: auto">
 
@@ -19,9 +25,12 @@
                             <nav class="bread-crumps">
                                 <ul>
                                     <li><a href="/store"><i class="fa fa-home mr-1"></i><span>คลังแพคเกจทัวร์</span></a></li>
-                                    <li><a href="/store/wholesale/1">{{''}}</a></li>
-                                    <li><a href="/store/wholesale/1/country/1">Japan</a></li>
-                                    <li>ฮานอย-ซาปา-ฟานซีปัน-นิงห์บิงห์-จ่างอาน 4วัน TG (ปีใหม่)</li>
+                                    <li><a href="/store/wholesale/{{$data->wholesale_id}}">{{$data->wholesale_name}}</a></li>
+
+                                    @if ( !empty($data->country_id) )
+                                    <li><a href="/store/wholesale/{{$data->wholesale_id}}/country/{{$data->country_id}}">{{$data->country_name}}</a></li>
+                                    @endif
+                                    <li>{{$data->name}}</li>
                                 </ul>
                             </nav>
 
@@ -31,8 +40,8 @@
                         <div class="store-product-section-body">
                             <div class="row">
                                 <div class="col-3">
-                                    <div class="product-detail-pic pic mb-3">
-                                        <img src="https://probookingcenter.com/public/upload/travel/img_1_2019_08_09_11_0_33.jpg" alt="วินาทีสุดท้าย Feat. น้ำ Aliz - Single">
+                                    <div class="product-detail-pic pic mb-3" style="padding-top: 100%">
+                                        {{ Fn::getGalleryCoverElem( $data->gallery ) }}
                                     </div>
 
                                     <table class="product-detail-meta mb-3">
@@ -40,34 +49,40 @@
                                             <tr>
                                                 <td class="td-label">โฮลเซลล์</td>
                                                 <td class="td-data">
-                                                    <span>Pro Booking Center</span>
-
+                                                    <span>{{$data->wholesale_name}}</span>
                                                 </td>
                                             </tr>
+
                                             <tr>
                                                 <td class="td-label">ประเทศ</td>
                                                 <td class="td-data">
-                                                    <span>Japan</span>
-
+                                                    @if ( !empty($data->country_id) )
+                                                    <span>{{$data->country_name}}</span>
+                                                    @else
+                                                    <span>-</span>
+                                                    @endif
                                                 </td>
                                             </tr>
-                                            <tr>
-                                                <td class="td-label">วันที่เดินทาง</td>
-                                                <td class="td-data">
-                                                    <span>23-26 ส.ค.</span>
 
+                                            <tr>
+                                                <td class="td-label">พีเรียด <span>({{ Fn::getPeriodCount( $data->period_start ) }})</span></td>                                  <td class="td-data">
+                                                    <span >{{ Fn::getPeriodConclusion( $data->period_start, $data->period_end ) }}</span>
                                                 </td>
                                             </tr>
                                             <tr>
                                                 <td class="td-label">สายการบิน</td>
                                                 <td class="td-data">
-                                                   <span>XJ</span>
+                                                    @if ( !empty($data->airline_id) )
+                                                    <span>{{$data->airline_name}}</span>
+                                                    @else
+                                                    <span>-</span>
+                                                    @endif
                                                 </td>
                                             </tr>
                                             <tr>
                                                 <td class="td-label">โปรแกรม</td>
                                                 <td class="td-data">
-                                                    <span>5 วัน 3 คืน</span>
+                                                    <span>{{$data->plan_days}}</span>
                                                 </td>
                                             </tr>
 
@@ -75,7 +90,7 @@
                                                 <td class="td-label">ราคา</td>
                                                 <td class="td-data">
                                                     <div class="product-detail-price">
-                                                        <span class="net" style="font-size: 1.571rem;color: red;font-weight: bold"><?=number_format( 19999 )?></span>
+                                                        <span class="net" style="font-size: 1.571rem;color: red;font-weight: bold">{{number_format( $data->price_at )}}</span>
                                                     </div>
                                                 </td>
                                             </tr>
@@ -107,15 +122,16 @@
 
                                             <div class="mr-4" style="height: 0.6rem;background: rgba(0, 0, 0, 0.1);width: 1px;"></div>
 
-                                            <div class="mr-4">
-                                                <a href="/store/wholesale/1" style="">Pro booking Center</a>
+                                            <div class="mr-4" style="font-size:14px;line-height: 1">
+                                                <a href="/store/wholesale/{{$data->wholesale_id}}">{{$data->wholesale_name}}</a>
                                             </div>
 
+                                            @if ( !empty($data->country_id) )
                                             <div class="mr-4" style="height: 0.6rem;background: rgba(0, 0, 0, 0.1);width: 1px;"></div>
-
                                             <div class="group-country">
-                                                <a href="/store/wholesale/1/country/1" style="">Japan</a>
+                                                <a href="/store/wholesale/{{$data->wholesale_id}}/country/{{$data->country_id}}" style="">{{$data->country_name}}</a>
                                             </div>
+                                            @endif
                                         </div>
 
 
@@ -124,8 +140,8 @@
                                     <div class="product-detail-body mb-3">
                                         <nav>
                                             <div class="nav nav-tabs product-detail-tabs" id="nav-tab" role="tablist">
-                                                <a class="nav-item nav-link active" id="nav-home-tab" data-toggle="tab" href="#nav-home" role="tab" aria-controls="nav-home" aria-selected="true"><span class="text">พีเรียด</span> <span class="count">(<span>8</span>)</span></a>
-                                                <a class="nav-item nav-link" id="nav-profile-tab" data-toggle="tab" href="#nav-profile" role="tab" aria-controls="nav-profile" aria-selected="false"><span class="text">โปรแกรมเดินทาง</span> <span class="count">(<span>3 วัน 2 คืน</span>)</span></a>
+                                                <a class="nav-item nav-link active" id="nav-home-tab" data-toggle="tab" href="#nav-home" role="tab" aria-controls="nav-home" aria-selected="true"><span class="text">พีเรียด</span> <span class="count">(<span>{{ Fn::getPeriodCount( $data->period_start ) }}</span>)</span></a>
+                                                <a class="nav-item nav-link" id="nav-profile-tab" data-toggle="tab" href="#nav-profile" role="tab" aria-controls="nav-profile" aria-selected="false"><span class="text">โปรแกรม</span> <span class="count">(<span>{{$data->plan_days}}</span>)</span></a>
                                                 <a class="nav-item nav-link" id="nav-contact-tab" data-toggle="tab" href="#nav-contact" role="tab" aria-controls="nav-contact" aria-selected="false">เงื่อนไข/หมายเหตุ
                                                     </a>
                                             </div>
