@@ -9,8 +9,36 @@ use Illuminate\Support\Facades\DB;
 class WholesaleSeries extends Model
 {
     //
-    protected $table = 'tours_series';
+    protected $table = 'wholesale_series';
     public $primatyKey = 'id';
+
+
+    protected $fillable = [
+      'wholesale_id',
+      'country_id',
+      'airline_id',
+      'code',
+      'name',
+      'highlight',
+      'description',
+      'status',
+      'days',
+      'nights',
+      'price_at',
+      'airline',
+      'plans',
+      'meals',
+      'meals_note',
+      'hotels',
+      'hotels_note',
+      'conditions',
+      'files',
+      'gallery',
+      'periods_note',
+      'created_uid',
+      'updated_uid',
+
+    ];
 
 
 
