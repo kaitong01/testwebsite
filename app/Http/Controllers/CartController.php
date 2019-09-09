@@ -113,7 +113,7 @@ class CartController extends Controller
           'sort' => isset($request->sort)? $request->sort: 'wholesale_series.created_at',
           'dir' => isset($request->dir)? $request->dir: 'desc',
 
-          'limit' => isset($request->limit)? $request->limit: 6,
+          'limit' => 5,
           'page' => isset($request->page)? $request->page: 1,
 
           'ts' => time(),
@@ -146,18 +146,17 @@ class CartController extends Controller
       }
 
 
-      $total = $sth;
+
 
       $sth->orderby( $ops['sort'], $ops['dir'] );
       $sth->skip( ($ops['page']*$ops['limit'])- $ops['limit']);
       $sth->take( $ops['limit'] );
 
-      $results = $sth->get();
-      $arr['total'] = $total->count();
-
-      $arr['data'] = $results;
+      $results = $sth->paginate();
       $arr['options'] = $ops;
-    
+      $arr['total'] = $results->total();
+      $arr['data'] = $results->items();
+
       $arr['items'] = $this->ui->q('CartTableUi')->init($arr['data'], $arr['options']);
 
       return response()->json($arr, 200);
@@ -172,10 +171,29 @@ class CartController extends Controller
     {
         //
     }
+    public function cancel($id)
+    {
+      $db_cart = DB::table('carts')
+      ->where('cid','=',Session::get('cid'))
+      ->where('wh_series_id','=',$id)
+      ->first();
 
+      if($db_cart!=null){
+        $cart = Carts::find($db_cart->id);
+        $cart->status = 0;
+        $cart->save();
+      }else{
+          return redirect()->back();
+      }
+      return redirect()->back();
+    }
     public function published($id)
     {
-      $tour_series = ToursSeries::find($id);
+
+      $tour_series = ToursSeries::where('master_id','=',$id)
+      ->where('company_id','=',Session::get('cid'))
+      ->first();
+
       if(!empty($tour_series)){
           return redirect()->back();
       }else{

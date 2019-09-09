@@ -74,6 +74,7 @@ Route::group(['middleware' => ['auth', 'company']], function () {
     Route::get('/cart/{param}', 'CartController@index');
     Route::get('/cart/datatable/{param}', 'CartController@datatable');
     Route::get('/cart/status/{param}/published', 'CartController@published');
+    Route::get('/cart/status/{param}/cancel', 'CartController@cancel');
 
 
 

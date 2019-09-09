@@ -361,8 +361,6 @@ if ( typeof Object.create !== 'function' ) {
 
 				self.data.options.more = false;
 				self.$elem.addClass('off');
-
-
 			}
 
 			self.$el.container
@@ -378,16 +376,13 @@ if ( typeof Object.create !== 'function' ) {
 				self.fetch().done(function( res ) {
 
 					if( res.error ){
-
 						self.$el.container.addClass('has-error');
 						return false;
-					}
-
+                    }
 
 					if( res.options ){
 						self.data.options = $.extend({}, self.data.options, res.options);
 					}
-
 
 					self.data.options.limit = parseInt(self.data.options.limit);
 					self.data.options.page = parseInt(self.data.options.page);
@@ -406,13 +401,11 @@ if ( typeof Object.create !== 'function' ) {
 						}
 
 
-
 						if( res.data.length > 0 && res.total ){
 
 							self.$total.text( PHP.number_format(res.total) )
 							self.$title.parent().toggleClass('is-text', res.total>0);
 						}
-
 
 						self.$elem.removeClass('off');
 
