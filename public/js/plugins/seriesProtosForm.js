@@ -51,7 +51,6 @@ if ( typeof Object.create !== 'function' ) {
 
 
             // self.files = [];
-
             // Event
             self.$uplaod.change(function (e) {
                 e.preventDefault();
@@ -119,7 +118,7 @@ if ( typeof Object.create !== 'function' ) {
                     )
                 )
 
-                , '<td class="td-action"><div class="g-btns"><button data-action="up" type="button" title="ย้ายขึ้น" tabindex="-1" class="btn ml-1"><i class="fa fa-arrow-up"></i></button> <button data-action="down" type="button" title="ย้ายขึ้น" tabindex="-1" class="btn ml-1"><i class="fa fa-arrow-down"></i></button> <button data-action="remove" type="button" title="ลบ" tabindex="-1" class="btn ml-1"><i class="fa fa-remove"></i></button></div></td>'
+                , '<td class="td-action"><div class="g-btns"><button data-action="up" type="button" title="ย้ายขึ้น" tabindex="-1" class="btn ml-1"><i class="fa fa-arrow-up"></i></button> <button data-action="down" type="button" title="ย้ายลง" tabindex="-1" class="btn ml-1"><i class="fa fa-arrow-down"></i></button> <button data-action="remove" type="button" title="ลบ" tabindex="-1" class="btn ml-1"><i class="fa fa-remove"></i></button></div></td>'
             );
 
 

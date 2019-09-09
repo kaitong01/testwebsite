@@ -32,7 +32,6 @@ if ( typeof Object.create !== 'function' ) {
                 let file = this.files[0];
 
                 if( file ){
-
                     self.hasFile( file.name );
                 }
             });
@@ -62,8 +61,6 @@ if ( typeof Object.create !== 'function' ) {
                 }
 
                 if( action=='undo' && self.options.src ){
-
-
                     self.hasFile( self.options.name  );
                 }
             });
