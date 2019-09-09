@@ -4,6 +4,12 @@ namespace App\Http\Controllers;
 
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\DB;
+use Illuminate\Support\Facades\Session;
+use App\Models\Carts;
+use App\Models\WholesaleSeries;
+use App\Models\WholesalePeriods;
+use App\Models\ToursSeries;
+use App\Models\ToursPeriod;
 
 class CartController extends Controller
 {
@@ -45,7 +51,7 @@ class CartController extends Controller
                     // 'page' => 1,
                     'limit' => 24
                 ],
-                "url" => 'api/v1/cart',
+                "url" => "/cart/datatable/".$tab,
 
                 'filter' => $filters,
                 'actions_right' => '<a class="btn btn-primary ml-2" href="/store"><svg class="svg-icon o__tiny o__by-text" xmlns="http://www.w3.org/2000/svg" width="12" height="12" viewBox="0 0 12 12"><path d="M2 5v2h3v3h2V7h3V5H7V2H5v3H2z"></path></svg> <span>ค้นหาแพคเกจทัวร์</span></a>'
@@ -99,6 +105,64 @@ class CartController extends Controller
         return response()->json($arr, 200);
     }
 
+
+    public function datatable($type)
+    {
+
+      $ops = array(
+          'sort' => isset($request->sort)? $request->sort: 'wholesale_series.created_at',
+          'dir' => isset($request->dir)? $request->dir: 'desc',
+
+          'limit' => isset($request->limit)? $request->limit: 6,
+          'page' => isset($request->page)? $request->page: 1,
+
+          'ts' => time(),
+      );
+
+
+      $sth = DB::table('wholesale_series')
+      ->join('carts','carts.wh_series_id','=','wholesale_series.id');
+      $sth->where( 'cid', '=', Session::get('cid') );
+      if($type=='waitlist'){
+        $sth->where( 'carts.status', '=', 1 );
+      }
+      if($type=='published'){
+        $sth->where( 'carts.status', '=', 2 );
+      }
+      if($type=='cancel'){
+        $sth->where( 'carts.status', '=', 0 );
+      }
+
+
+      if( isset($request->q) ){
+          $ops['q'] = trim($request->q);
+
+          $sth->where( 'name', 'LIKE', "%{$ops['q']}%" );
+      }
+
+      if( isset($request->status) ){
+          $ops['status'] = trim($request->status);
+          $sth->where( 'status', '=', $ops['status'] );
+      }
+
+
+      $total = $sth;
+
+      $sth->orderby( $ops['sort'], $ops['dir'] );
+      $sth->skip( ($ops['page']*$ops['limit'])- $ops['limit']);
+      $sth->take( $ops['limit'] );
+
+      $results = $sth->get();
+      $arr['total'] = $total->count();
+
+      $arr['data'] = $results;
+      $arr['options'] = $ops;
+    
+      $arr['items'] = $this->ui->q('CartTableUi')->init($arr['data'], $arr['options']);
+
+      return response()->json($arr, 200);
+    }
+
     /**
      * Show the form for creating a new resource.
      *
@@ -107,6 +171,98 @@ class CartController extends Controller
     public function create()
     {
         //
+    }
+
+    public function published($id)
+    {
+      $tour_series = ToursSeries::find($id);
+      if(!empty($tour_series)){
+          return redirect()->back();
+      }else{
+
+          $wh_series =  WholesaleSeries::find($id);
+          $wh_period =  WholesalePeriods::where('series_id','=',$id)->orderBy('start_date','asc')->get();
+
+          if(!empty($wh_series)){
+
+            $tour_series = new ToursSeries;
+            $tour_series->wholesale_id   =  $wh_series->wholesale_id;
+            $tour_series->master_id   =  $wh_series->id;
+            $tour_series->country_id   =  $wh_series->country_id;
+            $tour_series->airline_id   =  $wh_series->airline_id;
+            $tour_series->code   =  $wh_series->code;
+            $tour_series->name   =  $wh_series->name;
+            $tour_series->highlight   =  $wh_series->highlight;
+            $tour_series->description   =  $wh_series->description;
+            $tour_series->status   =  1;
+            $tour_series->days   =  $wh_series->days;
+            $tour_series->nights   =  $wh_series->nights;
+            $tour_series->price_at   =  $wh_series->price_at;
+            $tour_series->airline   =  $wh_series->airline;
+            $tour_series->plans   =  $wh_series->plans;
+            $tour_series->meals   =  $wh_series->meals;
+            $tour_series->meals_note   =  $wh_series->meals_note;
+            $tour_series->hotels   =  $wh_series->hotels;
+            $tour_series->hotels_note   =  $wh_series->hotels_note;
+            $tour_series->conditions   =  $wh_series->conditions;
+            $tour_series->files   =  $wh_series->files;
+            $tour_series->gallery   =  $wh_series->gallery;
+            $tour_series->periods_note   =  $wh_series->periods_note;
+            $tour_series->created_uid   =  '';
+            $tour_series->updated_uid   =  '';
+            $tour_series->whole_code   =  $wh_series->whole_code;
+            $tour_series->company_id   =  Session::get('cid');
+
+            if($tour_series->save()){
+              $db_cart = DB::table('carts')
+              ->where('cid','=',Session::get('cid'))
+              ->where('wh_series_id','=',$id)
+              ->first();
+
+              if($db_cart!=null){
+                $cart = Carts::find($db_cart->id);
+                $cart->status = 2;
+                $cart->save();
+              }
+              if(!empty($wh_period)){
+                foreach ($wh_period as $row) {
+                  $tour_period = new ToursPeriod;
+                  $tour_period->series_id = $tour_series->id;
+                  $tour_period->start_date = $row->start_date;
+                  $tour_period->end_date = $row->end_date;
+                  $tour_period->status = $row->status;
+                  $tour_period->created_uid = '';
+                  $tour_period->updated_uid = '';
+                  $tour_period->price_at = $row->price_at;
+                  $tour_period->prices_options = $row->prices_options;
+                  $tour_period->company_id = Session::get('cid');
+                  $tour_period->save();
+                }
+                $arr['code'] = 200;
+                $arr['message'] = 'บันทึกเรียบร้อย';
+                // $arr['redirect'] = 'refresh';
+
+                $arr['call'] = 'refreshDatatable';
+              }else{
+                $arr['code'] = 422;
+                $arr['message'] = 'บันทึกข้อมูลล้มเหล่ว, กรุณาลองใหม่';
+              }
+
+            }else{
+              $arr['code'] = 422;
+              $arr['message'] = 'บันทึกข้อมูลล้มเหล่ว, กรุณาลองใหม่';
+            }
+
+          }else{
+            $arr['code'] = 422;
+            $arr['message'] = 'บันทึกข้อมูลล้มเหล่ว, กรุณาลองใหม่';
+          }
+
+      }
+
+
+        //return response()->json($arr, $arr['code']);
+        return redirect()->back();
     }
 
     /**

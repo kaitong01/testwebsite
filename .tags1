@@ -4,3 +4,31 @@
 !_TAG_PROGRAM_NAME	Exuberant Ctags	//
 !_TAG_PROGRAM_URL	http://ctags.sourceforge.net	/official site/
 !_TAG_PROGRAM_VERSION	5.8	//
+CartController	C:\xampp2\htdocs\easywebtour\app\Http\Controllers\CartController.php	/^class CartController extends Controller$/;"	class	line:14
+table	C:\xampp2\htdocs\easywebtour\app\Http\Controllers\CartController.php	/^    protected $table = 'carts';$/;"	variable	line:16
+table	C:\xampp2\htdocs\easywebtour\app\Http\Controllers\CartController.php	/^    protected $table = 'carts';$/;"	variable	line:16
+index	C:\xampp2\htdocs\easywebtour\app\Http\Controllers\CartController.php	/^    public function index($tab='waitlist')$/;"	function	line:23
+filters	C:\xampp2\htdocs\easywebtour\app\Http\Controllers\CartController.php	/^        $filters = '';$/;"	variable	line:25
+find	C:\xampp2\htdocs\easywebtour\app\Http\Controllers\CartController.php	/^    public function find(Request $request)$/;"	function	line:62
+ops	C:\xampp2\htdocs\easywebtour\app\Http\Controllers\CartController.php	/^        $ops = array($/;"	variable	line:64
+sth	C:\xampp2\htdocs\easywebtour\app\Http\Controllers\CartController.php	/^        $sth = DB::table($this->table);$/;"	variable	line:75
+total	C:\xampp2\htdocs\easywebtour\app\Http\Controllers\CartController.php	/^        $total = $sth;$/;"	variable	line:91
+results	C:\xampp2\htdocs\easywebtour\app\Http\Controllers\CartController.php	/^        $results = $sth->get();$/;"	variable	line:97
+datatable	C:\xampp2\htdocs\easywebtour\app\Http\Controllers\CartController.php	/^    public function datatable($type)$/;"	function	line:109
+ops	C:\xampp2\htdocs\easywebtour\app\Http\Controllers\CartController.php	/^      $ops = array($/;"	variable	line:112
+sth	C:\xampp2\htdocs\easywebtour\app\Http\Controllers\CartController.php	/^      $sth = DB::table('wholesale_series')$/;"	variable	line:123
+total	C:\xampp2\htdocs\easywebtour\app\Http\Controllers\CartController.php	/^      $total = $sth;$/;"	variable	line:149
+results	C:\xampp2\htdocs\easywebtour\app\Http\Controllers\CartController.php	/^      $results = $sth->get();$/;"	variable	line:155
+create	C:\xampp2\htdocs\easywebtour\app\Http\Controllers\CartController.php	/^    public function create()$/;"	function	line:171
+published	C:\xampp2\htdocs\easywebtour\app\Http\Controllers\CartController.php	/^    public function published($id)$/;"	function	line:176
+wh_series	C:\xampp2\htdocs\easywebtour\app\Http\Controllers\CartController.php	/^        $wh_series =  WholesaleSeries::find($id);$/;"	variable	line:178
+wh_period	C:\xampp2\htdocs\easywebtour\app\Http\Controllers\CartController.php	/^        $wh_period =  WholesalePeriods::where('series_id','=',$id)->orderBy('start_date','asc')->get();$/;"	variable	line:179
+tour_series	C:\xampp2\htdocs\easywebtour\app\Http\Controllers\CartController.php	/^          $tour_series = new ToursSeries;$/;"	variable	line:182
+db_cart	C:\xampp2\htdocs\easywebtour\app\Http\Controllers\CartController.php	/^            $db_cart = DB::table('carts')$/;"	variable	line:211
+cart	C:\xampp2\htdocs\easywebtour\app\Http\Controllers\CartController.php	/^              $cart = Carts::find($db_cart->id);$/;"	variable	line:216
+tour_period	C:\xampp2\htdocs\easywebtour\app\Http\Controllers\CartController.php	/^                $tour_period = new ToursPeriod;$/;"	variable	line:222
+store	C:\xampp2\htdocs\easywebtour\app\Http\Controllers\CartController.php	/^    public function store(Request $request)$/;"	function	line:256
+show	C:\xampp2\htdocs\easywebtour\app\Http\Controllers\CartController.php	/^    public function show($id)$/;"	function	line:267
+edit	C:\xampp2\htdocs\easywebtour\app\Http\Controllers\CartController.php	/^    public function edit($id)$/;"	function	line:278
+update	C:\xampp2\htdocs\easywebtour\app\Http\Controllers\CartController.php	/^    public function update(Request $request, $id)$/;"	function	line:290
+destroy	C:\xampp2\htdocs\easywebtour\app\Http\Controllers\CartController.php	/^    public function destroy($id)$/;"	function	line:301

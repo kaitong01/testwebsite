@@ -22,7 +22,7 @@
                         "items" => [
                             ["id"=> "/cart/waitlist", "name" => "รอตรวจสอบ"],
                             ["id"=> "/cart/published", "name" => "เผยแพร่แล้ว"],
-                            ["id"=> "/cart/cancel", "name" => "ยกเลิก"],
+                          
                         ]
                     ],
 

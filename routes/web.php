@@ -64,6 +64,7 @@ Route::group(['middleware' => ['auth', 'company']], function () {
     Route::get('/store/wholesale/{id}', 'StoreController@find');
     // Route::get('/store/wholesale/{id}/country', 'StoreController@wholesaleCountry');
     Route::get('/store/wholesale/{id}/country/{country_id}', 'StoreController@find');
+      Route::get('/store/addtocart', 'StoreController@addtoCart')->name('addtocart.store');
 
 
     // Route::get('/store/sele/', 'StoreController@index');
@@ -71,6 +72,8 @@ Route::group(['middleware' => ['auth', 'company']], function () {
     # cart
     Route::get('/cart', 'CartController@index');
     Route::get('/cart/{param}', 'CartController@index');
+    Route::get('/cart/datatable/{param}', 'CartController@datatable');
+    Route::get('/cart/status/{param}/published', 'CartController@published');
 
 
 
