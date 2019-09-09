@@ -65,8 +65,14 @@ class StoreController extends Controller
     {
 
         if(  in_array($id, ['discount', 'new', 'popular'] ) ){
+          if($id=='new'){
+            $wholesales = Companies::followedWholesale( Session::get('cid') );
+            $data = WholesaleSeries::get( ['sort'=> 'created_at', 'dir'=>'desc', 'wholesales'=>$wholesales] );
+            return view('pages.store.find')->with(compact('data'));
+          }
 
-            return view('pages.store.find');
+
+
         }
         else{
             $data = WholesaleSeries::once( $id );

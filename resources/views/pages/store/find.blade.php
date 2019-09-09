@@ -33,46 +33,27 @@
             <div class="business-settings-body">
 
                     <div class="store-product pt-3">
+                      @if (!empty($data['data']))
+                      <div class="store-product-section">
 
-                        <div class="store-product-section">
+                          <div class="store-product-section-header d-flex justify-content-between align-items-center">
+                              <div class="store-product-section-header-title">
+                                  <h3>ทัวร์มาใหม่</h3>
+                              </div>
 
-                            <div class="store-product-section-header d-flex justify-content-between align-items-center">
+                              <!-- <div><a href="/store/tours/new?sort=created_at&dir=desc"><span class="mr-1">ดูทั้งหมด</span><i class="fa fa-angle-right"></i></a></div> -->
+                          </div>
+                          <div class="store-product-section-body">
+                              @component('components.product-grid', [
+                                  'items' => $data['data']
+                              ])
 
-                                <nav class="bread-crumps">
-                                    <ul>
-                                        <li><a href="/store">คลังแพคเกจทัวร์</a></li>
-                                        <li>ค้นหา</li>
-                                    </ul>
-                                </nav>
+                              @endcomponent
+                          </div>
+                      </div>
+                      @endif
+                      {{-- end: pecent --}}
 
-
-                            </div>
-
-                            <div class="store-product-section-body">
-                                <div class="products-grid">
-                                    <?php for ($i=0; $i < 12; $i++) { ?>
-                                    <div class="product-item" style="">
-                                        <div class="item-card">
-                                            <a class="product-item-pic pic" href="/store/tours/1">
-                                                <img src="https://image.joox.com/JOOXcover/0/8e68029d712eb83e/640" alt="วินาทีสุดท้าย Feat. น้ำ Aliz - Single">
-                                            </a>
-                                            <div class="product-item-body">
-                                                <span class="product-item-code">TDD59-149103</span>
-                                                <h3 class="product-item-title"><a title="วินาทีสุดท้าย Feat. น้ำ Aliz - Single" class="jsx-2087142158" href="/store/tours/1" style="overflow: hidden; overflow-wrap: break-word;">วินาทีสุดท้าย Feat. น้ำ Aliz - Single</a></h3>
-
-                                                <div class="product-item-price"><?=number_format( 19999 )?></div>
-                                                <span class="product-item-sub"><span><a href="/store/tours/1">by Pro Booking Center</a></span></span>
-
-                                                <div class="product-item-actions">
-                                                    <button class="btn btn-primary btn-block btn-sm">เผยแพร่</button>
-                                                </div>
-                                            </div>
-                                        </div>
-                                    </div>
-                                    <?php } ?>
-                                </div>
-                            </div>
-                        </div>
                     </div>
             </div>
         </div>

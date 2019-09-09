@@ -33,6 +33,7 @@ Route::group(['middleware' => ['auth', 'company']], function () {
 
     # Booking
     Route::resource('/booking', 'BookingController');
+    Route::get('/booking/datatable/show', 'BookingController@datatable');
 
 
     # Products
