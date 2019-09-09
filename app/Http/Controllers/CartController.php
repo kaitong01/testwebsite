@@ -10,6 +10,7 @@ use App\Models\WholesaleSeries;
 use App\Models\WholesalePeriods;
 use App\Models\ToursSeries;
 use App\Models\ToursPeriod;
+use Illuminate\Support\Facades\Auth;
 
 class CartController extends Controller
 {
@@ -88,17 +89,19 @@ class CartController extends Controller
         }
 
 
-        $total = $sth;
+        // $total = $sth;
+        // $arr['total'] = $total->count();
+
 
         $sth->orderby( $ops['sort'], $ops['dir'] );
         $sth->skip( ($ops['page']*$ops['limit'])- $ops['limit']);
         $sth->take( $ops['limit'] );
 
-        $results = $sth->get();
-        $arr['total'] = $total->count();
+        $results = $sth->paginate($ops['limit']);
 
-        $arr['data'] = $results;
         $arr['options'] = $ops;
+        $arr['total'] = $results->total();
+        $arr['data'] = $results->items();
 
         $arr['items'] = $this->ui->q('BlogCategoryUi')->init($arr['data'], $arr['options']);
 
@@ -106,7 +109,7 @@ class CartController extends Controller
     }
 
 
-    public function datatable($type)
+    public function datatable(Request $request, $type)
     {
 
       $ops = array(
@@ -146,13 +149,13 @@ class CartController extends Controller
       }
 
 
-
-
       $sth->orderby( $ops['sort'], $ops['dir'] );
       $sth->skip( ($ops['page']*$ops['limit'])- $ops['limit']);
       $sth->take( $ops['limit'] );
 
-      $results = $sth->paginate();
+      $results = $sth->paginate($ops['limit']);
+
+
       $arr['options'] = $ops;
       $arr['total'] = $results->total();
       $arr['data'] = $results->items();
