@@ -26,6 +26,7 @@ Auth::routes([
 
 Route::group(['middleware' => ['auth', 'company']], function () {
 
+
     # Home
     Route::get('/', function () {
         return redirect('/products');
@@ -34,6 +35,8 @@ Route::group(['middleware' => ['auth', 'company']], function () {
     # Booking
     Route::resource('/booking', 'BookingController');
     Route::get('/booking/datatable/show', 'BookingController@datatable');
+    Route::get('/booking/detail/{id}', 'BookingController@detail');
+    Route::get('/booking/setstatus/{id}/{param}', 'BookingController@setstatus');
 
 
     # Products

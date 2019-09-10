@@ -5,6 +5,7 @@ namespace App\Http\Controllers;
 use Illuminate\Http\Request;
 use DB;
 use Illuminate\Support\Facades\Session;
+use App\Models\Bookings;
 
 class BookingController extends Controller
 {
@@ -54,7 +55,7 @@ class BookingController extends Controller
     {
 
       $ops = array(
-          'sort' => isset($request->sort)? $request->sort: 'booking_created',
+          'sort' => isset($request->sort)? $request->sort: 'created_at',
           'dir' => isset($request->dir)? $request->dir: 'desc',
 
           'limit' => 5,
@@ -101,6 +102,29 @@ class BookingController extends Controller
     public function create()
     {
         //
+    }
+
+    public function detail($id)
+    {
+      $data = DB::table('booking')
+      ->join('booking_detail','booking_detail.detail_booking_id','=','booking.id')
+      ->where('booking.id','=',$id)
+      ->get();
+      if( is_null( $data ) ){
+          return response()->json(["message" => 'Record not found!'], 404);
+      }
+
+      return view('forms.booking.detail')->with('item', $data);
+    }
+
+    public function setstatus($id,$param)
+    {
+      if($param=="checked"){
+        $booking = Bookings::find($id);
+        $booking->status = 1;
+        $booking->save();
+      }
+      return redirect()->back();
     }
 
     /**

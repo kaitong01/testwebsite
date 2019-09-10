@@ -14,11 +14,15 @@ class BookingTableUi extends Ui
     	$key = array();
 
     	$key[] = array('label'=>'#', 'cls'=>'td-index', 'type'=>'index');
-    	// $key[] = array('id'=>'created_at', 'label'=>'สร้าง', 'cls'=>'td-date', 'type'=>'date');
-    	$key[] = array('id'=>'booking_no', 'label'=>'booking_no', 'cls'=>'td-name','type'=>'booking_no');
-    	$key[] = array('id'=>'updated_at', 'label'=>'แก้ไขล่าสุด', 'cls'=>'td-date td-light', 'type'=>'date');
+			$key[] = array('id'=>'booking_no', 'label'=>'Booking_no', 'cls'=>'td-date','type'=>'booking_no');
+    	$key[] = array('id'=>'created_at', 'label'=>'Created', 'cls'=>'td-date', 'type'=>'date');
+			$key[] = array('id'=>'cus_name', 'label'=>'Customer', 'type'=>'text');
+			$key[] = array('id'=>'tel', 'label'=>'Tel', 'type'=>'text');
+			$key[] = array('id'=>'total', 'label'=>'Total', 'cls'=>'td-date','type'=>'total');
+    	// $key[] = array('id'=>'updated_at', 'label'=>'สร้างเมื่อ', 'cls'=>'td-date td-light', 'type'=>'date');
+			$key[] = array('id'=>'status', 'label'=>'Status', 'cls'=>'td-name','type'=>'status');
+			$key[] = array('id'=>'action', 'label'=>'Detail', 'cls'=>'td-name','type'=>'action');
 
-			$key[] = array('id'=>'action', 'label'=>'สถานะ', 'cls'=>'td-name','type'=>'action');
 
     	return $key;
     }
@@ -62,13 +66,19 @@ class BookingTableUi extends Ui
 
 					$val = !empty($item[$label['id']])? $item[$label['id']]: '';
 
-					if( $label['id']=='name' ){
-
+					if( $label['id']=='cus_name' ){
 						$val = $this->_groupname( $item );
 					}
+					if( $label['id']=='tel' ){
+						$val = $this->_tel( $item );
+					}
+
 
 				} else if($type=='index'){
 					$val = $seq;
+				} else if($type=='total'){
+					$val = $this->_total( $item );
+
 
 				} else if($type=='date'){
 					 if( !empty($item[$label['id']]) ){
@@ -77,8 +87,8 @@ class BookingTableUi extends Ui
 
 			        $val = '<span ref="updated_str">'.$val.'</span>';
 
-				} else if($type=='move'){
-					$val = '<div class="handle"></div>';
+				} else if($type=='booking_no'){
+					$val = $this->_booking_no($item);
 
 				} else if($type=='status'){
 					$val = $this->_status( $item );
@@ -92,49 +102,67 @@ class BookingTableUi extends Ui
 				$tds .= '<td'.$cls.'>'.$val.'</td>';
 			}
 
-			$tr .= '<tr blog-category-id="'.$item['booking_id'].'">'.$tds.'</tr>';
+			$tr .= '<tr blog-category-id="'.$item['id'].'">'.$tds.'</tr>';
 		}
 
     	return $tr;
     }
 
 
-    // public function _groupname($data)
-    // {
-		// 	$arrs = json_decode($data['gallery'],1);
-		//
-    //     $picture = !empty($arrs[0]['url'])
-    //         ? '<img src="'.$arrs[0]['url'].'" alt="" />'
-    //         : '';
-    //     //Storage::disk('locol')->url($data['image'])
-		//
-    // 	return '<div class="media">
-		// 	<div class="pic-wrap mr-2"><div class="pic">'.$picture.'</div></div>
-		// 	<div class="media-body">'.
-		// 		'<a href="'.asset('blogs/category/'.$data['id']).'/edit" data-plugin="lightbox"><strong ref="name">'.$data['name'].'</strong></a>'.
-		// 		'<div class="y-ellipsis clamp-2"><span ref="description">'. $this->fn->q('text')->more($data['description']).'</span></div>'.
-		// 	'</div>
-		// </div>';
-    // }
+    public function _groupname($data)
+    {
 
+
+    	return '<div class="row">
+			<div class="col-6">
+			<span>'.$data['booking_cus_fname'].'</span>
+			</div>
+			<div class="col-6">
+			<span>'.$data['booking_cus_lname'].'</span>
+			</div>
+			</div>';
+    }
+		public function _booking_no($data)
+		{
+
+			$val = '<span>'.$data['booking_no'].'</span>';
+			return $val;
+		}
+		public function _tel($data)
+		{
+
+			$val = '<span>'.$data['booking_cus_tel'].'</span>';
+			return $val;
+		}
+		public function _total($data)
+		{
+
+			$val = '<span>'.number_format($data['booking_amount'],2).'</span>';
+			return $val;
+		}
     public function _status($data)
     {
     	$val = '';
 
-    	if( !empty($data['status_arr']) ){
-    		$val = '<div class="ui-status" style="background-color:'.$data['status_arr']['color'].';color:#fff" data-ref="status_arr" data-type="status">'.$data['status_arr']['name'].'</div>';
 
-    	}
-    	else{
 	    	switch ($data['status']) {
 	    		case 0:
-	    			$val = '<div class="ui-status primary" data-ref="status_arr" data-type="status">รอตรวจสอบ</div>';
+	    			$val = '<div class="dropdown">
+							  <button class="btn btn-secondary dropdown-toggle" type="button" id="dropdownMenuButton" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
+							   รอตรวจสอบ
+							  </button>
+							  <div class="dropdown-menu" aria-labelledby="dropdownMenuButton">
+							    <a class="dropdown-item" href="'.asset('booking/setstatus/'.$data['id'].'/checked').'">ตรวจสอบแล้ว</a>
+							  </div>
+							</div>';
 	    			break;
 
 	    		case 1:
-	    			$val = '<div class="ui-status success" data-ref="status_arr" data-type="status">ตรวจแล้ว</div>';
+	    			$val = '<button class="btn btn-success " type="button"  data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
+							   ตรวจแล้ว
+							  </button>';
 	    			break;
-	    	}
+
     	}
 
     	return $val;
@@ -143,7 +171,7 @@ class BookingTableUi extends Ui
 
     public function _action($data)
     {
-		$val = '<a href=""  class="btn btn-sm btn-primary"></a>';
+		$val ='<a href="'.asset('booking/detail/'.$data['id']).'" data-plugin="lightbox" class="ml-2" ><img src="https://img.icons8.com/windows/32/000000/info.png"></a>';
 		return $val;
     }
 }
