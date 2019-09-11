@@ -8,6 +8,7 @@ use Illuminate\Support\Facades\Auth;
 
 class SiteController extends Controller
 {
+  private $_tabs = ['infomation','home','themecolor','fonts', 'slideshow', 'banners','picture','google_analytic', 'google_adwords', 'onweb', 'wholesale'];
     // public function menu(Request $request)
     // {
     // 	// return is_null($method) ? $this->getRoutes() : Arr::get($this->routes, $method, []);
@@ -24,11 +25,19 @@ class SiteController extends Controller
      *
      * @return \Illuminate\Http\Response
      */
-    public function index()
-    {
-        //
-    }
+     public function index( $tab='infomation' )
+     {
 
+       if( !in_array($tab, $this->_tabs) ){
+         dd($tab);
+           return view('pages.error');
+       }else{
+         return view('pages.site.index')->with([
+             'page' => $tab,
+             'page_current_tab' => '/site/webeditor/'.$tab
+         ]);
+       }
+     }
     /**
      * Show the form for creating a new resource.
      *

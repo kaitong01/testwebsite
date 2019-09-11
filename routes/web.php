@@ -146,8 +146,11 @@ Route::group(['middleware' => ['auth', 'company']], function () {
         ]);
     });
     // Route::get('/site/menu', 'SiteController@menu');
-    Route::get('/site', function () {
-        return view('errors.404');
-    });
-    Route::post('/site', 'SiteController@store');
+    // Route::get('/site', function () {
+    //     return view('errors.404');
+    // });
+    // Route::post('/site', 'SiteController@store');
+
+    Route::get('/site','SiteController@index');
+      Route::get('/site/webeditor/{param}','SiteController@index');
 });
