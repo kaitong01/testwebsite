@@ -69,3 +69,7 @@ Tymon\JWTAuth\Providers\LaravelServiceProvider::class,
 <pre> $ php artisan vendor:publish --provider="Tymon\JWTAuth\Providers\LaravelServiceProvider" </pre>
 5. When that is done, set the jwt-auth secret by running the following command:
 <pre> $ php artisan jwt:secret </pre>
+
+
+
+uPDATE
