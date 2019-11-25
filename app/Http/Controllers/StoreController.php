@@ -9,6 +9,7 @@ use Illuminate\Support\Facades\Session;
 use App\Models\Companies;
 use App\Models\WholesaleSeries;
 use App\Models\Carts;
+use App\Models\TourWholesale;
 use DB;
 
 class StoreController extends Controller
@@ -25,6 +26,10 @@ class StoreController extends Controller
 
         $pecent = WholesaleSeries::get( ['sort'=> 'created_at', 'dir'=>'desc', 'limit'=>12, 'wholesales'=>$wholesales] );
         $periodLastWeek = WholesaleSeries::periodLastWeek( ['limit'=>6, 'wholesales'=>$wholesales] );
+        $whole_sales_choose = DB::table('tour_wholesale')->where('cid','=',Session::get('cid'))->first();
+        $whole = json_decode($whole_sales_choose->wholesale,1);
+        $whole_all = DB::table('wholesales')->whereIn('id',$whole)->get();
+        
 
         // $discount = WholesaleSeries::discount( ['sort'=> 'created_at', 'dir'=>'desc', 'limit'=>6, 'wholesales'=>$wholesales] );
         // $popular = WholesaleSeries::search( ['sort'=> 'download_total', 'dir'=>'desc', 'limit'=>6, 'wholesales'=>$wholesales] );
@@ -33,7 +38,7 @@ class StoreController extends Controller
         // $festival = WholesaleSeries::festival( ['limit'=>6] ); // เทศกาล
         // $holiday = WholesaleSeries::holiday( ['limit'=>6] ); // ตรงกับกวันหยุดไทย
 
-        return view('pages.store.index')->with(compact('wholesales', 'periodLastWeek', 'pecent'));
+        return view('pages.store.index')->with(compact('wholesales', 'periodLastWeek', 'pecent','whole_all'));
     }
     public static function check_carts($id)
     {

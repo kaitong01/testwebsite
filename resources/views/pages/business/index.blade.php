@@ -47,6 +47,9 @@
 
         @endslot
 
+
+
+
         <?php if( !empty( $page_current_tab ) ) { ?>
 
             <?php if( $page_current_tab=='/business/settings' ){ ?>
