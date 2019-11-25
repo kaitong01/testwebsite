@@ -21,7 +21,7 @@
                     {{-- <div class="filter-item"><label for="status" class="filter-item-label">โฮลเซลล์:</label><select id="status" name="status" data-action="change" class="filter-item-input form-control"><option value="">ทั้งหมด</option><option value="1">ใช้งาน</option><option value="2">ระงับ</option></select></div> --}}
 
                     <div class="col">
-                        <input type="text" autocomplete="off" role="combobox" name="q" class="form-control" placeholder="ค้าหา...">
+                        <input type="text" autocomplete="off" role="combobox" name="q" class="form-control" placeholder="ค้นหา...">
                     </div>
 
                     <div class="col-auto">
@@ -156,26 +156,27 @@
                                 $arr = ['https://probookingcenter.com/public/images/logo/128x128.png', 'https://www.bestindochina.com/img/logo.svg', 'http://www.ttntour.com/www_ttntour/image/logo_ttntour.png'];
 
 
-                                foreach ($wholesales as $key => $value) {
+                                foreach ($whole_all as $row) {
 
 
                                         $src = $arr[rand(0,2)];
-                                        $img = !empty( $value->logo )? '<img src="'.asset("storage/{$value->logo}").'" alt="">': '';
+                                        $img = !empty( $row->logo )? '<img src="'.asset("storage/{$row->logo}").'" alt="">': '';
                                     ?>
                                 <div class="product-item six-column" style="">
 
 
-                                    <a href="/store/wholesale/{{$value->id}}" class="product-item-pic pic" style="border-radius: 50%">{{$img}}</a>
+                                    <a href="/store/wholesale/{{$row->id}}" class="product-item-pic pic" style="border-radius: 50%">{{$img}}</a>
 
                                     <div class="product-item-body text-center">
 
-                                        <h3 class="product-item-title y-ellipsis clamp-2" style="overflow: hidden;text-overflow: ellipsis;white-space: nowrap;"><a title="{{$value->name}}" href="/store/wholesale/{{$value->id}}" style="overflow: hidden; overflow-wrap: break-word;"><span class="product-item-code">{{$value->name}}</span></a></h3>
+                                        <h3 class="product-item-title y-ellipsis clamp-2" style="overflow: hidden;text-overflow: ellipsis;white-space: nowrap;"><a title="{{$row->name}}" href="/store/wholesale/{{$row->id}}" style="overflow: hidden; overflow-wrap: break-word;"><span class="product-item-code">{{$row->name}}</span></a></h3>
 
                                     </div>
 
 
                                 </div>
                                 <?php } ?>
+
                             </div>
                         </div>
                     </div>

@@ -6,15 +6,15 @@
     </ol>
     <div class="carousel-inner">
         <div class="carousel-item active">
-            <img src="http://localhost/img/store/programe.jpg" alt="" >
+            <img src="{{asset('images/store/programe.jpg')}}" alt="" >
         </div>
         <div class="carousel-item">
 
-            <img src="http://localhost/img/store/design.jpg" alt="" >
+            <img src="{{asset('images/store/design.jpg')}}" alt="" >
 
         </div>
         <div class="carousel-item">
-            <img src="http://localhost/img/store/web.jpg" alt="" >
+            <img src="{{asset('images/store/web.jpg')}}" alt="" >
         </div>
     </div>
     <a class="carousel-control-prev" href="#carouselFeatured" role="button" data-slide="prev">

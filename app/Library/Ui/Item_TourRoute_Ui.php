@@ -109,7 +109,7 @@ class Item_TourRoute_Ui extends Ui
 			<div class="pic-wrap mr-2"><div class="pic">'.$picture.'</div></div>
 			<div class="media-body">'.
 				'<a href="'.asset('blogs/category/'.$data['id']).'/edit" data-plugin="lightbox"><strong ref="name">'.$data['name'].'</strong></a>'.
-				'<div class="y-ellipsis clamp-2"><span ref="description">'. $this->fn->q('text')->more($data['description']).'</span></div>'.
+				'<div class="y-ellipsis clamp-2"><span ref="description">'. $this->fn->q('text')->more($data['highlight']).'</span></div>'.
 			'</div>
 		</div>';
     }

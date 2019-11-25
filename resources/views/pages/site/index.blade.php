@@ -44,7 +44,7 @@
         @elseif($page=='themecolor')
         @include('pages.site.webeditor.themecolor')
         @elseif($page=='fonts')
-
+        @include('pages.site.webeditor.fonts')
         @elseif($page=='slideshow')
 
         @elseif($page=='banners')

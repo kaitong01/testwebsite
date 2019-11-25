@@ -5,6 +5,7 @@ namespace App\Http\Controllers;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Session;
 use Illuminate\Support\Facades\Auth;
+use DB;
 
 class SiteController extends Controller
 {
@@ -29,12 +30,32 @@ class SiteController extends Controller
      {
 
        if( !in_array($tab, $this->_tabs) ){
-         dd($tab);
-           return view('pages.error');
+         // dd($tab);
+           return view('errors.404');
        }else{
+         if($tab=='infomation'){
+           $data ='';
+         }elseif($tab=='home'){
+           $data ='';
+         }elseif($tab=='themecolor'){
+           $data = DB::table('theme_color')
+           ->where('company_id','=', Session::get('cid'))
+           ->first();
+         }elseif($tab=='fonts'){
+           $data = DB::table('pages_fonts')
+
+           ->get();
+         }elseif($tab==''){
+           $data ='';
+         }
+
+
+
+
          return view('pages.site.index')->with([
              'page' => $tab,
-             'page_current_tab' => '/site/webeditor/'.$tab
+             'page_current_tab' => '/site/webeditor/'.$tab,
+             'data' => $data,
          ]);
        }
      }
