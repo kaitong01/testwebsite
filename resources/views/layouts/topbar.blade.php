@@ -2,7 +2,7 @@
 
 // use Illuminate\Support\Facades\Session;
 
-
+// https://connect.facebook.net/en_US/sdk.js#xfbml=1&version=v2.11&appId=<APP_ID>&autoLogAppEvents=1
 
 ?>
 <div id="page-topbar" class="page-topbar">
@@ -14,6 +14,8 @@
         </a>
 
 
+
+        @endforeach
 
         <div class="collapse navbar-collapse">
             <!-- Left Side Of Navbar -->

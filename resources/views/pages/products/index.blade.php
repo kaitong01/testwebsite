@@ -21,7 +21,7 @@
                         "items" => [
                             ["id"=> "/products/publish", "name" => "เผยแพร่"],
                             ["id"=> "/products/draft", "name" => "แบบร่าง"],
-                            
+
                             ["id"=> "/products/disable", "name" => "ระงับ"],
                         ]
                     ],

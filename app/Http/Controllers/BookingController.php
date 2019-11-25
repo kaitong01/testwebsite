@@ -83,6 +83,7 @@ class BookingController extends Controller
       $sth->take( $ops['limit'] );
 
       $results = $sth->paginate($ops['limit']);
+      dd( $results );
 
 
       $arr['options'] = $ops;

@@ -1,4 +1,4 @@
-# composer create-project --prefer-dist laravel/laravel manage "5.6.*"
+# composer create-project --prefer-dist laravel/laravel middleware-auth "5.6.*"
 # php artisan serve
 
 
@@ -46,7 +46,6 @@ php artisan make:auth
 # php artisan passport:install
 
 
-
 // Laravel and JWT
 // https://blog.pusher.com/laravel-jwt/
 1. Run the following command:
@@ -69,3 +68,7 @@ Tymon\JWTAuth\Providers\LaravelServiceProvider::class,
 <pre> $ php artisan vendor:publish --provider="Tymon\JWTAuth\Providers\LaravelServiceProvider" </pre>
 5. When that is done, set the jwt-auth secret by running the following command:
 <pre> $ php artisan jwt:secret </pre>
+
+
+
+uPDATE
