@@ -31,7 +31,7 @@ class BlogsCategoryModel extends Model
         $options = array_merge(array(
             'sort' => isset($_REQUEST['sort'])? $_REQUEST['sort']: $this->_sort,
             'dir' => isset($_REQUEST['dir'])? $_REQUEST['dir']: $this->_dir,
-            
+
             'ts'=> isset($_REQUEST['time'])? $_REQUEST['time']:time(),
         ), $options);
 
@@ -43,7 +43,7 @@ class BlogsCategoryModel extends Model
             // 'str'=> "{$where} {$groupby} {$having} {$orderby} {$limit}",
             'params' => $params
         ];
-        
+
     }
     public function _find($ops=array()){
 
@@ -71,7 +71,7 @@ class BlogsCategoryModel extends Model
             $sth->where( 'status', '=', $ops['status'] );
         }
 
-        
+
         dd($ops);
 
 

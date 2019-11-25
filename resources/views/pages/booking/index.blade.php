@@ -13,7 +13,6 @@
         @endslot
         @endisset
 
-
         @isset( $datatable->tabs )
             @slot('nav')
             $datatable->tabs

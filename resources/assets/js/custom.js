@@ -20,8 +20,6 @@ var KEY_TAB       = 9;
 var TAG_SELECT    = 1;
 var TAG_INPUT     = 2;
 
-
-
 var Event = {
     getPlugin: function ( name, url ) {
 		if( !Cache.plugins[ name ] ){
@@ -147,6 +145,6 @@ $(document).ready(function(){
 
 	// });
 
-	
+
 
 });

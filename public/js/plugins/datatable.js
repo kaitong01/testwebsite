@@ -346,7 +346,7 @@ if ( typeof Object.create !== 'function' ) {
 		},
 
 		refresh: function ( delay ) {
-			var self = this;
+            var self = this;
 
 			if( !self.data.url ) return;
 			if( self.is_load ) clearTimeout( self.is_load );
@@ -374,6 +374,8 @@ if ( typeof Object.create !== 'function' ) {
 			self.is_load = setTimeout(function () {
 
 				self.fetch().done(function( res ) {
+
+
 
 					if( res.error ){
 						self.$el.container.addClass('has-error');

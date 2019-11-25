@@ -33,8 +33,7 @@ class BookingTableUi extends Ui
     	$tr = '';
     	$keys = $this->keys();
 
-    	$seq = ($ops['page'] * $ops['limit']) - $ops['limit'];
-
+        $seq = ($ops['page'] * $ops['limit']) - $ops['limit'];
 
     	// title
     	if( $ops['page']==1 ){
@@ -55,7 +54,8 @@ class BookingTableUi extends Ui
 
 		foreach ($data as $key => $item) {
 			$seq ++;
-			$item = json_decode( json_encode($item), 1);
+            $item = json_decode( json_encode($item), 1);
+
 
 			$tds = '';
 			foreach ($keys as $label) {

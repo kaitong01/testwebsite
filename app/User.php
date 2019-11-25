@@ -23,8 +23,6 @@ class User extends Authenticatable
         , 'user_status'
     ];
 
-
-
     /**
      * The attributes that should be hidden for arrays.
      *
