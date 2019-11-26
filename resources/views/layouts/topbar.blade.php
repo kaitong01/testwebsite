@@ -13,10 +13,6 @@
             <h2>Easy Web Tour</h2>
         </a>
 
-
-
-        @endforeach
-
         <div class="collapse navbar-collapse">
             <!-- Left Side Of Navbar -->
             <ul class="navbar-nav mr-auto">

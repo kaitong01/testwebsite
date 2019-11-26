@@ -42,7 +42,8 @@ if( !empty($bodyCls) ){
 
     <script src="/js/custom.js"></script>
 </head>
-<body<?=$bodyCls?>>
+{{-- $bodyCls --}}
+<body>
 
     <div id="doc">
         @auth
