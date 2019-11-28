@@ -1,7 +1,5 @@
 @extends('layouts.admin')
-
 @section('title', 'คลังแพคเกจทัวร์')
-
 @section('content')
 
 <div style="background: linear-gradient(135deg,#e4e6f5,#ecf6ff 39%,#ddecff);background-size: 100% 302px;background-repeat: no-repeat;    padding-bottom: 56px;">

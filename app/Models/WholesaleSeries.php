@@ -104,7 +104,7 @@ class WholesaleSeries extends Model
 
 
         if( isset($ops['periodLastWeek']) ){
-            $sth->where( 'wholesale_periods.start_date', '<=', 'NOW()' );
+            $sth->where( 'wholesale_periods.start_date', '>=', 'NOW()' );
             $sth->orderby( 'wholesale_periods.start_date', 'desc' );
         }
         else{
@@ -124,6 +124,7 @@ class WholesaleSeries extends Model
             'total' => $results->total(),
             'data' => $results->items(),
             'options' => $ops,
+            'sql' => $sth->toSql()
         ];
 
     }

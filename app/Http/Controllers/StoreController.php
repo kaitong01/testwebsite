@@ -29,7 +29,7 @@ class StoreController extends Controller
         $whole_sales_choose = DB::table('tour_wholesale')->where('cid','=',Session::get('cid'))->first();
         $whole = json_decode($whole_sales_choose->wholesale,1);
         $whole_all = DB::table('wholesales')->whereIn('id',$whole)->get();
-        
+
 
         // $discount = WholesaleSeries::discount( ['sort'=> 'created_at', 'dir'=>'desc', 'limit'=>6, 'wholesales'=>$wholesales] );
         // $popular = WholesaleSeries::search( ['sort'=> 'download_total', 'dir'=>'desc', 'limit'=>6, 'wholesales'=>$wholesales] );
@@ -60,10 +60,11 @@ class StoreController extends Controller
             'page_current_tab' => '/settings/blogs/'.$tab
         ]);
     }
-    public function wholesale($tab='')
+    public function wholesale($id)
     {
+        $data = WholesaleSeries::periodLastWeek( ['wholesale'=>$id] );
         return view('pages.store.find')->with([
-            'page_current_tab' => '/settings/blogs/'.$tab
+          'data'=>$data
         ]);
     }
     public function detail($id='')
