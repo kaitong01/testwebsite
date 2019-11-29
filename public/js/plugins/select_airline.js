@@ -35,7 +35,11 @@ if ( typeof Object.create !== 'function' ) {
 
 					});
 
-					self.$elem.val( self.options.id );
+					// console.log( self.options.id.airline_id);
+
+					if(self.options.id.airline_id){
+						self.$elem.val( self.options.id.airline_id );
+					}
 			})
 			.fail(function() {
 				console.log("error");

@@ -6,9 +6,9 @@ $formHtml = $form->create()
     ->elem('div')
     ->addClass('form-insert form-series')
 
-->field("country_id")->label( 'ประเทศ' )->autocomplete('off')->addClass('form-control')->select( [] )->attr('data-plugin', 'select_countries')->attr('data-options', htmlentities(json_encode(['id'=>2])) )
-->field("route_id")->label( 'เส้นทาง' )->autocomplete('off')->addClass('form-control')->select( [] )->attr('data-plugin', 'select_route')->attr('data-options', htmlentities(json_encode(['id'=>2])) )
-->field("airline_id")->label( 'สายการบิน' )->autocomplete('off')->addClass('form-control')->select( [] )->attr('data-plugin', 'select_airline')->attr('data-options', htmlentities(json_encode(['id'=>2])) )
+->field("country_id")->label( 'ประเทศ' )->autocomplete('off')->addClass('form-control')->select( [] )->attr('data-plugin', 'select_countries')->attr('data-options', htmlentities(json_encode(['id'=>$data])) )
+->field("route_id")->label( 'เส้นทาง' )->autocomplete('off')->addClass('form-control')->select( [] )->attr('data-plugin', 'select_route')->attr('data-options', htmlentities(json_encode(['id'=>$data])) )
+->field("airline_id")->label( 'สายการบิน' )->autocomplete('off')->addClass('form-control')->select( [] )->attr('data-plugin', 'select_airline')->attr('data-options', htmlentities(json_encode(['id'=>$data])) )
 
 ->hr( '<div class="form-hr white"><span>ทัวร์</span></div>' )
 

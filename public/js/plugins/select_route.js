@@ -26,7 +26,7 @@ if ( typeof Object.create !== 'function' ) {
 			.done(function(data) {
 
 					$.each(data, function(index, obj) {
-			
+
 						self.$elem.append( $('<option>', {value: obj.id}).text(obj.name) );
 						// if(obj.country_id == self.options.id){
 						// 		self.$elem.append( $('<option>', {value: obj.country_id}).text(obj.country_name) );
@@ -35,8 +35,11 @@ if ( typeof Object.create !== 'function' ) {
 						// }
 
 					});
+					console.log( self.options.id.route_id);
 
-					self.$elem.val( self.options.id );
+					if(self.options.id.route_id){
+						self.$elem.val( self.options.id.route_id );
+					}
 			})
 			.fail(function() {
 				console.log("error");

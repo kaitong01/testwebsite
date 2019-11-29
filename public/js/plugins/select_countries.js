@@ -34,8 +34,11 @@ if ( typeof Object.create !== 'function' ) {
 						// }
 
 					});
+					// console.log(self.options.id.country_id);
+					if(self.options.id.country_id){
+						self.$elem.val( self.options.id.country_id );
+					}
 
-					self.$elem.val( self.options.id );
 			})
 			.fail(function() {
 				console.log("error");
