@@ -123,6 +123,7 @@ class WholesaleSeries extends Model
             'total' => $results->total(),
             'data' => $results->items(),
             'options' => $ops,
+            'sql' => $sth->toSql()
         ];
 
     }

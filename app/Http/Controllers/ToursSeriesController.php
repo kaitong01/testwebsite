@@ -302,9 +302,11 @@ class ToursSeriesController extends Controller
         }
         else{
 
+
             $data->wholesale_id   = $request->wholesale_id;
             $data->company_id     = Session::get('cid');
             $data->route_id       = $request->route_id;
+            $data->country_id     = $request->country_id;
             $data->airline_id     = $request->airline_id;
 
             $data->code           = $request->code;
@@ -369,6 +371,7 @@ class ToursSeriesController extends Controller
 
 
             if( $data->update() ){
+            
 
                 // set: gallery
                 $oldGallery = json_decode($data->gallery, 1);

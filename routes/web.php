@@ -64,10 +64,10 @@ Route::group(['middleware' => ['auth', 'company']], function () {
 
 
 
-    Route::get('/store/wholesale/find', 'StoreController@find');
-    Route::get('/store/wholesale/{id}', 'StoreController@find');
+    // Route::get('/store/wholesale/find', 'StoreController@find');
+    Route::get('/store/wholesale/{id}', 'StoreController@wholesale');
     // Route::get('/store/wholesale/{id}/country', 'StoreController@wholesaleCountry');
-    Route::get('/store/wholesale/{id}/country/{country_id}', 'StoreController@find');
+    // Route::get('/store/wholesale/{id}/country/{country_id}', 'StoreController@find');
       Route::get('/store/addtocart', 'StoreController@addtoCart')->name('addtocart.store');
 
 
@@ -152,5 +152,11 @@ Route::group(['middleware' => ['auth', 'company']], function () {
     // Route::post('/site', 'SiteController@store');
 
     Route::get('/site','SiteController@index');
-      Route::get('/site/webeditor/{param}','SiteController@index');
+    Route::get('/site/webeditor/{param}','SiteController@index');
+
+
+    # API
+    Route::get('apidata/countries', 'ApiController@get_countries');
+    Route::get('apidata/airline', 'ApiController@get_airline');
+    Route::get('apidata/tourroute', 'ApiController@get_tourroute');
 });

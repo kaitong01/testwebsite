@@ -1,15 +1,14 @@
 <?php
 
-
 $form = new Form();
 $formHtml = $form->create()
     // set From
     ->elem('div')
     ->addClass('form-insert form-series')
 
-
-->field("route_id")->label( 'เส้นทาง' )->autocomplete('off')->addClass('form-control')->select( [] )->value( !empty( $data['route_id'] )? $data['route_id']: '' )
-->field("airline_id")->label( 'สายการบิน' )->autocomplete('off')->addClass('form-control')->select( [] )->value( !empty( $data['airline_id'] )? $data['airline_id']: '' )
+->field("country_id")->label( 'ประเทศ' )->autocomplete('off')->addClass('form-control')->select( [] )->attr('data-plugin', 'select_countries')->attr('data-options', htmlentities(json_encode(['id'=>$data])) )
+->field("route_id")->label( 'เส้นทาง' )->autocomplete('off')->addClass('form-control')->select( [] )->attr('data-plugin', 'select_route')->attr('data-options', htmlentities(json_encode(['id'=>$data])) )
+->field("airline_id")->label( 'สายการบิน' )->autocomplete('off')->addClass('form-control')->select( [] )->attr('data-plugin', 'select_airline')->attr('data-options', htmlentities(json_encode(['id'=>$data])) )
 
 ->hr( '<div class="form-hr white"><span>ทัวร์</span></div>' )
 

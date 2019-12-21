@@ -25,4 +25,6 @@ Route::prefix('v1')->group(function () {
     Route::get('/companies', 'CompaniesController@index');
 
     Route::get('/cart', 'CartController@find');
+    
+
 });
