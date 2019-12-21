@@ -81,6 +81,6 @@ $formBasic = $form->create()
     ->autocomplete('off')
     ->addClass('form-control input-content')
     ->attr('data-plugin', 'autosize')
-    ->value( $series->highlight ?? '' )
+    ->value( $series->description ?? '' )
 
 ->html();

@@ -10,12 +10,13 @@ use App\Models\Company;
 use App\Models\CountryModel;
 use App\Models\DatacenterPeriod;
 use App\Models\DatacenterSeries;
+use App\Models\DefaultAirlines;
+use App\Models\TourCountryModel;
 use App\Models\TourPeriod;
 use App\Models\TourSerie;
 use Illuminate\Auth\Access\AuthorizationException;
 use Illuminate\Support\Facades\DB;
 use Illuminate\Support\Facades\Route;
-use Illuminate\Support\Facades\Storage;
 
 class CartController extends Controller
 {
@@ -59,6 +60,9 @@ class CartController extends Controller
         $countryList = CountryModel::get();
 
 
+        $airlineList = DefaultAirlines::get();
+
+
         $series = $data->serie;
 
         // $periods = $series->periods;
@@ -67,7 +71,7 @@ class CartController extends Controller
             ['series_id','=', $series->id],
         ])->orderby('start_date', 'asc')->get();
 
-        return view('forms.cart.form', compact('data', 'statusList', 'countryList', 'series', 'periods'));
+        return view('forms.cart.form', compact('data', 'statusList', 'countryList', 'airlineList', 'series', 'periods'));
     }
 
     public function update(CartSerieRequest $request, $id)
@@ -95,6 +99,19 @@ class CartController extends Controller
             ## update carts
             $cart->status = 2;
             $cart->update();
+
+            // country_id
+            $hasCountry = TourCountryModel::where([
+                ['country_id', '=', $series->country_id],
+                ['company_id', '=', $request->user()->company->id]
+            ])->count();
+
+            if( !$hasCountry ){
+                TourCountryModel::create([
+                    'country_id' => $series->country_id,
+                    'company_id' => $request->user()->company->id,
+                ]);
+            }
 
 
             ## update tourSeries
