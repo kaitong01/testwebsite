@@ -40,8 +40,7 @@ class WholesaleSeries extends Model
 
     ];
 
-
-
+    // ดันขาย
     public static function periodLastWeek($ops=array())
     {
         $ops = array_merge( array(
@@ -104,7 +103,7 @@ class WholesaleSeries extends Model
 
 
         if( isset($ops['periodLastWeek']) ){
-            $sth->where( 'wholesale_periods.start_date', '<=', 'NOW()' );
+            $sth->where( 'wholesale_periods.start_date', '>=', 'NOW()' );
             $sth->orderby( 'wholesale_periods.start_date', 'desc' );
         }
         else{

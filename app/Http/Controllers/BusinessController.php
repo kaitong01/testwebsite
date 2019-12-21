@@ -8,6 +8,8 @@ use Illuminate\Support\Facades\Validator;
 use Illuminate\Support\Facades\Storage;
 
 use App\Models\Companies;
+use App\Models\CompaniesSlidesModel;
+use Illuminate\Support\Facades\Auth;
 
 use function GuzzleHttp\json_encode;
 
