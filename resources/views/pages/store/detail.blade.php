@@ -6,8 +6,13 @@
 
 <?php
 
-// $periodConclusion = Fn::getPeriodConclusion( $data->period_start, $data->period_end );
-// dd($periodConclusion);
+
+$Fn = new Fn;
+
+$decode_files = $Fn->q('decode')->DbjsonToObject($data->files);
+
+$tr_period = $Fn->q('trperiod')->set_tr($period);
+
 ?>
 
 <div style="background: linear-gradient(135deg,#e4e6f5,#ecf6ff 39%,#ddecff);background-size: 100% 302px;background-repeat: no-repeat;    padding-bottom: 56px;">
@@ -28,7 +33,7 @@
                                     <li><a href="/store/wholesale/{{$data->wholesale_id}}">{{$data->wholesale_name}}</a></li>
 
                                     @if ( !empty($data->country_id) )
-                                    <li><a href="/store/wholesale/{{$data->wholesale_id}}/country/{{$data->country_id}}">{{$data->country_name}}</a></li>
+                                    <li><a href="/store/wholesale/{{$data->wholesale_id}}/country/{{$data->country_id}}">{{$Fn->q('trperiod')->country_name($data->country_id)}}</a></li>
                                     @endif
                                     <li>{{$data->name}}</li>
                                 </ul>
@@ -57,7 +62,7 @@
                                                 <td class="td-label">ประเทศ</td>
                                                 <td class="td-data">
                                                     @if ( !empty($data->country_id) )
-                                                    <span>{{$data->country_name}}</span>
+                                                    <span>{{$Fn->q('trperiod')->country_name($data->country_id)}}</span>
                                                     @else
                                                     <span>-</span>
                                                     @endif
@@ -99,14 +104,30 @@
 
 
                                     <div class="product-detail-files row row-sm mb-3">
-                                        <div class="col"><button class="btn btn-primary btn-block btn-sm btn-word"><i class="fa fa-file-word-o mr-2"></i><span>DOC</span></button></div>
-                                        <div class="col"><button class="btn btn-danger btn-block btn-sm btn-pdf"><i class="fa fa-file-pdf-o mr-2"></i><span>PDF</span></button></div>
+                                      @if(empty($data->files))
+                                        <div class="col"><button class="btn btn-secondary btn-block btn-sm btn-word"><i class="fa fa-file-word-o mr-2"></i><span>DOC</span></button></div>
+                                        <div class="col"><button class="btn btn-secondary btn-block btn-sm btn-pdf"><i class="fa fa-file-pdf-o mr-2"></i><span>PDF</span></button></div>
+                                        @else
+                                        @if(isset($decode_files[0]->url))
+                                        <div class="col"><a href="{{$decode_files[1]->url}}" class="btn btn-primary btn-block btn-sm btn-word"><i class="fa fa-file-word-o mr-2"></i><span>DOC</span></a></div>
+                                        <div class="col"><a href="{{$decode_files[0]->url}}" class="btn btn-danger btn-block btn-sm btn-pdf" target="_blank"><i class="fa fa-file-pdf-o mr-2"></i><span>PDF</span></a></div>
+
+                                          @else
+                                          <div class="col"><a href="{{asset($decode_files[1]->path)}}" class="btn btn-primary btn-block btn-sm btn-word"><i class="fa fa-file-word-o mr-2"></i><span>DOC</span></a></div>
+                                          <div class="col"><a href="{{asset($decode_files[0]->path)}}" class="btn btn-danger btn-block btn-sm btn-pdf" target="_blank"><i class="fa fa-file-pdf-o mr-2"></i><span>PDF</span></a></div>
+
+                                        @endif
+                                        @endif
                                     </div>
 
 
                                     <hr>
                                     <div class="product-detail-actions">
-                                        <button class="btn btn-primary btn-block"><i class="fa fa-plus mr-2"></i>เผยแพร่</button>
+
+
+                                        <button class="btn btn-success btn-block"><i class="fa fa-plus mr-2"></i>หยิบใส่ตระกร้า</button>
+
+
                                     </div>
                                 </div>
                                 <div class="col-9">
@@ -129,7 +150,7 @@
                                             @if ( !empty($data->country_id) )
                                             <div class="mr-4" style="height: 0.6rem;background: rgba(0, 0, 0, 0.1);width: 1px;"></div>
                                             <div class="group-country">
-                                                <a href="/store/wholesale/{{$data->wholesale_id}}/country/{{$data->country_id}}" style="">{{$data->country_name}}</a>
+                                                <a href="/store/wholesale/{{$data->wholesale_id}}/country/{{$data->country_id}}" style="">{{$Fn->q('trperiod')->country_name($data->country_id)}}</a>
                                             </div>
                                             @endif
                                         </div>
@@ -157,27 +178,8 @@
                                                         </tr></thead>
 
                                                         <tbody>
-                                                            <tr><td class="td-head" colspan="3">สิงหาคม 2019</td></tr>
+                                                          {!!$tr_period!!}
 
-                                                            <tr>
-                                                                <td class="td-date">24 - 27 ส.ค.</td>
-                                                                <td class="td-price">-</td>
-                                                                <td class="td-price">-</td>
-                                                            </tr>
-
-                                                            <tr>
-                                                                <td class="td-date">31 ส.ค. - 3 ก.ย.</td>
-                                                                <td class="td-price">-</td>
-                                                                <td class="td-price">-</td>
-                                                            </tr>
-
-                                                            <tr><td class="td-head" colspan="4">กันยายน 2019</td></tr>
-
-                                                            <tr>
-                                                                <td class="td-date">ส. 7 - 10 ก.ย.</td>
-                                                                <td class="td-price">-</td>
-                                                                <td class="td-price">-</td>
-                                                            </tr>
                                                         </tbody>
                                                     </table>
                                                 </div>

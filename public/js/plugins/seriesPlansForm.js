@@ -20,7 +20,7 @@ if ( typeof Object.create !== 'function' ) {
 
             self.$listsbox.empty();
 
-            console.log( self.options.data );
+            // console.log( self.options.data );
             if(!self.options.data || self.options.data.length==0){
                 self.addDay();
                 self.calDay();

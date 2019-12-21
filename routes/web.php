@@ -1,20 +1,9 @@
 <?php
 
-/*
-|--------------------------------------------------------------------------
-| Web Routes
-|--------------------------------------------------------------------------
-|
-| Here is where you can register web routes for your application. These
-| routes are loaded by the RouteServiceProvider within a group which
-| contains the "web" middleware group. Now create something great!
-|
-*/
-// use App\Http\Controllers\CompanyController;
-// use App\Http\Middleware\CheckCompany;
-
 use Illuminate\Http\Request;
 use App\Library\Fn;
+use Illuminate\Support\Facades\Auth;
+use Illuminate\Support\Facades\Route;
 
 Auth::routes([
     'register' => false,
@@ -24,118 +13,223 @@ Auth::routes([
 
 // Route::get('/home', 'HomeController@index')->name('pages.home');
 
-Route::group(['middleware' => ['auth', 'company']], function () {
+Route::group(['middleware' => ['auth', 'user.role']], function () {
 
 
     # Home
-    Route::get('/', function () {
+    Route::get('/', function (Request $request) {
         return redirect('/products');
     });
-
-    # Booking
-    Route::resource('/booking', 'BookingController');
-    Route::get('/booking/datatable/show', 'BookingController@datatable');
-    Route::get('/booking/detail/{id}', 'BookingController@detail');
-    Route::get('/booking/setstatus/{id}/{param}', 'BookingController@setstatus');
-
-
-    # Products
-    Route::get('/products/create', 'ProductsController@create');
-    Route::get('/products/{param?}', 'ProductsController@index');
-
-    Route::get('/products/show/{param?}', 'ProductsController@set_data');
-
-    # tours -> series
-    Route::resource('/tours/series', 'ToursSeriesController');
-    // ->only(['store', 'update', 'destroy']);
-
-
-    # Business
-    Route::get('/business', 'BusinessController@index');
-    Route::get('/business/{param}', 'BusinessController@index');
-
-    Route::put('/business/update/{param}', 'BusinessController@update');
-
-
-    # Store
-    Route::get('/store', 'StoreController@index');
-    Route::get('/store/find', 'StoreController@find');
-    Route::get('/store/tours/{id}', 'StoreController@detail');
-
-
-
-    // Route::get('/store/wholesale/find', 'StoreController@find');
-    Route::get('/store/wholesale/{id}', 'StoreController@wholesale');
-    // Route::get('/store/wholesale/{id}/country', 'StoreController@wholesaleCountry');
-    // Route::get('/store/wholesale/{id}/country/{country_id}', 'StoreController@find');
-      Route::get('/store/addtocart', 'StoreController@addtoCart')->name('addtocart.store');
-
-
-    // Route::get('/store/sele/', 'StoreController@index');
-
-    # cart
-    Route::get('/cart', 'CartController@index');
-    Route::get('/cart/{param}', 'CartController@index');
-    Route::get('/cart/datatable/{param}', 'CartController@datatable');
-    Route::get('/cart/status/{param}/published', 'CartController@published');
-    Route::get('/cart/status/{param}/cancel', 'CartController@cancel');
-
-
-
 
 
     # Settings
     Route::get('/settings', function () {
+        return redirect('/settings/tours/countries');
+    });
 
-        return view('pages.settings');
-    })->name('pages.settings');
+    ## Settings: set routes : /settings/tours
+    Route::prefix('/settings/tours')->group(function () {
+        Route::get('/countries', 'SettingTourController@index');
+        Route::get('/routes', 'SettingTourController@index');
+        Route::get('/wholesales', 'SettingTourController@index');
+        Route::get('/categories', 'SettingTourController@index');
+    });
 
-    // /settings/tours/
-    Route::get('/settings/tours/{param?}', 'SettingsToursController@index')->name('pages.settings.tours');
-
-
-    // /settings/blogs/
-    Route::get('/settings/blogs/{param?}', 'SettingsBlogsController@index')->name('pages.settings.blogs');
-
-
-
-    // Route::get('/blogs/category', 'BlogsCategoryController@index');
-    // Route::get('/blogs/category/create', 'BlogsCategoryController@create');
-    // Route::post('/blogs/category', 'BlogsCategoryController@store');
-    // Route::get('/blogs/category/{id}/edit', 'BlogsCategoryController@edit');
-    // Route::put('/blogs/category/{id}', 'BlogsCategoryController@update');
-    // Route::delete('/blogs/category/{id}', 'BlogsCategoryController@destroy');
-    # Settings
-    Route::get('/blogs', function () {
-
-        return view('pages.blogs');
-    })->name('pages.blogs');
-
-    //blogs
-    Route::get('/blogs/post/{param?}', 'BlogsPostController@index')->name('pages.blogs.post');
-    Route::resource('/blogs/add', 'BlogsAddController');
-    Route::get('/blogs/add/{id}/delete', 'BlogsAddController@delete');
+    ### Settings: tours -> countries
+    Route::resource('/tours/countries', 'TourCountryController')->only([
+        'index', 'edit', 'store'
+    ]);
+    Route::post('/tours/countries/switch', 'TourCountryController@switch');
+    Route::get('/tours/countries/{param}', function ()
+    {
+        return abort(404);
+    });
 
 
-    Route::resource('/blogs/category', 'BlogsCategoryController');
-    Route::get('/blogs/category/{id}/delete', 'BlogsCategoryController@delete');
+    ### Settings: tours -> Routes
+    Route::resource('/tours/routes', 'TourRouteController')->only([
+        'index', 'create', 'store', 'edit', 'update'
+    ]);
+    Route::post('/tours/routes/switch', 'TourRouteController@switch');
+    Route::get('/tours/routes/{param}', function ()
+    {
+        return abort(404);
+    });
 
 
-    Route::resource('/tours/route', 'ToursRouteController');
-    Route::get('/tours/route/{id}/delete', 'ToursRouteController@delete');
+    ### Settings: tours -> Category
+    Route::resource('/tours/categories', 'TourCategoryController')->only([
+        'index', 'create','store', 'edit', 'update'
+    ]);
+    Route::post('/tours/categories/switch', 'TourCategoryController@switch');
+    Route::get('/tours/categories/{param}', function ()
+    {
+        return abort(404);
+    });
 
-    Route::get('install/country','SetupDbController@install_country');
-    // Route::get('install/con','SetupDbController@install_con');
 
-    Route::resource('/tours/country', 'TourCountryController');
+    ### Settings: tours -> Wholesales
+    Route::resource('/tours/wholesales', 'TourWholesaleController')->only([
+        'index'
+    ]);
+    Route::post('/tours/wholesales/switch', 'TourWholesaleController@switch');
+    Route::get('/tours/wholesales/{param}', function ()
+    {
+        return abort(404);
+    });
 
-    Route::resource('/tours/wholesale', 'TourWholesaleController');
 
-    Route::resource('/tours/category', 'TourCategoryController');
-    Route::get('/tours/category/{id}/delete', 'TourCategoryController@delete');
+    ## Settings: set routes : /settings/blogs
+    Route::prefix('/settings/blogs')->group(function () {
+        Route::get('/categories', 'SettingBlogController@index');
+    });
 
+    ### Settings: blogs -> categories
+    Route::resource('/blogs/categories', 'blogCategoryController')->only([
+        'index', 'create', 'edit', 'store', 'update'
+    ]);
+    Route::post('/blogs/categories/switch', 'blogCategoryController@switch');
+    Route::get('/blogs/categories/{param}', function ()
+    {
+        return abort(404);
+    });
+
+
+
+    // --------------------------------------------------------------------------------
+    # Business
+    Route::get('/business', 'BusinessController@index');
+    Route::get('/business/{param}', 'BusinessController@index');
+    Route::put('/business/update/{param}', 'BusinessController@update');
+
+
+
+    // --------------------------------------------------------------------------------
+    # site
+    Route::get('/site', 'SiteController@index');
+    Route::get('/site/{param}', 'SiteController@index');
+
+    ### site: Menus
+    Route::resource('/site/menu', 'SiteMenuController')->only([
+        'index', 'create', 'store', 'edit' , 'update'
+    ]);
+    Route::post('/site/menu/sort', 'SiteMenuController@sort');
+    Route::get('/site/menu/{param}', function ()
+    {
+        return abort(404);
+    });
+
+    ### site: Font
+    Route::resource('/site/fonts', 'SiteFontController')->only([
+        'store'
+    ]);
+    Route::get('/site/fonts/{param}', function ()
+    {
+        return abort(404);
+    });
+
+    ### site: slides
+    Route::resource('/site/slides', 'SiteSlideController')->only([
+        'store'
+    ]);
+    Route::get('/site/slides/{param}', function ()
+    {
+        return abort(404);
+    });
+
+    ### site: banners
+    Route::resource('/site/banners', 'SiteBannerController')->only([
+        'store'
+    ]);
+    Route::get('/site/banners/{param}', function ()
+    {
+        return abort(404);
+    });
+
+
+
+
+    // --------------------------------------------------------------------------------
+    # products
+    Route::get('/products', function () {
+        return redirect('/products/publish');
+    });
+
+    ## products: set routes
+    Route::prefix('/products')->group(function () {
+        Route::get('/publish', 'ProductController@index');
+        Route::get('/draft', 'ProductController@index');
+        Route::get('/disable', 'ProductController@index');
+
+
+        Route::get('/yourself', 'ProductController@index');
+        Route::get('/wholesale', 'ProductController@index');
+    });
+
+    Route::resource('/tours/series', 'TourSerieController')->only([
+        'index', 'store', 'create', 'edit', 'update'
+    ]);
+    Route::post('/tours/series/switch', 'TourSerieController@switch');
+    Route::get('/tours/series/{param}', function ()
+    {
+        return abort(404);
+    });
+
+
+
+    // --------------------------------------------------------------------------------
+    # store
+    Route::get('/store', function () {
+        return redirect('/store/tours');
+    });
+    ## store: set routes
+    Route::prefix('/store/tours')->group(function () {
+        Route::get('/', 'StoreTourController@index');
+        Route::get('/new', 'StoreTourController@index');
+        Route::get('/upcoming', 'StoreTourController@index');
+        Route::get('/discount', 'StoreTourController@index');
+        Route::get('/popular', 'StoreTourController@index');
+        Route::get('/selected', 'StoreTourController@index');
+
+    });
+
+
+    // --------------------------------------------------------------------------------
+    # cart
+    Route::resource('/carts', 'CartController')->only([
+        'index', 'edit', 'update', 'destroy'
+    ]);
+
+    Route::get('/carts/find', 'CartController@find');
+    Route::get('/carts/find/{param}', 'CartController@find');
+
+    Route::prefix('/carts')->group(function () {
+        Route::get('/', 'CartController@index');
+        Route::get('/confirm', 'CartController@index');
+        Route::get('/verify', 'CartController@index');
+        Route::get('/cancel', 'CartController@index');
+
+    });
+
+    Route::post('/carts/switch', 'CartController@switch');
+    Route::get('/carts/{param}/delete', 'CartController@delete');
+
+    Route::get('/carts/{param}', function ()
+    {
+        return abort(404);
+    });
+
+
+    // --------------------------------------------------------------------------------
+    # datacenter
+    Route::get('/datacenter/series/{param}', 'DatacenterController@series');
+
+
+    // --------------------------------------------------------------------------------
     # update back-end
-    Route::post('/account/change_company', 'AccountController@changeCompany');
+    Route::get('/companies', 'CompanyController@index');
+
+    ## check Permalink
     Route::get('/createPrimaryLink', function ( Request $request ) {
         $Fn = new Fn;
 
@@ -145,18 +239,23 @@ Route::group(['middleware' => ['auth', 'company']], function () {
             'data' => $Fn->q('text')->createPrimaryLink( $request->text )
         ]);
     });
-    // Route::get('/site/menu', 'SiteController@menu');
-    // Route::get('/site', function () {
-    //     return view('errors.404');
-    // });
-    // Route::post('/site', 'SiteController@store');
 
-    Route::get('/site','SiteController@index');
-    Route::get('/site/webeditor/{param}','SiteController@index');
+    ## switch menu
+    Route::get('/switch/menu', function (Request $request)
+    {
+
+        session(['show_menu' =>$request->status]);
+        return response(['code'=>200], 200);
+    });
+
+    ## switch company
+    Route::get('/switch/company', function (Request $request)
+    {
+        session(['cid' =>$request->id]);
+        // $request->session()->pull('cid', $request->id);
+
+        return response(['code'=>200], 200);
+    });
 
 
-    # API
-    Route::get('apidata/countries', 'ApiController@get_countries');
-    Route::get('apidata/airline', 'ApiController@get_airline');
-    Route::get('apidata/tourroute', 'ApiController@get_tourroute');
 });

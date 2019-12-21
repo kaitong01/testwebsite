@@ -19,10 +19,10 @@ class ProductsUi extends Ui
 
 			$key[] = array('id'=>'status', 'label'=>'สถานะ', 'cls'=>'td-status', 'type'=>'status');
 			$key[] = array('id'=>'name', 'label'=>'แพ็คเกจทัวร์', 'cls'=>'td-name');
-    	    $key[] = array('id'=>'updated_at', 'label'=>'แก้ไขล่าสุด', 'cls'=>'td-date td-light', 'type'=>'date');
+    	$key[] = array('id'=>'updated_at', 'label'=>'แก้ไขล่าสุด', 'cls'=>'td-date td-light', 'type'=>'date');
 
 			// $key[] = array('id'=>'wholesales', 'label'=>'โฮลเซลล์', 'cls'=>'');
-			// $key[] = array('id'=>'action', 'cls'=>'td-action', 'type'=>'action');
+			 $key[] = array('id'=>'action', 'cls'=>'td-action', 'type'=>'action');
 
     	return $key;
     }
@@ -160,8 +160,8 @@ class ProductsUi extends Ui
 
     public function _action($data)
     {
-    	$val = '<a href="'.asset('blogs/add/'.$data['id']).'/edit" data-plugin="lightbox" class="btn btn-sm btn-primary" title="แก้ไข"><i class="fa fa-pencil"></i></a>';
-		$val .= '<a href="'.asset('blogs/add/'.$data['id'].'/delete').'" data-plugin="lightbox" class="btn btn-sm btn-danger ml-2" title="ลบ"><i class="fa fa-remove"></i></a>';
+    	$val = '<a href="'.asset('products/'.$data['id']).'" " class="btn btn-sm btn-primary" title="แก้ไข"><i class="fa fa-pencil"></i></a>';
+		// $val .= '<a href="'.asset('blogs/add/'.$data['id'].'/delete').'" data-plugin="lightbox" class="btn btn-sm btn-danger ml-2" title="ลบ"><i class="fa fa-remove"></i></a>';
 
 		return $val;
     }

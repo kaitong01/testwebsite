@@ -77,7 +77,7 @@ class Create_Form
 		return $this;
 	}
 
-	public function notify($text){		
+	public function notify($text){
 		$this->_field[$this->_currentField]['notify'] = $text;
 		return $this;
 	}
@@ -147,12 +147,12 @@ class Create_Form
 
 	            $this->_field[$this->_currentField]['attr'][$attr] = $value;
                 return $this;
-                
+
             }else{
 
                 if( isset($this->_field[$this->_currentField]['attr'][$attr]) )
                 return $this->_field[$this->_currentField]['attr'][$attr];
-                    
+
             }
 
 		}elseif(is_array($attr)){
@@ -166,7 +166,7 @@ class Create_Form
 		return $this;
 	}
 
-	
+
 
 	public function button(){
 		// $this->_field[ '$hr_'.count($this->_field) ]['text'] = $text;
@@ -219,7 +219,7 @@ class Create_Form
 				else{
 					$field_str.='<hr>';
 				}
-				
+
 				continue;
 			}
 
@@ -227,7 +227,7 @@ class Create_Form
 				$value['attr']['class']  = isset($value['attr']['class'])
 					? "{$value['attr']['class']} form-{$this->_style}"
 					: "form-{$this->_style}";
-					
+
 				$form_attribute = $value['attr'];
 				continue;
 			}
@@ -247,7 +247,7 @@ class Create_Form
 
 				$attr = $value['attr'];
 				$value = $attr['value']; unset($attr['value']);
-				
+
 				$attr_str = $this->getAttr( $attr );
 
 				$actions.= '<a'.$attr_str.'>'.$value.'</a>';
@@ -296,8 +296,17 @@ class Create_Form
 				}
 
 				foreach ($value['select']['data'] as $i => $val) {
-					$t = isset($val[ $value['select']['keyname'] ]) ? $val[ $value['select']['keyname'] ]:'';
-					$v = isset($val[ $value['select']['keyval'] ]) ? $val[ $value['select']['keyval'] ]: $t;
+					if( is_object($val) ){
+
+						$t = isset($val->{$value['select']['keyname']}) ? $val->{$value['select']['keyname']}:'';
+						$v = isset($val->{$value['select']['keyval']}) ? $val->{$value['select']['keyval']}: $t;
+					}
+
+					if( is_array($val) ){
+
+						$t = isset($val[ $value['select']['keyname'] ]) ? $val[ $value['select']['keyname'] ]:'';
+						$v = isset($val[ $value['select']['keyval'] ]) ? $val[ $value['select']['keyval'] ]: $t;
+					}
 
 					$s = $_v==$v ? ' selected="1"':'';
 					$option .= '<option'.$s.' value="'.$v.'">'.$t.'</option>';
@@ -346,7 +355,7 @@ class Create_Form
 							}elseif( ($value['attr']['type']==="radio" && $checked == $v) || ($value['attr']['type']==="checkbox" && !empty($val['checked'])) ){
 								$is_checked = true;
 							}
-							
+
 							$txt .= '<label class="'.$value['attr']['type'].'" for="'.$value['attr']['id'].'"><input'.$this->getAttr( $value['attr'] ). ( $is_checked? ' checked':'' ). '><span>'.(!empty($val['name']) ? $val['name']: '').'</span></label>';
 						}
 						else{
@@ -368,7 +377,7 @@ class Create_Form
 								}
 
 							}
-							
+
 							$txt .= '<label class="'.$value['attr']['type'].'" for="'.$value['attr']['id'].'"><input'.$this->getAttr( $value['attr'] ). ($is_checked? ' checked':'' ).'><span>'.$val.'</span></label>';
 						}
 					}
@@ -414,15 +423,15 @@ class Create_Form
 				$cls .= !empty($cls)? ' ':'';
 				$cls .= $value['cls'];
 			}
-			
+
 
 			$cls = !empty($cls)? ' class="'.$cls.'"':'';
 			$field_str.='<div'.$fieldId.$cls.'>'.
-				
+
 				$label.
 
 				$hind.
-				
+
 				'<div class="controls">'.
 					$string.
 					$sidetip.

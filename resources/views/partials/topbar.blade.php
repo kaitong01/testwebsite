@@ -2,30 +2,35 @@
     <nav class="navbar navbar-expand-md navbar-dark">
 
         <a class="navbar-brand" href="{{ url('/') }}">
-            <h1>Manager</h1>
+            <h1>Admin</h1>
+
+            @if  ( in_array(Auth::user()->role->id, [1,3]) )
             <h2>Easy Web Tour</h2>
+            @else
+            <h2>{{ Auth::user()->company->name }}</h2>
+
+            @endif
+
         </a>
 
         <div class="collapse navbar-collapse">
             <!-- Left Side Of Navbar -->
             <ul class="navbar-nav mr-auto">
 
-                <?php if( Auth::user()->company_id==0 ){
-
-                    // <img src="" alt="">
-                    ?>
+                @if ( in_array(Auth::user()->role->id, [1,3]) )
 
                     <li class="nav-link dropdown topbar-dropdown-company" data-plugin="SwitchCompany">
-                        <div class="account-group topbar-dropdown-company-toggle d-flex align-items-center" data-toggle="dropdown" data-company-id="{{ Session::get('cid') }}">
+                        <div class="account-group topbar-dropdown-company-toggle d-flex align-items-center" data-toggle="dropdown" data-company-id="{{ Auth::user()->company->id }}">
                             <div class="avatar"></div>
                             <div class="content">
 								<div class="pl-2">
-									<div class="title" style="white-space: nowrap;">{{ Session::get('cname') }}</div>
-									<div class="text">{{ Session::get('cdomain') }}</div>
+									<div class="title" style="white-space: nowrap;">{{ Auth::user()->company->name }}</div>
+									<div class="text">{{ Auth::user()->company->domain ?? Auth::user()->company->username }}</div>
 								</div>
                             </div>
                             <div class="ml-2" style="font-size: 14px;"><i class="fa fa-chevron-down"></i></div>
                         </div>
+
 
                         <div class="dropdown-menu" role="dropdown">
                             <div class="dropdown-menu-content has-loading" role="content">
@@ -45,7 +50,8 @@
                             </div>
                         </div>
                     </li>
-                <?php } ?>
+                @endif
+
             </ul>
 
             <!-- Right Side Of Navbar -->
@@ -63,9 +69,9 @@
 
                 <li class="nav-item ml-2">
                     <a href="/cart" class="nav-link"><svg width="24" height="24" viewBox="0 0 24 24"><path d="M22 9h-4.79l-4.38-6.56c-.19-.28-.51-.42-.83-.42s-.64.14-.83.43L6.79 9H2c-.55 0-1 .45-1 1 0 .09.01.18.04.27l2.54 9.27c.23.84 1 1.46 1.92 1.46h13c.92 0 1.69-.62 1.93-1.46l2.54-9.27L23 10c0-.55-.45-1-1-1zM12 4.8L14.8 9H9.2L12 4.8zM18.5 19l-12.99.01L3.31 11H20.7l-2.2 8z"></path><circle cx="12" cy="15" r="2"></circle></svg></a>
-
                 </li>
 
+                {{-- notify --}}
                 <li class="nav-item dropdown global-notify ml-2 d-none">
                     <a href="javascript:void(0)" class="nav-link" data-toggle="dropdown" aria-expanded="true"><svg width="24" heigth="24" viewBox="0 0 24 24"><path d="m12 24c1.5-0.1 2.7-1.3 2.8-2.8h-5.6c0.1 1.5 1.3 2.7 2.8 2.8zm6.5-17.4c0-2.4-2.3-3.5-5-3.7v-2.2c-0.1-0.4-0.5-0.7-0.9-0.7h-1.2c-0.4 0-0.8 0.3-0.8 0.7v2.2c-2.8 0.3-5 1.3-5 3.7 0 10.9-3.4 10.4-3.4 11.8v1.3h19.8v-1.3c-0.1-1.5-3.5-0.9-3.5-11.8z"/></svg></a>
 
@@ -89,7 +95,9 @@
                         <div class="global-notify__footer"><a href="/notifications">ดูทั้งหมด</a></div>
                     </div>
                 </li>
+                {{-- end: notify --}}
 
+                {{-- profile --}}
                 <li class="nav-item dropdown global-nav-profile ml-3">
 
                     <a class="nav-link avatar avatar-9" href="javascript:void(0)" data-toggle="dropdown" aria-expanded="true">
@@ -144,27 +152,3 @@
         </div>
     </nav>
 </div>
-
-<!-- 'addClass' => 'modal-lg' -->
-@section('modals')
-    {{-- set modal: logout --}}
-    @component('components.modal', [
-        'id' => 'logoutModal',
-        'form'=> [
-            'action'=> route('logout'),
-            'method'=> 'POST'
-        ],
-        'title' => "ออกจากระบบ",
-
-    ])
-
-        ยืนยันการออกจากระบบหรือไม่?
-
-        @slot('buttons')
-
-            <button type="submit" class="btn btn-primary">ออกจากระบบ</button>
-            <button type="button" class="btn btn-secondary" data-dismiss="modal">ปิด</button>
-        @endslot
-    @endcomponent
-
-@endsection

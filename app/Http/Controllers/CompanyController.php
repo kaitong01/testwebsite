@@ -2,71 +2,51 @@
 
 namespace App\Http\Controllers;
 
+use App\Models\Company;
 use Illuminate\Http\Request;
-// use Illuminate\Session\Store;
-use Illuminate\Support\Facades\Session;
-use Illuminate\Support\Facades\Auth;
-use Illuminate\Support\Facades\DB;
-
-// use App\Company;
-// use App\Library\Business;
 
 class CompanyController extends Controller
 {
-    public function is()
+    public function index(Company $model, Request $request)
     {
-        $id = Auth::user()->company_id;
 
-        if( $id==0 ){
+        $ops = array(
+            'sort' => isset($request->sort)? $request->sort: 'updated_at',
+            'dir' => isset($request->dir)? $request->dir: 'desc',
 
-            $id = Session::get('cid');
+            'limit' => isset($request->limit)? $request->limit: 1,
+            'page' => isset($request->page)? $request->page: 1,
 
-            if( !isset($id) ){
+            'ts' => isset($request->ts)? $request->ts: time(),
+        );
 
-                $company = CompanyController::first();
-                // dd($company);
-                $id = $company->id;
-                // Session::put('cid', $id);
-            }
+        $where = [];
 
-            $company = CompanyController::get( $id );
-            if( empty($company) ){
-                $company = CompanyController::first();
-                $id = $company->id;
-            }
-        }
+        // if( $request->has('status') ){
+        //     if( $request->status!='' ){
+        //         $where[] = ['status', '=', $request->status];
+        //     }
+        // }
 
-        $results = CompanyController::get( $id );
+        $where[] = ['status', '=', 1];
 
-        if( !empty($results) ){
+        $sth = Company::where($where)
+            ->select([
+                'name', 'id', 'status', 'domain', 'username'
+            ])
+            ->orderby( $ops['sort'], $ops['dir'] )
 
-            // $request->session()->put('cid', $id);
-            Session::put('cid', $id);
-            Session::put('cname', $results->name);
-            Session::put('cdomain', $results->domain);
-            // $this->_company = $results;
-            // Business::set($results);
-            // dd(Business::get());
-            return true;
-        }
-        else{
-            return false;
-        }
-    }
+            ->skip( ($ops['page']*$ops['limit'])-$ops['limit'])
+            ->take( $ops['limit'] )
 
-    public static function first()
-    {
-        return DB::table('companies')
-            ->where('status','=',1)
-            ->orderby( 'updated_at', 'desc' )
-            ->first();
-    }
+            ->paginate( $ops['limit'] );
 
-    public static function get($id)
-    {
-        return DB::table('companies')
-            ->where('status','=',1)
-            ->where('id','=', $id)
-            ->first();
+        $arr = [
+            'options' => $ops,
+            'total' => $sth->total(),
+            'data' => $model->buildFrag($sth->items()),
+        ];
+
+        return response()->json($arr, 200);
     }
 }

@@ -48,4 +48,21 @@ class Ui {
 
         return isset($this->_dataFun[$filename]) ?$this->_dataFun[$filename]: $this;
     }
+
+    public function item($name=null)
+    {
+    	$name = ucfirst($name);
+        $path =  "Ui/{$name}.php";
+
+        // if( file_exists( $path ) ){
+
+            require_once $path;
+
+            if(array_key_exists($name, $this->_dataFun)==false){
+                $this->_dataFun[$name] = new $name;
+            }
+        // }
+
+        return isset($this->_dataFun[$name]) ?$this->_dataFun[$name]: $this;
+    }
 }

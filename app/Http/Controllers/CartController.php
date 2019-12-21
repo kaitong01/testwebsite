@@ -3,342 +3,533 @@
 namespace App\Http\Controllers;
 
 use Illuminate\Http\Request;
+use App\Http\Controllers\Controller;
+use App\Http\Requests\CartSerieRequest;
+use App\models\Carts;
+use App\Models\Company;
+use App\Models\CountryModel;
+use App\Models\DatacenterPeriod;
+use App\Models\DatacenterSeries;
+use App\Models\TourPeriod;
+use App\Models\TourSerie;
+use Illuminate\Auth\Access\AuthorizationException;
 use Illuminate\Support\Facades\DB;
-use Illuminate\Support\Facades\Session;
-use App\Models\Carts;
-use App\Models\WholesaleSeries;
-use App\Models\WholesalePeriods;
-use App\Models\ToursSeries;
-use App\Models\ToursPeriod;
-use Illuminate\Support\Facades\Auth;
+use Illuminate\Support\Facades\Route;
+use Illuminate\Support\Facades\Storage;
 
 class CartController extends Controller
 {
-    protected $table = 'carts';
-
-    /**
-     * Display a listing of the resource.
-     *
-     * @return \Illuminate\Http\Response
-     */
-    public function index($tab='waitlist')
+    public function index(Request $request)
     {
-        $filters = '';
+        $tab = basename(Route::getFacadeRoot()->current()->uri);
 
-
-
-        // $filters .= '<div class="filter-item"><label class="filter-item-label" for="status">สถานะ:</label><select class="filter-item-input form-control" id="status" name="status" data-action="change">'.
-        //     '<option value="">ทั้งหมด</option>'.
-        //     '<option value="1">ใช้งาน</option>'.
-        //     '<option value="2">ระงับ</option>'.
-        // '</select></div>';
-
-
-        $filters .= '<div class="filter-item search textbox-wrap">
-                <input type="text" class="filter-item-input form-control form-textbox form-icon-left" id="search-input" autocomplete="off" role="combobox" name="q" value="" required="" data-action="search">
-
-                <svg class="textbox-icon" viewBox="0 0 52.966 52.966" xmlns="http://www.w3.org/2000/svg"><path d="m51.704 51.273-14.859-15.453c3.79-3.801 6.138-9.041 6.138-14.82 0-11.58-9.42-21-21-21s-21 9.42-21 21 9.42 21 21 21c5.083 0 9.748-1.817 13.384-4.832l14.895 15.491c0.196 0.205 0.458 0.307 0.721 0.307 0.25 0 0.499-0.093 0.693-0.279 0.398-0.383 0.41-1.016 0.028-1.414zm-29.721-11.273c-10.477 0-19-8.523-19-19s8.523-19 19-19 19 8.523 19 19-8.524 19-19 19z"></path></svg>
-
-                <button class="textbox-clear" type="button"><svg width="19" height="19" viewBox="0 0 19 19" xmlns="http://www.w3.org/2000/svg"><path d="M18.253,5.8A9.494,9.494,0,0,0,9.5,0,9.5,9.5,0,0,0,.747,5.8a9.472,9.472,0,0,0,2.035,10.41A9.526,9.526,0,0,0,5.8,18.254a9.531,9.531,0,0,0,7.394,0,9.526,9.526,0,0,0,3.022-2.043A9.5,9.5,0,0,0,18.253,5.8Zm-5.095,6.392-0.967.967L9.45,10.426,6.708,13.159l-0.967-.967L8.483,9.45,5.741,6.717l0.967-.976L9.45,8.483l2.742-2.742,0.967,0.976L10.417,9.45Z"></path></svg></button>
-
-            </div>';
-
-
-        return view('pages.cart.index')->with([
-            'datatable' => [
-                'title' => 'นำเข้าข้อมูล',
-
-                'options' => [
-                    // 'page' => 1,
-                    'limit' => 24
-                ],
-                "url" => "/cart/datatable/".$tab,
-
-                'filter' => $filters,
-                'actions_right' => '<a class="btn btn-primary ml-2" href="/store"><svg class="svg-icon o__tiny o__by-text" xmlns="http://www.w3.org/2000/svg" width="12" height="12" viewBox="0 0 12 12"><path d="M2 5v2h3v3h2V7h3V5H7V2H5v3H2z"></path></svg> <span>ค้นหาแพคเกจทัวร์</span></a>'
+        $tabs = [
+            'carts' => [
+                'title' => 'ทั้งหมด',
             ],
-            'page_current_tab' => '/cart/'.$tab
-        ]);
+            'confirm' => [
+                'title' => 'เผยแพร่แล้ว',
+            ],
+            'verify' => [
+                'title' => 'รอตรวจสอบ',
+            ],
+            'cancel' => [
+                'title' => 'ยกเลิก',
+            ],
+        ];
+
+        if( in_array($tab, array_keys($tabs)) ){
+
+            $ops = $tabs[$tab];
+            $ops['url'] = '/carts/find/'.$tab;
+
+            return view('pages.cart.index')->with( CartController::_init( $request, $ops ) );
+        }
+        else{
+            throw new AuthorizationException('You do not have permission to view this page');
+        }
     }
-    public function find(Request $request)
+    public function edit (Request $request, $id)
     {
-        $ops = array(
-            'sort' => isset($request->sort)? $request->sort: 'updated_at',
-            'dir' => isset($request->dir)? $request->dir: 'desc',
-
-            'limit' => isset($request->limit)? $request->limit: 2,
-            'page' => isset($request->page)? $request->page: 1,
-
-            'ts' => time(),
-        );
+        $data = Carts::findOrFail( $id );
+        $statusList = TourSerie::status();
 
 
-        $sth = DB::table($this->table);
-        $sth->where( 'cid', '=', Session::get('cid') );
+        #
+        $countryList = CountryModel::get();
 
 
-        if( isset($request->q) ){
-            $ops['q'] = trim($request->q);
+        $series = $data->serie;
 
-            $sth->where( 'name', 'LIKE', "%{$ops['q']}%" );
+        // $periods = $series->periods;
+
+        $periods = DatacenterPeriod::where([
+            ['series_id','=', $series->id],
+        ])->orderby('start_date', 'asc')->get();
+
+        return view('forms.cart.form', compact('data', 'statusList', 'countryList', 'series', 'periods'));
+    }
+
+    public function update(CartSerieRequest $request, $id)
+    {
+        $cart = Carts::findOrFail( $id );
+
+
+        $series = $cart->serie;
+        // dd($series->gallery);
+
+
+        ## clone series
+        $data = TourSerie::where([
+            'master_id'     => $series->id,
+            'company_id'    => $request->user()->company->id,
+            'wholesale_id'  => $series->wholesale_id,
+        ])->first();
+
+        if( empty($data) ){
+            $data = new TourSerie;
         }
 
-        if( isset($request->status) ){
-            $ops['status'] = trim($request->status);
-            $sth->where( 'status', '=', $ops['status'] );
-        }
+        if( $data->fill( $request->input() )->save() ){
+
+            ## update carts
+            $cart->status = 2;
+            $cart->update();
 
 
-        // $total = $sth;
-        // $arr['total'] = $total->count();
+            ## update tourSeries
+            $data->master_id = $series->id;
+            $data->country_id = $series->country_id;
+            $data->airline_id = $series->airline_id;
+            $data->wholesale_id = $series->wholesale_id;
+            $data->company_id = $request->user()->company->id;
+
+            ## update: price_at
+            $data->price_at = str_replace(',', '', $request->price_at);
 
 
-        $sth->orderby( $ops['sort'], $ops['dir'] );
-        $sth->skip( ($ops['page']*$ops['limit'])- $ops['limit']);
-        $sth->take( $ops['limit'] );
+            ### update: plans
+            if( $request->has('plans')  ){
 
-        $results = $sth->paginate($ops['limit']);
+                $plans = [];
+                foreach ($request->plans as $value) {
+                    $plansTimes = [];
 
-        $arr['options'] = $ops;
-        $arr['total'] = $results->total();
-        $arr['data'] = $results->items();
+                    foreach ($value['items'] as $times) {
+                        if( empty($times['name']) && empty($times['text']) ) continue;
 
-        $arr['items'] = $this->ui->q('BlogCategoryUi')->init($arr['data'], $arr['options']);
+                        $plansTimes[] = $times;
+                    }
 
-        return response()->json($arr, 200);
-    }
+                    if( empty($plansTimes) && empty($value['title']) ) continue;
 
-
-    public function datatable(Request $request, $type)
-    {
-
-      $ops = array(
-          'sort' => isset($request->sort)? $request->sort: 'wholesale_series.created_at',
-          'dir' => isset($request->dir)? $request->dir: 'desc',
-
-          'limit' => 5,
-          'page' => isset($request->page)? $request->page: 1,
-
-          'ts' => time(),
-      );
-
-
-      $sth = DB::table('wholesale_series')
-      ->join('carts','carts.wh_series_id','=','wholesale_series.id');
-      $sth->where( 'cid', '=', Session::get('cid') );
-      if($type=='waitlist'){
-        $sth->where( 'carts.status', '=', 1 );
-      }
-      if($type=='published'){
-        $sth->where( 'carts.status', '=', 2 );
-      }
-      if($type=='cancel'){
-        $sth->where( 'carts.status', '=', 0 );
-      }
-
-
-      if( isset($request->q) ){
-          $ops['q'] = trim($request->q);
-
-          $sth->where( 'name', 'LIKE', "%{$ops['q']}%" );
-      }
-
-      if( isset($request->status) ){
-          $ops['status'] = trim($request->status);
-          $sth->where( 'status', '=', $ops['status'] );
-      }
-
-
-      $sth->orderby( $ops['sort'], $ops['dir'] );
-      $sth->skip( ($ops['page']*$ops['limit'])- $ops['limit']);
-      $sth->take( $ops['limit'] );
-
-      $results = $sth->paginate($ops['limit']);
-
-
-      $arr['options'] = $ops;
-      $arr['total'] = $results->total();
-      $arr['data'] = $results->items();
-
-      $arr['items'] = $this->ui->q('CartTableUi')->init($arr['data'], $arr['options']);
-
-      return response()->json($arr, 200);
-    }
-
-    /**
-     * Show the form for creating a new resource.
-     *
-     * @return \Illuminate\Http\Response
-     */
-    public function create()
-    {
-        //
-    }
-    public function cancel($id)
-    {
-      $db_cart = DB::table('carts')
-      ->where('cid','=',Session::get('cid'))
-      ->where('wh_series_id','=',$id)
-      ->first();
-
-      if($db_cart!=null){
-        $cart = Carts::find($db_cart->id);
-        $cart->status = 0;
-        $cart->save();
-      }else{
-          return redirect()->back();
-      }
-      return redirect()->back();
-    }
-    public function published($id)
-    {
-
-      $tour_series = ToursSeries::where('master_id','=',$id)
-      ->where('company_id','=',Session::get('cid'))
-      ->first();
-
-      if(!empty($tour_series)){
-          return redirect()->back();
-      }else{
-
-          $wh_series =  WholesaleSeries::find($id);
-          $wh_period =  WholesalePeriods::where('series_id','=',$id)->orderBy('start_date','asc')->get();
-
-          if(!empty($wh_series)){
-
-            $tour_series = new ToursSeries;
-            $tour_series->wholesale_id   =  $wh_series->wholesale_id;
-            $tour_series->master_id   =  $wh_series->id;
-            $tour_series->country_id   =  $wh_series->country_id;
-            $tour_series->airline_id   =  $wh_series->airline_id;
-            $tour_series->code   =  $wh_series->code;
-            $tour_series->name   =  $wh_series->name;
-            $tour_series->highlight   =  $wh_series->highlight;
-            $tour_series->description   =  $wh_series->description;
-            $tour_series->status   =  1;
-            $tour_series->days   =  $wh_series->days;
-            $tour_series->nights   =  $wh_series->nights;
-            $tour_series->price_at   =  $wh_series->price_at;
-            $tour_series->airline   =  $wh_series->airline;
-            $tour_series->plans   =  $wh_series->plans;
-            $tour_series->meals   =  $wh_series->meals;
-            $tour_series->meals_note   =  $wh_series->meals_note;
-            $tour_series->hotels   =  $wh_series->hotels;
-            $tour_series->hotels_note   =  $wh_series->hotels_note;
-            $tour_series->conditions   =  $wh_series->conditions;
-            $tour_series->files   =  $wh_series->files;
-            $tour_series->gallery   =  $wh_series->gallery;
-            $tour_series->periods_note   =  $wh_series->periods_note;
-            $tour_series->created_uid   =  '';
-            $tour_series->updated_uid   =  '';
-            $tour_series->whole_code   =  $wh_series->whole_code;
-            $tour_series->company_id   =  Session::get('cid');
-
-            if($tour_series->save()){
-              $db_cart = DB::table('carts')
-              ->where('cid','=',Session::get('cid'))
-              ->where('wh_series_id','=',$id)
-              ->first();
-
-              if($db_cart!=null){
-                $cart = Carts::find($db_cart->id);
-                $cart->status = 2;
-                $cart->save();
-              }
-              if(!empty($wh_period)){
-                foreach ($wh_period as $row) {
-                  $tour_period = new ToursPeriod;
-                  $tour_period->series_id = $tour_series->id;
-                  $tour_period->start_date = $row->start_date;
-                  $tour_period->end_date = $row->end_date;
-                  $tour_period->status = $row->status;
-                  $tour_period->created_uid = '';
-                  $tour_period->updated_uid = '';
-                  $tour_period->price_at = $row->price_at;
-                  $tour_period->prices_options = $row->prices_options;
-                  $tour_period->company_id = Session::get('cid');
-                  $tour_period->save();
+                    $plans[] = array(
+                        'title' => trim($value['title']),
+                        'items' => $plansTimes
+                    );
                 }
-                $arr['code'] = 200;
-                $arr['message'] = 'บันทึกเรียบร้อย';
-                // $arr['redirect'] = 'refresh';
+            }
+            $data->plans = !empty($plans)? json_encode($plans, JSON_UNESCAPED_UNICODE): null;
 
-                $arr['call'] = 'refreshDatatable';
-              }else{
-                $arr['code'] = 422;
-                $arr['message'] = 'บันทึกข้อมูลล้มเหล่ว, กรุณาลองใหม่';
-              }
+            ### update: meals
+            $data->meals = $request->has('meals')? json_encode($request->meals, JSON_UNESCAPED_UNICODE): null;
 
-            }else{
-              $arr['code'] = 422;
-              $arr['message'] = 'บันทึกข้อมูลล้มเหล่ว, กรุณาลองใหม่';
+
+            ### update: hotels
+            if( $request->has('hotels') ){
+
+                $hotels = [];
+                foreach ($request->hotels as $key => $value) {
+                    if( empty($value['name']) ) continue;
+                    $hotels[] = $value;
+                }
+            }
+            $data->hotels = !empty($hotels)? json_encode($hotels, JSON_UNESCAPED_UNICODE): null;
+
+            ### update: gallery
+            $gallery = []; $oldGallery = json_decode($series->gallery, 1);
+            if($request->has('images')){
+
+                // dd( $request->images );
+                foreach ($request->images as $img) {
+
+                    $dataImage = array();
+
+                    if( !empty($img['upload']) ) {
+                        $dataImage['path'] = $img['upload']->store($request->user()->company->id.'/gallery/', 'public');
+                        $dataImage['name'] = $img['upload']->getClientOriginalName();
+                        $dataImage['size'] = $img['upload']->getClientSize();
+                    }
+
+                    if( isset($img['id']) && !empty($oldGallery) ){
+                        foreach ($oldGallery as $i => $value) {
+                            $img_id = isset($value['id']) ? $value['id']: $i;
+                            if( $img_id==$img['id'] ){
+
+                                $value['url'] = asset("storage/{$value['path']}"); unset( $value['path'] );
+                                $dataImage = $value;
+                                unset( $oldGallery[$i] );
+                            }
+                        }
+                    }
+
+                    if( !empty( $img['caption'] ) ){
+                        $dataImage['caption'] = $img['caption'];
+                    }
+                    else if( isset($dataImage['caption']) ) {
+                        unset($dataImage['caption']);
+                    }
+
+                    $gallery[] = $dataImage;
+                }
             }
 
-          }else{
-            $arr['code'] = 422;
-            $arr['message'] = 'บันทึกข้อมูลล้มเหล่ว, กรุณาลองใหม่';
-          }
-
-      }
+            $data->gallery = !empty($gallery)? json_encode($gallery): null;
 
 
-        //return response()->json($arr, $arr['code']);
-        return redirect()->back();
+            ### update docs
+            $files = array(); $oldFiles = !empty($series->files)? json_decode($series->files, 1): [];
+            if( $request->has('docs') ){
+
+                // dd( $request->docs );
+                foreach ($request->docs as $key => $value) {
+
+                    if( !empty($value['upload']) ){
+                        //insert
+
+                        $files[] = array(
+                            'name' => !empty($value['name'])? $value['name']: $value['upload']->getClientOriginalName(),
+                            'exten' => $value['upload']->getClientOriginalExtension(),
+                            'size' => $value['upload']->getClientSize(),
+                            'key' => $value['key'],
+                            'path' => $value['upload']->store($request->user()->company->id.'/docs/', 'public'),
+                        );
+
+                    } else if( !empty($value['name']) && !empty($oldFiles) ){
+
+                        // update
+                        foreach ($oldFiles as $val) {
+                            if( $val['key']==$value['key'] ){
+                                $val['name'] = $value['name'];
+
+                                $val['url'] = asset("storage/{$val['path']}"); unset( $val['path'] );
+                                $files[] = $val;
+                            }
+                        }
+                    }
+                }
+            }
+            $data->files = !empty($files)? json_encode($files): null;
+
+
+            ## update permalink
+            $permalink = $request->has('permalink')
+                ? $this->fn->q('text')->createPermalink($request->permalink)
+                : $this->fn->q('text')->createPermalink($request->name);
+
+            $count = TourSerie::where([
+                ['permalink', '=', $permalink],
+                ['company_id', '=', $request->user()->company->id],
+            ])->count();
+
+            if( $count>0 ){
+                $permalink += "-".($count+1);
+            }
+            $data->permalink = $permalink;
+
+            ## all update
+            $data->created_uid = $request->user()->id;
+            $data->updated_uid = $request->user()->id;
+            $data->update();
+
+
+            ### set: period
+            foreach ($request->period as $item) {
+
+                if( empty($item['start_date']) || empty($item['end_date']) ) continue;
+
+                $period = new TourPeriod();
+
+                // $period->wholesale_id = $request->wholesale_id;
+                $period->series_id = $data->id;
+
+                list($d, $m, $y) = explode('/', $item['start_date']);
+                $period->start_date = date("{$y}-{$m}-{$d}");
+
+                list($d, $m, $y) = explode('/', $item['end_date']);
+                $period->end_date = date("{$y}-{$m}-{$d}");
+
+                $period->status = $item['status'];
+
+                $prices = array();
+                if( !empty($item['prices_options']) ){
+                    foreach ($item['prices_options'] as $price) {
+                        $prices[] = str_replace(',', '', $price);
+                    }
+                }
+
+                if( !empty( $prices[0] ) ){
+                    $period->price_at = $prices[0];
+                }
+
+                $period->prices_options = !empty($prices)? json_encode($prices): '';
+                // $period->discount = $item['discount'];
+                $period->created_uid = $request->user()->id;
+                $period->updated_uid = $request->user()->id;
+
+                $period->save();
+            }
+
+            // $res['data'] = $data;
+            $res['code'] = 200;
+            $res['message'] = 'บันทึกข้อมูลแล้ว';
+
+            $res['call'] = 'refreshDatatable';
+            // $res['redirect'] = "/tours/series/{$data->id}/edit";
+        }
+        else{
+
+            $res['code'] = 402;
+            $res['message'] = 'บันทึกข้อมูลล้มเหลว, กรุณาลองใหม่';
+        }
+
+        return response()->json($res, $res['code']);
     }
 
-    /**
-     * Store a newly created resource in storage.
-     *
-     * @param  \Illuminate\Http\Request  $request
-     * @return \Illuminate\Http\Response
-     */
-    public function store(Request $request)
+    public function switch(Request $request)
     {
-        //
+
+        if( $request->has('id') ){
+            $data = Carts::findOrFail( $request->id );
+        }
+        else{
+            $data = new Carts();
+        }
+
+
+        if( $data->fill( $request->input() )->save() ){
+
+            $data->cid = $request->user()->company->id;
+            $data->update();
+
+            $res['data'] = $data;
+            $res['code'] = 200;
+            $res['message'] = 'บันทึกข้อมูลแล้ว';
+        }
+        else{
+            $res['code'] = 402;
+            $res['message'] = 'บันทึกข้อมูลล้มเหลว, กรุณาลองใหม่';
+        }
+
+        return response()->json($res, $res['code']);
+
     }
 
-    /**
-     * Display the specified resource.
-     *
-     * @param  int  $id
-     * @return \Illuminate\Http\Response
-     */
-    public function show($id)
+    public function delete($id)
     {
-        //
-    }
+        $data = Carts::findOrFail( $id );
 
-    /**
-     * Show the form for editing the specified resource.
-     *
-     * @param  int  $id
-     * @return \Illuminate\Http\Response
-     */
-    public function edit($id)
-    {
-        //
-    }
+        $series = $data->serie;
 
-    /**
-     * Update the specified resource in storage.
-     *
-     * @param  \Illuminate\Http\Request  $request
-     * @param  int  $id
-     * @return \Illuminate\Http\Response
-     */
-    public function update(Request $request, $id)
-    {
-        //
+        return view('forms.cart.delete', compact('data', 'series'));
     }
-
-    /**
-     * Remove the specified resource from storage.
-     *
-     * @param  int  $id
-     * @return \Illuminate\Http\Response
-     */
     public function destroy($id)
     {
+        $data = Carts::findOrFail( $id );
+
+        $data->status = 0;
+        $data->update();
+
+        return response()->json([
+            "message" => 'ยกเลิกข้อมูลเรียบร้อย',
+            'code' => 200,
+            'info' => 'Successfully',
+
+            // 'delete' => '[blog-category-id='.$id.']',
+            'call' => 'refreshDatatable',
+
+        ], 200);
+    }
+
+    // get data
+    public function find(Request $request, $tab='')
+    {
+        $ops = [
+            'sort' => isset($request->sort)? $request->sort: 'wholesale_series.updated_at',
+            'dir' => isset($request->dir)? $request->dir: 'desc',
+
+            'limit' => isset($request->limit)? $request->limit: 1,
+            'page' => isset($request->page)? $request->page: 1,
+
+            'ts' =>  isset($request->ts)? $request->ts: time(),
+        ];
+
+        $where = [];
+
+        // if( $request->has('status') ){
         //
+        // }
+
+        if( $tab=='confirm' ){
+            $where[] = ['carts.status', '=', 2];
+        }
+
+        if( $tab=='verify' ){
+            $where[] = ['carts.status', '=', 1];
+        }
+
+        if( $tab=='cancel' ){
+            $where[] = ['carts.status', '=', 0];
+        }
+
+
+
+        if( $request->has('q') ){
+            $where[] = ['name', 'LIKE', "%{$request->q}%"];
+            $ops['q'] = $request->q;
+        }
+
+        $where[] = ['wholesale_series.status', '=', 1];
+        $wholesalesIDs = Company::wholesalesIds( $request->user()->company->id );
+
+        $sth = DatacenterSeries::where($where)
+            ->join( 'carts', 'carts.wh_series_id', '=', 'wholesale_series.id' );
+
+
+        $sth
+            ->whereIn( 'wholesale_series.wholesale_id', $wholesalesIDs )
+
+            ->orderby( $ops['sort'], $ops['dir'] )
+
+            ->skip( ($ops['page']*$ops['limit'])-$ops['limit'])
+            ->take( $ops['limit'] );
+
+        $results = $sth->paginate( $ops['limit'] );
+
+        $res = [
+            'options' => $ops,
+            'total' => $results->total(),
+            'data' => $results->items(),
+        ];
+
+        $res['code'] = 200;
+        $res['info'] = 'Results successfully';
+        $res['message'] = 'The request has succeeded.';
+
+        // dd($res);
+        $res['items'] = $this->ui->item('CartDatatable')->init( $res['data'], $ops );
+
+        return response()->json($res, 200);
+    }
+
+    // set Datatable
+    public static function _init ($request, $ops=[] )
+    {
+        return [
+            'title' => '',
+
+            'navleft' => CartController::_leftMenu($request),
+
+            'datatable' => [
+                'title' => isset($ops['title'])? $ops['title']: 'ตะกร้า',
+
+                'options' => [
+                    'limit' => 24
+                ],
+                "url" => $ops['url'],
+
+                'filters' => CartController::_filters( $ops ),
+            ],
+        ];
+    }
+    public static function _filters( $ops=[] )
+    {
+
+        $ops = array_merge( [
+            'status' => 1,
+            'state' => '',
+        ], $ops );
+
+
+        $filters = [];
+
+        $filters[] = [
+            'position' => 'topLeft',
+            'type' => 'searchbox',
+
+            'name' => 'q',
+        ];
+
+
+        return $filters;
+    }
+    public static function _leftMenu($request)
+    {
+
+        $wholesalesIDs = Company::wholesalesIds( $request->user()->company->id );
+
+        $today = date('Y-m-d 23:59:59');
+        $prevWeek = strtotime("-7 day", strtotime($today));
+        $nextWeek = strtotime("+7 day", strtotime($today));
+
+        return [
+            [
+                // "name" => "สถานะ",
+                "items" => [
+                    [
+                        "id"=> "/carts",
+                        "name" => "ทั้งหมด",
+                        'count' => DB::table('wholesale_series')
+                            ->join('carts', 'carts.wh_series_id', '=', 'wholesale_series.id')
+                            // ->where([])
+                            ->whereIn( 'wholesale_series.wholesale_id', $wholesalesIDs )
+                            ->count()
+                    ],
+                    [
+                        "id"=> "/carts/confirm",
+                        "name" => "เผยแพร่แล้ว",
+                        'count' => DB::table('wholesale_series')
+
+                            ->join('carts', 'carts.wh_series_id', '=', 'wholesale_series.id')
+                            ->where([
+                                ['carts.status', '=', 2],
+                            ])
+                            ->whereIn( 'wholesale_series.wholesale_id', $wholesalesIDs )
+                            ->count()
+                    ],
+                    [
+                        "id"=> "/carts/verify",
+                        "name" => "รอตรวจสอบ",
+                        'count' => DB::table('wholesale_series')
+
+                            ->join('carts', 'carts.wh_series_id', '=', 'wholesale_series.id')
+                            ->where([
+                                ['carts.status', '=', 1],
+                            ])
+                            ->whereIn( 'wholesale_series.wholesale_id', $wholesalesIDs )
+                            ->count()
+                    ],
+
+
+                ]
+            ],
+
+            [
+                "items" => [
+                    [
+                        "id"=> "/carts/cancel",
+                        "name" => "ยกเลิก",
+                        'count' => DB::table('wholesale_series')
+
+                            ->join('carts', 'carts.wh_series_id', '=', 'wholesale_series.id')
+                            ->where([
+                                ['carts.status', '=', 0],
+                            ])
+                            ->whereIn( 'wholesale_series.wholesale_id', $wholesalesIDs )
+                            ->count()
+                    ],
+                ]
+            ]
+        ];
     }
 }

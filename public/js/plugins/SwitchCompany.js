@@ -70,7 +70,7 @@ if ( typeof Object.create !== 'function' ) {
 
 			self.total = 0;
 			// self.settings = settings;
-			self.url = '/api/v1/companies'; //settings.url; // ||
+			self.url = '/companies'; //settings.url; // ||
 		},
 
 		refresh: function ( delay ) {
@@ -180,12 +180,14 @@ if ( typeof Object.create !== 'function' ) {
 
 
 
-            $.post('/account/change_company', {
+            $.get('/switch/company', {
                 id: data.id,
                 _token: $('meta[name=csrf-token]').attr('content')
-            }, function(data, textStatus, xhr) {
+            }, function(res, textStatus, xhr) {
 
-                if( data.code==200 ){
+                // console.log( res );
+
+                if( res.code==200 ){
                     location.reload();
                 }
             }, 'json');

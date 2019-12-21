@@ -84,6 +84,7 @@ if ( typeof Object.create !== 'function' ) {
             self.$listsbox.delegate('.form-start-date', 'change', function (e) {
                 // e.preventDefault();
 
+                var val = $(this).val();
                 var $parent = $(this).closest('tr');
 
                 if( $(this).data('datepicker') && !is_update ){
@@ -101,10 +102,11 @@ if ( typeof Object.create !== 'function' ) {
                     var $endDate = $parent.find('.form-end-date');
                     var _d = $endDate.data('datepicker');
 
-                    is_update = true;
-                    _d.update( theDate );
-
-                    is_update = false;
+                    if( val!='' ){
+                        is_update = true;
+                        _d.update( theDate );
+                        is_update = false;
+                    }
 
                 }
 
@@ -113,6 +115,7 @@ if ( typeof Object.create !== 'function' ) {
             self.$listsbox.delegate('.form-end-date', 'change', function (e) {
                 // e.preventDefault();
 
+                var val = $(this).val();
                 var $parent = $(this).closest('tr');
 
                 if( $(this).data('datepicker') && !is_update ){
@@ -125,9 +128,11 @@ if ( typeof Object.create !== 'function' ) {
                     var $startDate = $parent.find('.form-start-date');
                     var _d = $startDate.data('datepicker');
 
-                    is_update = true;
-                    _d.update( theDate );
-                    is_update = false;
+                    if( val!='' ){
+                        is_update = true;
+                        _d.update( theDate );
+                        is_update = false;
+                    }
                 }
 
             });
@@ -139,29 +144,42 @@ if ( typeof Object.create !== 'function' ) {
 
             let startDateStr = '';
             if(data.start_date){
-                let startDate = new Date(data.start_date);
 
-                let d = startDate.getDate();
-                d = d < 10 ? '0'+d:d;
 
-                let m = startDate.getMonth();
-                m = m < 10 ? '0'+m:m;
+                let res = data.start_date.split("-");
+                // let startDate = new Date(parseInt(res[0]), parseInt(res[1]), parseInt(res[2]));
 
-                startDateStr = d+'/'+m+'/'+startDate.getFullYear();
+                // let d = startDate.getDate();
+                // d = d < 10 ? '0'+d:d;
+
+                // let m = startDate.getMonth();
+                // m = m < 10 ? '0'+m:m;
+
+                startDateStr = res[2]+'/'+res[1]+'/'+res[0];
             }
 
 
             let endDateStr = '';
             if(data.end_date){
-                let endDate = new Date(data.end_date);
+                let res = data.end_date.split("-");
+                // console.log( data.end_date );
+                // let endDate = new Date();
 
-                let d = endDate.getDate();
-                d = d < 10 ? '0'+d:d;
+                // endDate.setFullYear(parseInt(res[0]));
+                // endDate.setMonth(parseInt(res[1]));
+                // endDate.setDate(parseInt(res[2]));
 
-                let m = endDate.getMonth();
-                m = m < 10 ? '0'+m:m;
+                // console.log( parseInt(res[0]), parseInt(res[1]), parseInt(res[2]) );
+                // // parseInt(res[0]), parseInt(res[1]), parseInt(res[2])
 
-                endDateStr = d+'/'+m+'/'+endDate.getFullYear();
+                // let d = parseInt(res[2]);
+                // d = d < 10 ? '0'+d:d;
+
+                // let m = parseInt(res[1]);
+                // m = m < 10 ? '0'+m:m;
+
+                endDateStr = res[2]+'/'+res[1]+'/'+res[0];
+                //d+'/'+m+'/'+endDate.getFullYear();
             }
 
             let pricesOps = [];

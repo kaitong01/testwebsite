@@ -50,10 +50,10 @@ if ( typeof Object.create !== 'function' ) {
 
 			if( self.options.src ){
 
-				var name_cancel = options.name_cancel || '_'+self.options.name;
+				var cancelFileName = options.cancelFileName || '_'+self.options.name;
 
 
-				self.$inputHas = $('<input type="hidden" name="'+ name_cancel +'" value="1" autocomplete="off" >');
+				self.$inputHas = $('<input type="hidden" name="'+ cancelFileName +'" value="1" autocomplete="off" >');
 				self.$elem.append(self.$inputHas);
 				self.$inputHas.val( 0 ).addClass('disabled').prop('disabled', true);
 

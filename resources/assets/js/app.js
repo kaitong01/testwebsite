@@ -23,3 +23,23 @@ Vue.component('example-component', require('./components/ExampleComponent.vue'))
 const app = new Vue({
     el: '#doc'
 });
+
+$(document).ready(function(){
+
+    $.ajaxSetup({
+        headers: {
+            'X-CSRF-TOKEN': $('meta[name="csrf-token"]').attr('content')
+        }
+    });
+
+
+    $('#page-navigation-trigger').click( (evt) => {
+        evt.preventDefault();
+        $('body').toggleClass('is-pushed-left');
+
+        $.get( '/switch/menu', {status: $('body').hasClass('is-pushed-left')? 1: 0}, function (res) {
+
+            // console.log( res );
+        }, 'json');
+    });
+});

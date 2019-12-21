@@ -20,7 +20,7 @@ class CheckCompany
         $response = $next($request);
         $c = new CompanyController;
 
-        if( Auth::user()->user_status != 1 ){
+        if( Auth::user()->status != 1 ){
             Auth::logout();
             return redirect('/login')->with('erro_login', 'status disable');
         }

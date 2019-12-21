@@ -1,8 +1,7 @@
 <?php
 
-// use Illuminate\Support\Facades\Session;
-
-$site_menu_open = Session::get('site_menu_open') || true;
+$site_menu_open = session('show_menu');
+// $site_menu_open = Session::get('site_menu_open');
 
 $bodyCls = '';
 if( !empty($site_menu_open) ){
@@ -34,16 +33,19 @@ if( !empty($bodyCls) ){
     <!-- CSRF Token -->
     <meta name="csrf-token" content="{{ csrf_token() }}">
 
-    <title>@if (trim($__env->yieldContent('title')))@yield('title') | @endif {{ config('app.name', 'MANAGER/Easy Web Tour') }}</title>
+
+    <title>@if (trim($__env->yieldContent('title')))@yield('title') | @endif {{ 'Easy Web Tour' }}</title>
+
 
     <link rel="stylesheet" href="{{ mix('/css/app.css') }}">
+
+
     <script src="https://ajax.googleapis.com/ajax/libs/jquery/1.11.3/jquery.min.js"></script>
     <script src="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.5/js/bootstrap.min.js"></script>
-
     <script src="/js/custom.js"></script>
+
 </head>
-{{-- $bodyCls --}}
-<body>
+<body<?=$bodyCls?>>
 
     <div id="doc">
         @auth
@@ -58,9 +60,7 @@ if( !empty($bodyCls) ){
         @endauth
 
         <main id="page-main" class="page-main layout__box o__flexes-to-1 o__has-rows">
-
             @yield('content')
-
         </main>
     </div>
 
@@ -71,6 +71,8 @@ if( !empty($bodyCls) ){
     </div>
 
     <!-- Scripts -->
+    <!-- <script src="https://ajax.googleapis.com/ajax/libs/jquery/1.11.3/jquery.min.js"></script>
+    <script src="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.5/js/bootstrap.min.js"></script> -->
     <script src="{{ mix('js/app.js') }}" defer></script>
 
     @yield('footer_scripts')

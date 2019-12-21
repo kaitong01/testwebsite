@@ -3,126 +3,55 @@
 namespace App\Http\Controllers;
 
 use Illuminate\Http\Request;
-use Illuminate\Support\Facades\Session;
 use Illuminate\Support\Facades\Validator;
 use Illuminate\Support\Facades\Storage;
 
-use App\Models\Companies;
-use App\Models\CompaniesSlidesModel;
-use Illuminate\Support\Facades\Auth;
-
-use function GuzzleHttp\json_encode;
 
 class BusinessController extends Controller
 {
-    /**
-     * Display a listing of the resource.
-     *
-     * @return \Illuminate\Http\Response
-     */
-    public function index( $tab='settings' )
+    public function index(Request $request, $tab='settings' )
     {
-        $id = Session::get('cid');
-        $data = Companies::find( $id );
-
-        // if( is_null( $data ) ){
-        //     return response()->json(["message" => 'Record not found!'], 404);
-        // }
-
+        // dd( $request );
         return view('pages.business.index')->with([
             'page_current_tab' => '/business/'.$tab,
-            'item' => $data,
+            'item' => $request->user()->company,
         ]);
     }
 
-    /**
-     * Show the form for creating a new resource.
-     *
-     * @return \Illuminate\Http\Response
-     */
-    public function create()
-    {
-        //
-    }
-
-    /**
-     * Store a newly created resource in storage.
-     *
-     * @param  \Illuminate\Http\Request  $request
-     * @return \Illuminate\Http\Response
-     */
-    public function store(Request $request)
-    {
-
-    }
-
-    /**
-     * Display the specified resource.
-     *
-     * @param  int  $id
-     * @return \Illuminate\Http\Response
-     */
-    public function show($id)
-    {
-        //
-    }
-
-    /**
-     * Show the form for editing the specified resource.
-     *
-     * @param  int  $id
-     * @return \Illuminate\Http\Response
-     */
-    public function edit($id)
-    {
-        //
-    }
-
-    /**
-     * Update the specified resource in storage.
-     *
-     * @param  \Illuminate\Http\Request  $request
-     * @param  int  $id
-     * @return \Illuminate\Http\Response
-     */
     public function update(Request $request, $tab)
     {
         // $arr['post'] = $request->all();
-        $validate = [];
-        $validateMessage = [];
+        $validate = []; $validateMessage = [];
 
         if($tab=='settings'){
             $validate = [
                 'name' => 'required|max:75',
                 // 'description' => 'required',
-                // 'image' => 'required | mimes:jpeg,jpg,png | max:1000',
+                'image' => 'mimes:jpeg,jpg,png|max:1000',
             ];
 
             $validateMessage = [
                 'name.required' => 'กรุณากรอกชื่อธุรกิจหรือเว็บไซต์ของคุณ',
+                'name.max' => 'ชื่อต้องไม่เกิน 175 ตัวอักษร',
+                'name.min' => 'ชื่อต้องยาว 2 ตัวอักษรขึ้นไป',
+
                 'description.required' => 'กรุณากรอกคำอธิบาย',
+
                 'image.required' => 'กรุณาใส่รูปภาพ',
-                'image.max' => 'ขนาดไฟล์เกินกำหนด',
-                'image.mimes' => 'ชนิดของไฟล์ต้องเป็น jpeg,jpg,png เท่านั้น',
+                'image.mimes' => 'ชนิดของไฟล์ต้องเป็น .jpeg, .jpg, .png เท่านั้น',
+                'image.max' => 'รับขนาดไฟล์สูงสุดที่จะอัปโหลดคือ 2MB',
             ];
         }
 
-
-
         $validator = Validator::make($request->all(), $validate, $validateMessage);
+
         if ( $validator->fails() ) {
             $arr['code'] = 422;
             $arr['errors'] = $validator->errors();
         }
         else{
 
-            $id = Session::get('cid');
-            $data = Companies::find( $id );
-
-            if( is_null( $data ) ){
-                return response()->json(["message" => 'Record not found!'], 404);
-            }
-
+            $data = $request->user()->company;
 
             if($tab=='settings'){
 
@@ -137,7 +66,7 @@ class BusinessController extends Controller
                 }
 
                 if($request->hasFile('logo')){
-                    $data->logo = $request->file('logo')->store( Session::get('cid'), 'public' );
+                    $data->logo = $request->file('logo')->store( $request->user()->company->id.'/logos', 'public' );
                 }
             }
 
@@ -187,8 +116,6 @@ class BusinessController extends Controller
                 $data->seo_title         = $request->seo_title;
                 $data->seo_description   = $request->seo_description;
                 $data->seo_keywords      = $request->seo_keywords;
-
-
             }
 
             if( $tab=='google_analytics' ){
@@ -207,7 +134,9 @@ class BusinessController extends Controller
                 $arr['code'] = 200;
                 $arr['message'] = 'บันทึกข้อมูลเรียบร้อย';
 
-                $arr['update'] = ['[company-id='.$id.']', $data];
+                $arr['redirect'] = 'refresh';
+
+                // $arr['update'] = ['[company-id='.$id.']', $data];
             }
             else{
                 $arr['code'] = 422;
@@ -219,16 +148,5 @@ class BusinessController extends Controller
         return response()->json($arr, $arr['code']);
 
         // return
-    }
-
-    /**
-     * Remove the specified resource from storage.
-     *
-     * @param  int  $id
-     * @return \Illuminate\Http\Response
-     */
-    public function destroy($id)
-    {
-        //
     }
 }

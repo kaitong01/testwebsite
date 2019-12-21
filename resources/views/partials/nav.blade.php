@@ -16,7 +16,3 @@
 
     </div>
 </nav>
-
-@section('footer_scripts')
-    @include('scripts.nav')
-@endsection

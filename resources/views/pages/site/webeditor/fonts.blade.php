@@ -1,60 +1,20 @@
+<meta name="csrf-token" content="{{ csrf_token() }}">
 <div class="container-fluid">
-  <div class="row" style="padding:20px;">
-    <div class="col-12">
-
-      <div class="row">
-        <div class="col-12">
-          <div class="page-title d-flex justify-content-between ptl">
-          		<div>
-          			<h3>Fonts </h3>
-          		</div>
-
-			   </div>
-        </div>
-      </div>
-
-      <div class="row" style="margin-top:20px;">
-        <div class="col-12">
-          <div class="row">
-            <div class="col-12">
-              <div class="card ">
-                  <div class="card-header bg-primary ">
-                    <h4>  </h4>
-                  </div>
-                  <div class="card-body">
-                    <div class="row" >
-                      @foreach($data as $row)
-                      <div class="col-3" style="margin-top:15px">
-                        <div class="card ">
-                            <div class="card-header  ">
-                              <h4>{{$row->name}} </h4>
-                            </div>
-                            <div class="card-body" style="height:100px">
-                              <div class="row">
-                                <span style="">{{$row->text}}</span>
-                              </div>
-                            </div>
-                          </div>
-
-                      </div>
-
-
-                      @endforeach
-                    </div>
-                  </div>
-                </div>
-
-            </div>
+  <div class="card-body" data-plugin="page_fonts">
+    <input type="hidden" class="font-id" value="{!! $data->co_font !!}">
+    <div class="row">
+      @foreach( $forntLists as $key => $value )
+      <div class="col-xl-4 col-md-6 col-sm-12 fonts-margin {{ $data->co_font==$value->id ? ' font-active':'' }}">
+        <div class="card-body card-fonts font-module">
+          <div class="custom-control custom-radio ">
+            <input type="radio" class="custom-control-input radio-fonts" name="id" value="{{$value->id}}" {{ $data->co_font==$value->id ? ' checked="1"':'' }}>
+            <label class="custom-control-label">{{$value->name}}</label>
           </div>
-
-
-
+          <hr>
+          <p style="font-family:{{$value->style}};font-size: 20px;">{{$value->text}}</p>
         </div>
-
       </div>
-
+      @endforeach
     </div>
   </div>
-
-
 </div>

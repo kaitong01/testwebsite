@@ -3,7 +3,6 @@
 // @import url('https://fonts.googleapis.com/css?family=Nunito');
 
 
-
 // Bootstrap
 @import '~bootstrap/scss/bootstrap';
 
@@ -20,4 +19,10 @@
 // @import 'variables';
 // @import 'selectize';
 @import 'datepicker';
+
+@import 'googlefonts';
+@import 'banner';
+@import 'sitepage';
+@import 'slide';
+
 @import 'main';

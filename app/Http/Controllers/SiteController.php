@@ -2,136 +2,103 @@
 
 namespace App\Http\Controllers;
 
+use App\Models\CompanyBanner;
+use App\Models\CompanySlide;
+use App\Models\DefaultFont;
+use App\Models\DefaultThemeBanner;
 use Illuminate\Http\Request;
-use Illuminate\Support\Facades\Session;
 use Illuminate\Support\Facades\Auth;
-use DB;
+
+use App\Models\SitePage;
+use App\Models\SitePageDefault;
+
 
 class SiteController extends Controller
 {
-  private $_tabs = ['infomation','home','themecolor','fonts', 'slideshow', 'banners','picture','google_analytic', 'google_adwords', 'onweb', 'wholesale'];
-    // public function menu(Request $request)
-    // {
-    // 	// return is_null($method) ? $this->getRoutes() : Arr::get($this->routes, $method, []);
-    // 	$is = is_null($request->is_open) ? 0: $request->is_open;
-    // 	// $menuOpen = Session::get('site_menu_open');
 
-    // 	Session::put('site_menu_open', $is);
-    // 	return response()->json(['success'=>'Got Simple Ajax Request.', 'site_menu_open'=>$is]);
-    // }
+    private $navleft = [
+        [
+            "name" => "การตั้งค่า",
+            "items" => [
+                ["id"=> "/site/menus", "name" => "เมนู"],
+                ["id"=> "/site/fonts", "name" => "ฟอนต์"],
+                ["id"=> "/site/colors", "name" => "สี"],
+            ]
+        ],
+        [
+            "name" => "การตั้งค่าขั้นสูง",
+            "items" => [
+                ["id"=> "/site/slides", "name" => "ภาพสไลด์"],
+                ["id"=> "/site/banners", "name" => "แบนเนอร์"],
+            ]
+        ]
+    ];
 
-
-    /**
-     * Display a listing of the resource.
-     *
-     * @return \Illuminate\Http\Response
-     */
-     public function index( $tab='infomation' )
+     public function index( $tab='menus' )
      {
 
-       if( !in_array($tab, $this->_tabs) ){
-         // dd($tab);
-           return view('errors.404');
-       }else{
-         if($tab=='infomation'){
-           $data ='';
-         }elseif($tab=='home'){
-           $data ='';
-         }elseif($tab=='themecolor'){
-           $data = DB::table('theme_color')
-           ->where('company_id','=', Session::get('cid'))
-           ->first();
-         }elseif($tab=='fonts'){
-           $data = DB::table('pages_fonts')
+        $data = [];
 
-           ->get();
-         }elseif($tab==''){
-           $data ='';
-         }
-
-
-
-
-         return view('pages.site.index')->with([
-             'page' => $tab,
-             'page_current_tab' => '/site/webeditor/'.$tab,
-             'data' => $data,
-         ]);
-       }
-     }
-    /**
-     * Show the form for creating a new resource.
-     *
-     * @return \Illuminate\Http\Response
-     */
-    public function create()
-    {
-        //
-    }
-
-    /**
-     * Store a newly created resource in storage.
-     *
-     * @param  \Illuminate\Http\Request  $request
-     * @return \Illuminate\Http\Response
-     */
-    public function store(Request $request)
-    {
-
-        // return is_null($method) ? $this->getRoutes() : Arr::get($this->routes, $method, []);
-
-        if($request->has('is_menu_open')){
-
-            $is = is_null($request->is_menu_open) ? 0: $request->is_menu_open;
-            Session::put('site_menu_open', $is);
+        ## tab: menus
+        if( $tab=='menus'){
+            $data['items'] = SitePage::where( 'company_id', '=', Auth::user()->company->id )->orderBy('seq', 'asc')->get();
+            $data['defaults'] = SitePageDefault::orderBy('seq', 'asc')->get();
         }
-    	// $menuOpen = Session::get('site_menu_open');
 
-    	return response()->json(['success'=>'Got Simple Ajax Request.'], 200);
+        ## tab: fonts
+        if($tab=='fonts'){
+            $data['items'] = DefaultFont::get();
+            $data['active'] = Auth::user()->company->font_id;
+        }
+
+        ## tab: slides
+        if($tab=='slides'){
+            $slides = CompanySlide::where( 'company_id', '=', Auth::user()->company->id )->get();
+
+            $data = [];
+            foreach ($slides as $item) {
+                $data[] = [
+                    'id' => $item->id,
+                    'src' => asset( "storage/{$item->path}" ),
+                    'caption' => $item->caption,
+                    'permalink' => $item->permalink,
+                    'title' => $item->title,
+                ];
+            }
+        }
+
+
+        ## tab: banners
+        if($tab=='banners'){
+            $data['banners'] = DefaultThemeBanner::where( 'theme_id', '=', Auth::user()->company->theme_id )->orderby( 'position', 'asc' )->get();
+            $data['target'] = DefaultThemeBanner::target();
+
+
+            foreach ($data['banners']as $key => $value) {
+
+                $item = CompanyBanner::where([
+
+                    ['banner_id', '=', $value['id']],
+                    ['company_id', '=', Auth::user()->company->id],
+
+                ])->first();
+
+
+                $data['banners'][$key]['item'] = $item;
+            }
+        }
+
+
+        return view('pages.site.index')->with([
+            'navleftItems' => $this->navleft,
+            'navleftItemsCurrentTab' => '/site/'.$tab,
+
+            'inc' => "tabs.{$tab}",
+
+            'data' => $data,
+        ]);
+
     }
 
-    /**
-     * Display the specified resource.
-     *
-     * @param  int  $id
-     * @return \Illuminate\Http\Response
-     */
-    public function show($id)
-    {
-        //
-    }
 
-    /**
-     * Show the form for editing the specified resource.
-     *
-     * @param  int  $id
-     * @return \Illuminate\Http\Response
-     */
-    public function edit($id)
-    {
-        //
-    }
-
-    /**
-     * Update the specified resource in storage.
-     *
-     * @param  \Illuminate\Http\Request  $request
-     * @param  int  $id
-     * @return \Illuminate\Http\Response
-     */
-    public function update(Request $request, $id)
-    {
-        //
-    }
-
-    /**
-     * Remove the specified resource from storage.
-     *
-     * @param  int  $id
-     * @return \Illuminate\Http\Response
-     */
-    public function destroy($id)
-    {
-        //
-    }
 }

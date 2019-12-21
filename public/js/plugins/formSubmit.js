@@ -66,6 +66,10 @@ if ( typeof Object.create !== 'function' ) {
 			// 	self.changeData();
 			// });
 
+			self.$form.find(":input[name]").bind('change keyup',function(e) {
+				self.changeData();
+			});
+
 			self.changeData();
 			// self.autosave = self.options.autosave;
         },
@@ -80,62 +84,74 @@ if ( typeof Object.create !== 'function' ) {
 		changeData: function () {
 			var self = this;
 
-            return false;
-
             var inputChange = {};
 
-            var inputRequired = self.$form.find(":input[aria-label=required]");
+
+            var inputRequired = self.$form.find(":input[aria-label=required]:not(disabled),:input[required]:not(disabled)").not('[type=radio]');
 
 
-            // data-initial-value="ลาดพร้าว"
+            // :disabled
+            var inputRequiredRadio = self.$form.find(":input[type=radio][aria-label=required],:input[type=radio][required]").not(':disabled');
+            var inputRequiredRadioLength = 0;
 
-			$.each(inputRequired, function(index, el) {
 
-				var type = $(this).attr('type');
-				var name = $(this).attr('name');
-				var val = $.trim($(this).val() );
 
-				if( self._type(type) ){
+            var nameRadioRequired = {};
+            var requiredNameRadio = {};
+            $.each(inputRequiredRadio, function(index, el) {
 
-					if( self._checked(type) ){
-						val = self.$form.find(':input[name='+name+']:checked').val();
-					}
+            	var name = $(this).attr('name');
+				var val = $(this).prop('checked');
 
-					//
-					if( self.inputs[name] != val ){
-						inputChange[name] = val;
-					}
+
+				requiredNameRadio[ name ] = 1;
+
+				if( val ){
+					nameRadioRequired[ name ] = val;
 				}
             });
 
-            var is_change = false;
-            if( inputRequired.length > 0 ){
 
-                if( self.options.input_change_data_min ){
 
-                    if( Object.keys(inputChange).length>=self.options.input_change_data_min ){
-                        is_change = true;
-                    }
-                }
-                else if( inputRequired.length==Object.keys(inputChange).length ){
+            var required = 0;
+            $.each(inputRequired, function(index, el) {
+            	var type = $(this).attr('type');
+				var name = $(this).attr('name');
+				var val = $.trim($(this).val() );
 
-                    is_change = true;
-                }
+				if( type=='checkbox' || type=='radio' ){
+
+
+					if( $(this).prop('checked')==true && type=='checkbox' ){
+						required++;
+					}
+
+
+				}
+				else if( type=='hidden' ){
+
+				}
+				else if( val!='' ){
+
+					required++;
+				}
+            });
+
+
+            required += Object.keys(nameRadioRequired).length;
+            var inputRequiredLength = inputRequired.length + Object.keys(requiredNameRadio).length;
+
+            // console.log( required, inputRequiredLength, self.options.requiredMax );
+
+            if( inputRequiredLength>0 ){
+
+            	if( self.options.requiredMax ){
+            		self.$submit.prop('disabled', required<self.options.requiredMax );
+            	}
+            	else{
+            		self.$submit.prop('disabled', required!=inputRequiredLength );
+            	}
             }
-            else{
-                is_change = true;
-            }
-
-            self.$submit.prop('disabled', !is_change );
-
-
-            // if( self.options.autosave && self.is_change ){
-            //     self.is_change = false;
-
-            //     if( is_change ){
-            //         self.save();
-            //     }
-            // }
 		},
 
 		_autosave: function () {
@@ -165,14 +181,11 @@ if ( typeof Object.create !== 'function' ) {
 			return type=='checkbox' || type=='radio' ? true: false;
 		},
 
-		save: function () {
+		save: function (delay) {
 			var self = this;
 
 			if( self.alert ){ self.alert.hide(); }
 
-			// self.alert = ShotAlert.add({
-			// 	text: 'กำลังบันทึกข้อมูล...',
-			// });
 
 			self.$submit.removeClass('btn-error');
 
@@ -209,21 +222,24 @@ if ( typeof Object.create !== 'function' ) {
 			self.$submit.addClass('loading');
 
 
-			self.fetch( formData ).done(function( res ) {
+			setTimeout(function () {
+				self.fetch( formData ).done(function( res ) {
 
-				// console.log("success", res);
-				self.process( res ).then(function () { // doneCallbacks
+					// console.log("success", res);
+					self.process( res ).then(function () { // doneCallbacks
 
-					self.$form.find(':input[type=password]').val('');
-					// console.log('done');
-					self.updateForm();
-					self.changeData();
+						self.$form.find(':input[type=password]').val('');
+						// console.log('done');
+						self.updateForm();
+						self.changeData();
 
-				}, function () {
+					}, function () {
 
-					// console.log('reject');
-				}); //failCallbacks
-			});
+						// console.log('reject');
+					}); //failCallbacks
+				});
+
+			}, delay||1)
 		},
 		fetch: function ( formData ) {
 			var self = this;
@@ -259,7 +275,7 @@ if ( typeof Object.create !== 'function' ) {
 							text: res.message,
 							type: 'error',
 							close: true,
-							// auto: false
+							auto: false
 						}).show();
 					}
 
@@ -328,22 +344,31 @@ if ( typeof Object.create !== 'function' ) {
 			return new Promise(function(resolve, reject) {
 
 				// shot message
-				if( res.message ){
+
+				// alert
+				if( res.alert && typeof Swal ==='function' ){
+					// console.log( res.alert );
+					// https://sweetalert2.github.io/
+					// self._setAlert( res.alert );
+
+					let SwalOps = self._setAlert( res.alert );
+
+					SwalOps.onOpen = function (toast) {
+
+						Event.plugins($(toast), res.data||{});
+					}
+
+					Swal.fire( SwalOps ).then((result) => {
+
+						// console.log( result.value );
+					});
+				}else if( res.message ){
 					self._showMessage( res.message, res.code==200 ? 'success': 'error' );
                 }
 
                 if( res.clearFormData && self.formData ){
                     delete self.formData;
                 }
-
-
-				// alert
-				if( res.alert ){
-					console.log( res.alert );
-					// https://sweetalert2.github.io/
-					// self._setAlert( res.alert );
-					Swal.fire( self._setAlert( res.alert ) );
-				}
 
 				// error form
 				if( res.error ){
@@ -419,11 +444,10 @@ if ( typeof Object.create !== 'function' ) {
                                         }
                                         else if( type=='image' ){
 
-                                            if( nodeName=='img' ){
+                                            if( nodeName=='IMG' ){
                                                 $elem.attr('src', val);
                                             }
                                             else if( val!='' ){
-
                                                 $elem.html( $('<img>', {src: val}) );
                                             }
                                             else{
@@ -448,8 +472,6 @@ if ( typeof Object.create !== 'function' ) {
 								}
 							}
 						});
-
-						// console.log( typeof res.update[1] );
 					}
 
 				}
@@ -461,10 +483,15 @@ if ( typeof Object.create !== 'function' ) {
 					}
 				}
 
+				if( res.call ){
 
-				if( typeof window[res.call] === 'function' ){
-					window[res.call]( res.data || {} );
+					$.each( res.call.split(','), function(i, apply) {
+						if( typeof window[apply] === 'function' ){
+							window[apply]( res.data || {} );
+						}
+					});
 				}
+
 
 				// if( self.alert ){ self.alert.update({'remove': true}); }
 
@@ -610,7 +637,8 @@ if ( typeof Object.create !== 'function' ) {
 	};
 	$.fn.formSubmit.defaults = {
 		dataType: 'json',
-		// changeDataMax: 0
+
+		// requiredMax: 0
 	}
 
 

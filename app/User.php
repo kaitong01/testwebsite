@@ -20,7 +20,9 @@ class User extends Authenticatable
         , 'username'
         , 'email'
         , 'password'
-        , 'user_status'
+        , 'status'
+
+        , 'last_login_at', 'last_login_ip',
     ];
 
     /**
@@ -39,5 +41,14 @@ class User extends Authenticatable
         $this->save();
 
         return $this->api_token;
+    }
+
+    public function role(){
+        return $this->belongsTo('App\Models\UserRole');
+    }
+
+
+    public function company(){
+        return $this->belongsTo('App\Models\Company');
     }
 }

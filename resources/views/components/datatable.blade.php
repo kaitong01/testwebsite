@@ -1,17 +1,38 @@
+<?php
+
+
+$dataFilters = [
+    'topLeft' => [],
+    'topRight' => [],
+    'bottomLeft' => [],
+    'bottomRight' => [],
+];
+if ( isset($filters) ){
+
+    foreach ($filters as $value) {
+        $position = isset($value['position'])? $value['position']: 'bottomLeft';
+        $dataFilters[$position][] = $value;
+    }
+}
+
+
+
+?>
 {{-- Datatable --}}
 <div class="page-Datatable datatable-wrap layout__box o__has-rows off" data-plugin="datatable"@if ( !empty( $options ) ) data-options="{{ Fn::stringify([
     'options' => isset( $options )? $options: [],
     'url' => isset( $url )? $url: [],
     'token' => csrf_token(),
 ]) }}"@endif>
-
+    
     {{-- Datatable -> Header --}}
-    <div class="datatable-header layout__box fixed" role="header">
+    <div role="filter"><div class="datatable-header layout__box fixed" role="header">
 
         {{-- Header -> top --}}
         <div class="layout__box d-flex justify-content-between mb-2">
 
             <div class="d-flex align-items-center">
+
                 {{-- title --}}
                 <div class="group-title">
                     <h2 class="title" ref="title">{{ $title }}</h2>
@@ -19,15 +40,29 @@
                 </div>
                 {{-- end: title --}}
 
-                <div>
+                <div class="">
                     <button type="button" class="btn btn-outline-secondary ml-2" data-action="refresh"><i class="fa fa-refresh"></i></button>
                 </div>
+
+                @if ( !empty($dataFilters['topLeft']) )
+                    <div class="ml-md-3">
+                    @component('components.filters', ['items'=>$dataFilters['topLeft']])
+                        
+                    @endcomponent
+                    </div>
+                @endif
+
             </div>
 
 
-            <div>
-                @if ( !empty($actions_right) )
+            <div class="d-flex align-items-center">
 
+                @if ( !empty($dataFilters['topRight']) )
+                    @component('components.filters', ['items'=>$dataFilters['topRight']])
+                    @endcomponent
+                @endif
+
+                @if ( !empty($actions_right) )
                 {!!$actions_right!!}
                 @endif
             </div>
@@ -53,20 +88,24 @@
 
 
         {{-- Header -> filters --}}
-        @if ( isset($filter) || isset($filter_right) )
-        <nav class="datatable-filter d-flex mb-2 align-items-center justify-content-between" role="filter">
+        @if ( !empty($dataFilters['bottomLeft']) )
 
-            @isset ( $filter )
-            <div class="filters d-flex align-items-center">{!!$filter!!}</div>
-            @endisset
+        <nav class="datatable-filter d-flex mb-2 align-items-center justify-content-between">
 
-            @if ( !empty($filter_right) )
-            <ul class="nav">{{ $filter }}</ul>
+            @if ( !empty($dataFilters['bottomLeft']) )
+                @component('components.filters', ['items'=>$dataFilters['bottomLeft']])
+                @endcomponent
             @endif
 
+
+            @if ( !empty($dataFilters['bottomRight']) )
+                @component('components.filters', ['items'=>$dataFilters['bottomRight']])
+                @endcomponent
+            @endif
+            
         </nav>
         @endif
-        {{-- end: Header -> filters --}}
+        
 
 
         <table class="datatable-table datatable-table-header-fixed">
@@ -74,7 +113,7 @@
         </table>
 
 
-    </div>
+    </div></div>
     {{-- end: Datatable -> Header --}}
 
 

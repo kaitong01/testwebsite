@@ -1,9 +1,8 @@
-@extends('index')
+@extends('layouts.admin')
 
 @section('title', 'ตั้งค่าเว็บไซต์ของคุณ')
 
 @section('content')
-
 
     @component('components.columns', [
         'navleft'=> ''
@@ -61,8 +60,6 @@
             <?php } ?>
 
         <?php } ?>
-
-
 
     @endcomponent
 

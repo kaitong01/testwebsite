@@ -110,7 +110,7 @@ if ( typeof Object.create !== 'function' ) {
 
 
 			if( self.$el.filter ){
-				self.$input__search = self.$el.filter.find(':input[data-action=search]');
+				self.$input__search = self.$el.filter.find(':input[data-action=searchbox]');
 
 				self.$el.filter.delegate('[data-action=multichecked]', 'change', function(event) {
 
@@ -346,7 +346,7 @@ if ( typeof Object.create !== 'function' ) {
 		},
 
 		refresh: function ( delay ) {
-            var self = this;
+			var self = this;
 
 			if( !self.data.url ) return;
 			if( self.is_load ) clearTimeout( self.is_load );
@@ -375,8 +375,6 @@ if ( typeof Object.create !== 'function' ) {
 
 				self.fetch().done(function( res ) {
 
-
-
 					if( res.error ){
 						self.$el.container.addClass('has-error');
 						return false;
@@ -388,7 +386,9 @@ if ( typeof Object.create !== 'function' ) {
 
 					self.data.options.limit = parseInt(self.data.options.limit);
 					self.data.options.page = parseInt(self.data.options.page);
-					self.data.options.more = self.data.options.limit*self.data.options.page < res.total;
+
+
+					self.data.options.more = (self.data.options.limit*self.data.options.page) < res.total;
 
 					// has data
 					if( res.data ){
@@ -546,7 +546,7 @@ if ( typeof Object.create !== 'function' ) {
 			q: ''
 		},
 
-		infinite: 'scrolling', //Scrolling Vs. Pagination https://medium.com/@dalpattapaniya/infinite-scrolling-vs-pagination-f237592f339a
+		infinite: 'scrolling', //Scrolling Vs. pagination https://medium.com/@dalpattapaniya/infinite-scrolling-vs-pagination-f237592f339a
 
 		triggerMenu: '#page-navigation-trigger',
 

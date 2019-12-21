@@ -60,7 +60,7 @@
                     <div class="store-product-section-body">
 
                         @component('components.product-grid', [
-                            'items' => $periodLastWeek['data'],
+                            'items' => $periodInWeek['data'],
                             'itemStyle' => 3
                         ])
 
@@ -147,7 +147,7 @@
                                 <h3>โฮลเซลล์</h3>
                             </div>
 
-                            <div><a href="/settings/tours/wholesales"><span class="mr-1">เลือกโฮลเซลล์</span><i class="fa fa-angle-right"></i></a></div>
+                            <div><a href="/tours/wholesale"><span class="mr-1">เลือกโฮลเซลล์</span><i class="fa fa-angle-right"></i></a></div>
                         </div>
                         <div class="store-product-section-body">
                             <div class="products-grid">

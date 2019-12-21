@@ -40,7 +40,8 @@ class WholesaleSeries extends Model
 
     ];
 
-    // ดันขาย
+
+
     public static function periodLastWeek($ops=array())
     {
         $ops = array_merge( array(
@@ -101,6 +102,13 @@ class WholesaleSeries extends Model
             }
         }
 
+        if( isset($ops['q']) ){
+
+            $sth->Where( 'wholesale_series.name', 'LIKE', "%{$ops['q']}%" )
+            ->orWhere('wholesale_series.code', 'LIKE', "%{$ops['q']}%")
+            ;
+        }
+
 
         if( isset($ops['periodLastWeek']) ){
             $sth->where( 'wholesale_periods.start_date', '>=', 'NOW()' );
@@ -108,6 +116,12 @@ class WholesaleSeries extends Model
         }
         else{
             $sth->orderby( 'wholesale_series.'. $ops['sort'], $ops['dir'] );
+        }
+
+        if(isset($ops['between'])){
+          $start_date = $ops['between'][0];
+          $end_date = $ops['between'][1];
+          $sth->whereBetween('wholesale_periods.start_date', [$start_date, $end_date]);
         }
 
 

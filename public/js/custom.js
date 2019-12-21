@@ -45,7 +45,7 @@ const ShotAlert = {
 	},
 	_setElem: function (data) {
 		var self = this;
-		
+
 		var $box = $('#shotalert');
 		if( $box.length==0 ){
 			$box = $('<div>', {id: 'shotalert', class: 'shotalert'});
@@ -67,7 +67,7 @@ const ShotAlert = {
 				}
 
 				self.hide();
-			}); 
+			});
 		}
 
 		self.is_update = true;
@@ -98,12 +98,12 @@ const ShotAlert = {
 	},
 	_icons: {
 		success: function () {
-			
+
 			return '<svg class="alert-icon" role="icon" focusable="false" aria-label="Success" role="img"><path d="M9 1a8 8 0 1 0 8 8 8 8 0 0 0-8-8zm5.333 4.54l-6.324 8.13a.6.6 0 0 1-.437.23h-.037a.6.6 0 0 1-.425-.176l-3.893-3.9a.6.6 0 0 1 0-.849l.663-.663a.6.6 0 0 1 .848 0L7.4 10.991l5.256-6.754a.6.6 0 0 1 .843-.1l.728.566a.6.6 0 0 1 .106.837z"></path></svg>';
 		},
 
 		close: function () {
-			
+
 			return '<svg focusable="false" aria-hidden="true" role="img"><path d="M7.77 6.709L5.061 4 7.77 1.291A.75.75 0 1 0 6.709.23L4 2.939 1.291.23A.75.75 0 1 0 .23 1.291L2.939 4 .23 6.709A.75.75 0 1 0 1.291 7.77L4 5.061 6.709 7.77A.75.75 0 1 0 7.77 6.709z"></path></svg>';
 		},
 
@@ -131,7 +131,7 @@ const ShotAlert = {
 			if( type ){
 				options.type = type;
 			}
-			
+
 		}else if( typeof text==='object' ){
 			options = $.extend( {}, options, text );
 		}
@@ -159,12 +159,10 @@ const ShotAlert = {
 	show: function () {
 		var self = this;
 		var fn = self.onClose;
-		
+
 		if( !self.$elem ){
 		 	self._setElem();
 		}
-		
-
 
 		if( self.is_update ){
 
@@ -179,9 +177,9 @@ const ShotAlert = {
 		 	}, 200);
 		}
 		else{
-			self.$elem.addClass('show');	
+			self.$elem.addClass('show');
 			self.done();
-		}		
+		}
 	},
 
 	done: function () {
@@ -189,7 +187,10 @@ const ShotAlert = {
 
 		if( self.ops.auto ) {
 			self.__autoClose = setTimeout(function() {
-	 			self.$elem.removeClass('animate');
+
+                if( self.$elem ){
+                    self.$elem.removeClass('animate');
+                }
 
 	 			self._autoClose();
 	 		}, 1300);
@@ -198,23 +199,30 @@ const ShotAlert = {
 
 	_autoClose: function () {
 		var self = this;
-		
+
 		self.__autoClose = setTimeout(function() {
 			self.hide();
 		}, self.ops.delay || 2800);
 	},
 
 	hide: function () {
-		var self = this;
+        var self = this;
+
+        if( self.t_hide ){
+            clearTimeout(self.t_hide);
+        }
 
 		if( self.$elem ){
 
 			if( self.ops.close ){
 				self.$elem.removeClass('show');
 
-				setTimeout(function() {
-					self.$elem.remove();
-					delete self.$elem;
+				self.t_hide = setTimeout(function() {
+
+                    if( self.$elem ){
+					    self.$elem.remove();
+                        delete self.$elem;
+                    }
 				}, 300);
 			}
 			else{
@@ -226,7 +234,7 @@ const ShotAlert = {
 
 					console.log( 'hide', self.ops );
 					if( self.ops.remove ){
-						
+
 					}*/
 				});
 			}
@@ -375,6 +383,6 @@ $(document).ready(function(){
 
 	// });
 
-	
+
 
 });

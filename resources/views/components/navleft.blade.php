@@ -8,31 +8,30 @@
         </div>
         @endif
         <div class="navleft-body layout__box">
-            
+
             @foreach ($items as $key=> $menu)
 
             <ul class="navleft-nav">
 
                 @if (!empty($menu['name']))
                 <li class="navleft-item head"><span>{{ $menu['name'] }}</span></li>
-                   
+
                 @endempty
 
                 @if (!empty($menu['items']))
-                
+
                 @foreach ($menu['items'] as $value)
 
 
 
-                <?php 
-                $active = ''; 
+                <?php
+                $active = '';
                 if( isset($current) ){
 
-                    if( $current==$value['id'] ){
-                        $active = ' active'; 
+                    if( trim($current, '/') == trim( $value['id'], '/' ) ){
+                        $active = ' active';
                     }
                 }
-
 
                 ?>
 
@@ -52,7 +51,7 @@
 
             </ul>
             @endforeach
-            
+
         </div>
     </div>
 </div>
