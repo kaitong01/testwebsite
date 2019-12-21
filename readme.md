@@ -1,6 +1,5 @@
 # LARAVEL & BKKSOFT 
 
-
 ## Run steps
 - Clone GitHub repo for this project locally
 - Run command `composer install`
