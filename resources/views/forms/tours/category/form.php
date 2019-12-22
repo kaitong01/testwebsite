@@ -48,7 +48,7 @@ $formBasic = $form->create()
         ->text( '<div style="width: 585px">'.$Fn->q('form')->imageCover( $imageCoverOpt ).'</div>' )
 
  ->field("name")
-        ->label( 'ชื่อ*' )
+        ->label( 'ชื่อ' )
         ->autocomplete('off')
         ->addClass('form-control input-title')
         ->value( !empty($data->name)? $data->name:'' )
@@ -63,9 +63,6 @@ $formBasic = $form->create()
         ->value( !empty($data->description)? $data->description:'' )
 ->html();
 // อธิบายเประเภเพื่อให้ผู้คนรู้ว่ามีเนื้อหาเกี่ยวกับอะไร
-
-
-
 
 
 $form = new Form();
