@@ -15,8 +15,6 @@ class DatacenterController extends Controller
     {
         // $tab = basename(Route::getFacadeRoot()->current()->uri);
         // dd($tab);
-
-
         $ops = [
             'sort' => isset($request->sort)? $request->sort: 'updated_at',
             'dir' => isset($request->dir)? $request->dir: 'desc',
@@ -40,6 +38,8 @@ class DatacenterController extends Controller
 
         $where[] = ['status', '=', 1];
         $wholesalesIDs = Company::wholesalesIds( $request->user()->company->id );
+
+
 
         $sth = DatacenterSeries::where($where);
 

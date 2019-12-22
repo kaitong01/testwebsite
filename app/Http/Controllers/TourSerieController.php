@@ -5,6 +5,7 @@ namespace App\Http\Controllers;
 use Illuminate\Http\Request;
 use App\Http\Controllers\Controller;
 use App\Http\Requests\TourSerieRequest;
+use App\Models\Company;
 use App\Models\DefaultAirlines;
 use App\Models\TourCountryModel;
 use App\Models\TourSerie;
@@ -32,17 +33,7 @@ class TourSerieController extends Controller
         }
 
 
-        if( $request->has('state') ){
 
-            if( $request->state==1 ){
-                $where[] = ['wholesale_id', '=', 0];
-
-            }
-            else{
-                $where[] = ['wholesale_id', '>', 0];
-            }
-
-        }
 
         if( $request->has('q') ){
             $where[] = ['name', 'LIKE', "%{$request->q}%"];
@@ -51,14 +42,38 @@ class TourSerieController extends Controller
 
         $where[] = ['company_id', '=', $request->user()->company->id ];
 
-        $results = TourSerie::where($where)
+        // แสดง เฉพราะ โฮลเชลที่เลือก
+        $wholesalesIDs = Company::wholesalesIds( $request->user()->company->id );
+        $wholesalesIDsAddCustom = $wholesalesIDs;
+        array_push($wholesalesIDsAddCustom, 0);
 
-            ->orderby( $ops['sort'], $ops['dir'] )
+
+        $sth = TourSerie::where($where);
+
+
+        if( $request->has('state') ){
+
+            if( $request->state==1 ){
+
+                $sth->where( 'wholesale_id', 0 );
+
+            }
+            else{
+                $sth->whereIn( 'wholesale_id', $wholesalesIDs );
+            }
+
+        }
+        else{
+            $sth->whereIn( 'wholesale_id', $wholesalesIDsAddCustom );
+        }
+
+
+        $sth->orderby( $ops['sort'], $ops['dir'] )
 
             ->skip( ($ops['page']*$ops['limit'])-$ops['limit'])
-            ->take( $ops['limit'] )
+            ->take( $ops['limit'] );
 
-            ->paginate( $ops['limit'] );
+        $results = $sth->paginate( $ops['limit'] );
 
         $res = [
             'options' => $ops,

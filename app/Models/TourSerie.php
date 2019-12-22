@@ -120,6 +120,13 @@ class TourSerie extends Model
     public static function _leftMenu()
     {
 
+
+        $wholesalesIDs = Company::wholesalesIds( Auth::user()->company->id );
+
+
+        $wholesalesIDsAddCustom = $wholesalesIDs;
+        array_push($wholesalesIDsAddCustom, 0);
+
         return [
             [
                 "name" => "สถานะ",
@@ -127,26 +134,35 @@ class TourSerie extends Model
                     [
                         "id"=> "/products/publish",
                         "name" => "เผยแพร่",
-                        'count' => DB::table('tours_series')->where([
-                                ['company_id', '=', Auth::user()->company->id],
-                                ['status', '=', 1],
-                            ])->count()
+                        'count' => DB::table('tours_series')
+                            ->where([
+                                ['company_id', Auth::user()->company->id],
+                                ['status', 1],
+                            ])
+                            ->whereIn( 'wholesale_id', $wholesalesIDsAddCustom )
+                            ->count()
                     ],
                     [
                         "id"=> "/products/draft",
                         "name" => "แบบร่าง",
-                        'count' => DB::table('tours_series')->where([
-                            ['company_id', '=', Auth::user()->company->id],
-                            ['status', '=', 2],
-                        ])->count()
+                        'count' => DB::table('tours_series')
+                            ->where([
+                                ['company_id', Auth::user()->company->id],
+                                ['status', 2],
+                            ])
+                            ->whereIn( 'wholesale_id', $wholesalesIDsAddCustom )
+                            ->count()
                     ],
                     [
                         "id"=> "/products/disable",
                         "name" => "ระงับ",
-                        'count' => DB::table('tours_series')->where([
-                            ['company_id', '=', Auth::user()->company->id],
-                            ['status', '=', 0],
-                        ])->count()
+                        'count' => DB::table('tours_series')
+                            ->where([
+                                ['company_id', Auth::user()->company->id],
+                                ['status', 0],
+                            ])
+                            ->whereIn( 'wholesale_id', $wholesalesIDsAddCustom )
+                            ->count()
                     ],
                 ]
             ],
@@ -157,17 +173,19 @@ class TourSerie extends Model
                         "id"=> "/products/yourself",
                         "name" => "สร้างเอง",
                         'count' => DB::table('tours_series')->where([
-                            ['company_id', '=', Auth::user()->company->id],
-                            ['wholesale_id', '=', 0],
+                            ['company_id', Auth::user()->company->id],
+                            ['wholesale_id', 0],
                         ])->count()
                     ],
                     [
                         "id"=> "/products/wholesale",
                         "name" => "จากโฮลเซลล์",
                         'count' => DB::table('tours_series')->where([
-                            ['company_id', '=', Auth::user()->company->id],
-                            ['wholesale_id', '<>', 0],
-                        ])->count()
+                            ['company_id', Auth::user()->company->id],
+
+                        ])
+                        ->whereIn( 'wholesale_id', $wholesalesIDsAddCustom )
+                        ->count()
                     ],
                 ]
             ],

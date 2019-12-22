@@ -56,11 +56,11 @@ $formBasic = $form->create()
         ->text( '<div style="width: '. $imageCoverOpt['width'] .'px">'.$Fn->q('form')->imageCover( $imageCoverOpt ).'</div>' )
 
  ->field("name")
-        ->label( 'ชื่อ*' )
+        ->label( 'ชื่อ' )
         ->autocomplete('off')
         ->addClass('form-control input-title')
         ->maxlength(175)
-        ->attr('aria-label', 'required')
+        // ->attr('aria-label', 'required')
         ->value( !empty($data->name)? $data->name:'' )
         ->placeholder( $originalName )
 
