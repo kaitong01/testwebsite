@@ -219,6 +219,31 @@ Route::group(['middleware' => ['auth', 'user.role']], function () {
         return abort(404);
     });
 
+     // --------------------------------------------------------------------------------
+    # blogs
+    Route::resource('/blogs', 'BlogController')->only([
+        'index', 'edit', 'update', 'destroy'
+    ]);
+
+    Route::get('/blogs/find', 'BlogController@find');
+    Route::get('/blogs/find/{param}', 'BlogController@find');
+
+    Route::prefix('/blogs')->group(function () {
+        Route::get('/', 'BlogController@index');
+        Route::get('/confirm', 'BlogController@index');
+        Route::get('/verify', 'BlogController@index');
+        Route::get('/cancel', 'BlogController@index');
+
+    });
+
+    Route::post('/blogs/switch', 'BlogController@switch');
+    Route::get('/blogs/{param}/delete', 'BlogController@delete');
+
+    Route::get('/blogs/{param}', function ()
+    {
+        return abort(404);
+    });
+
 
     // --------------------------------------------------------------------------------
     # datacenter
