@@ -92,9 +92,24 @@ class TourCountryController extends Controller
 
 
         if( $data->fill( $request->input() )->save() ){
-            $res['data'] = [
-                'id' => $data->id
-            ];
+
+
+            if( empty($data->permalink)  ){
+
+                if( !empty( $data->name ) ){
+                    $data->permalink = $this->fn->q('text')->createPermalink($data->name);
+                }
+                else if( $request->has('country_id') ){
+                    $country = CountryModel::find($request->country_id);
+                    $name = !empty($country->name_th) ? $country->name_th: $country->name;
+                    $data->permalink = $this->fn->q('text')->createPermalink($name);
+                }
+
+            }
+
+            $data->update();
+
+            $res['data'] = $data;
 
             $res['code'] = 200;
             $res['message'] = 'บันทึกข้อมูลแล้ว';

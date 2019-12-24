@@ -222,7 +222,7 @@ Route::group(['middleware' => ['auth', 'user.role']], function () {
      // --------------------------------------------------------------------------------
     # blogs
     Route::resource('/blogs', 'BlogController')->only([
-        'index', 'edit', 'update', 'destroy'
+        'index', 'create', 'store', 'edit', 'update', 'destroy'
     ]);
 
     Route::get('/blogs/find', 'BlogController@find');
@@ -230,9 +230,11 @@ Route::group(['middleware' => ['auth', 'user.role']], function () {
 
     Route::prefix('/blogs')->group(function () {
         Route::get('/', 'BlogController@index');
-        Route::get('/confirm', 'BlogController@index');
-        Route::get('/verify', 'BlogController@index');
-        Route::get('/cancel', 'BlogController@index');
+        Route::get('/posted', 'BlogController@index');
+        Route::get('/scheduled', 'BlogController@index');
+        Route::get('/draft', 'BlogController@index');
+        Route::get('/expire', 'BlogController@index');
+        Route::get('/disabled', 'BlogController@index');
 
     });
 

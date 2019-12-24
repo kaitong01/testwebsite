@@ -13,7 +13,7 @@ $imageCoverOpt = array(
 );
 
 if( !empty($data) ){
-    $formAction = '/tours/categories/'.$data->id;
+    $formAction = '/blogs/'.$data->id;
     if(!empty($data->image)){
       $imageCoverOpt['src'] = asset("storage/{$data->image}");
     }
@@ -22,19 +22,17 @@ if( !empty($data) ){
     $arr['hiddenInput'][] = array('name'=>'_method', 'value'=>'PUT');
     // $arr['hiddenInput'][] = array('name'=>'_method', 'value'=>'PUT');
 
-    $arr['title'] = 'แก้ไขประเภททัวร์';
+    $arr['title'] = 'แก้ไขบทความ';
     $arr['title'] .= !empty($data->name)? $data->name:'';
     $arr['title'] .= '<div class="fsm text-muted" style="font-size:13px">แก้ไขล่าสุด: '.$Fn->q('time')->live( $data->updated_at ).'</div>';
 }
 else{
-    $formAction = '/tours/categories';
+    $formAction = '/blogs';
     $arr['hiddenInput'][] = array('name'=>'_method', 'value'=>'post');
-    $arr['title'] = 'เพิ่มประเภททัวร์';
+    $arr['title'] = 'เพิ่มบทความ';
 }
 
 $arr['hiddenInput'][] = array('name'=>'_token', 'value'=>csrf_token());
-$arr['hiddenInput'][] = array('name'=>'company_id', 'value'=> Auth::user()->company->id );
-
 
 
 $form = new Form();
@@ -43,24 +41,45 @@ $formBasic = $form->create()
     ->elem('div')
     ->addClass('form-insert')
 
-
    ->field($imageCoverOpt['name'])
-        ->text( '<div style="width: 585px">'.$Fn->q('form')->imageCover( $imageCoverOpt ).'</div>' )
+        ->text( '<div style="width: 603px">'.$Fn->q('form')->imageCover( $imageCoverOpt ).'</div>' )
 
- ->field("name")
-        ->label( 'ชื่อ*' )
+    ->field("category_id")
+        ->label( 'ประเภทบทความ*' )
+        ->autocomplete('off')
+        ->addClass('form-control')
+        ->select( $categoryList )
+        ->attr('aria-label', 'required')
+        ->value( $data->category_id ?? '' )
+
+    ->field("name")
+        ->label( 'หัวข้อ* (200 ตัวอักษร)' )
         ->autocomplete('off')
         ->addClass('form-control input-title')
-        ->value( !empty($data->name)? $data->name:'' )
+        ->placeholder('เพิ่มหัวข้อของบทความ...')
+        ->attr('aria-label', 'required')
+        ->value( $data->name ?? '' )
 
- ->field("description")
+        ->field("summary")
         ->type( 'textarea' )
-        ->label( 'คำอธิบาย*' )
+        ->label( 'คำอธิบายแบบย่อ* (320 ตัวอักษร)' )
         ->autocomplete('off')
         ->addClass('form-control input-content')
-        ->placeholder('')
         ->attr('data-plugin', 'autosize')
-        ->value( !empty($data->description)? $data->description:'' )
+        ->placeholder('อธิบายบทความของคุณแบบย่อ...')
+        ->attr('aria-label', 'required')
+        ->value( $data->summary ?? '' )
+
+ ->field("text")
+        ->type( 'textarea' )
+        ->label( 'คำอธิบายแบบเต็ม*' )
+        ->autocomplete('off')
+        ->addClass('form-control')
+        ->placeholder('อธิบายบทความของคุณเพื่อให้ผู้คนรู้ว่ามีเนื้อหาเกี่ยวกับอะไร')
+        ->attr('data-plugin', 'autosize')
+        ->attr('rows', 8)
+        ->attr('aria-label', 'required')
+        ->value( $data->text ?? '' )
 ->html();
 // อธิบายเประเภเพื่อให้ผู้คนรู้ว่ามีเนื้อหาเกี่ยวกับอะไร
 
@@ -71,12 +90,14 @@ $formSEO = $form->create()
     ->elem('div')
     ->addClass('form-insert')
 
+    ->hr('<div class="alert alert-warning">SEO คือวิธีที่คุณจะปรับแต่งเว็บไซต์ของคุณให้เหมาะสมที่สุด เพื่อจะให้เว็บไซต์ของคุณถูกค้นหาและติดอันดับโดยเสิร์ชเอนจินเช่น Google และอื่น ๆ ได้ง่าย</div>')
+
     ->field("seo_title")
         ->label('ใส่ชื่อเพจที่จะให้แสดงในผลการค้นหาหรือบนแท็บบราวเซอร์ (70 ตัวอักษร)')
         ->addClass('form-control input-seo input-title-seo')
         ->autocomplete("off")
         ->maxlength( 70 )
-        ->value( !empty($data->seo_title) ? $data->seo_title:'' )
+        ->value( $data->seo_title ?? '' )
 
 
     ->field("seo_description")
@@ -87,7 +108,7 @@ $formSEO = $form->create()
         ->type('textarea')
         ->maxlength( 320 )
         ->attr('data-plugins', 'autosize')
-        ->value( !empty($data->seo_description) ? $data->seo_description:'' )
+        ->value( $data->seo_description ?? '' )
 
 
     ->field("permalink")
@@ -96,7 +117,7 @@ $formSEO = $form->create()
         ->text(
 
             '<div class="seourl-wrap d-flex justify-content-between align-items-center">'.
-                '<div class="seourl-base">/tours/categories/</div>'.
+                '<div class="seourl-base">/blogs/</div>'.
                 '<div class="seourl-input">'.
                     '<input id="permalink" class="form-control input-seo input-url-seo" autocomplete="off" type="text" name="permalink" value="'.(!empty($data->permalink)? $data->permalink:'').'" />'.
                 '</div>'.
@@ -119,10 +140,13 @@ $formSEO = $form->create()
 ->html();
 
 
+$formCogs = '';
+
 # body
 $arr['body'] = '<div data-plugins="formstaps|formseo|ChooseCountry" class="form-staps row no-gutters">'.
     '<div class="col-12 col-sm-8"><div class="form-staps-content">'.
         '<div data-stap-section="basic" class="form-staps-section active">'.$formBasic.'</div>'.
+        '<div data-stap-section="cogs" class="form-staps-section">'.$formCogs.'</div>'.
         '<div data-stap-section="seo" class="form-staps-section">'.$formSEO.'</div>'.
     '</div></div>'.
 
@@ -133,6 +157,11 @@ $arr['body'] = '<div data-plugins="formstaps|formseo|ChooseCountry" class="form-
             '<li class="nav-item active" data-stap-action="basic">'.
                 '<h3>รายละเอียด</h3>'.
                 '<p>ใส่รายละเอียดเนื้อหาเกี่ยวเส้นทาง</p>'.
+            '</li>'.
+
+            '<li class="nav-item" data-stap-action="cogs">'.
+                '<h3>ตัวเลือกการเผยแพร่</h3>'.
+                '<p>ตั้งค่าก่อนเผยแพร่</p>'.
             '</li>'.
 
             '<li class="nav-item" data-stap-action="seo">'.
@@ -146,7 +175,7 @@ $arr['body'] = '<div data-plugins="formstaps|formseo|ChooseCountry" class="form-
 $arr['form'] = '<form class="model-body-p0" method="post" action="'.asset( $formAction ).'" data-plugins="formSubmit"></form>';
 
 
-$statusActive = !empty($data['status'])? $data['status']: 1;
+$statusActive = $data->status ?? 1;
 
 $status = '';
 

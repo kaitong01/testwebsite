@@ -6,18 +6,17 @@ use Illuminate\Database\Eloquent\Model;
 
 class TourCategory extends Model
 {
-  protected $table = 'tour_category';
+  protected $table = 'tours_categories';
   public $primatyKey = 'id';
   public $itemstamps = false;
 
   protected $fillable = [
-    'cid',
-    'seq',
-    'name',
-    'start_date',
-    'end_date',
-    'image',
-    'description',
-    'status',
+    'company_id',
+
+    'name', 'description',
+
+    'seo_title', 'seo_description',
+
+    'seq', 'status',
   ];
 }

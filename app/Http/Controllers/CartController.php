@@ -107,10 +107,16 @@ class CartController extends Controller
             ])->count();
 
             if( !$hasCountry ){
+
+                $country = CountryModel::find($series->country_id);
+
                 TourCountryModel::create([
-                    'country_id' => $series->country_id,
-                    'company_id' => $request->user()->company->id,
+                    'country_id'    => $series->country_id,
+                    'company_id'    => $request->user()->company->id,
+                    'permalink'     => $this->fn->q('text')->createPermalink($country->name),
                 ]);
+
+
             }
 
 

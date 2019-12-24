@@ -5,7 +5,7 @@ namespace App\Http\Controllers;
 use Illuminate\Http\Request;
 use App\Http\Controllers\Controller;
 use App\Http\Requests\TourCategoryRequest;
-use App\Models\ToursCategory;
+use App\models\TourCategory;
 use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\Storage;
 
@@ -33,7 +33,7 @@ class TourCategoryController extends Controller
         $where[] = ['company_id', '=', Auth::user()->company->id ];
 
 
-        $results = ToursCategory::where($where)
+        $results = TourCategory::where($where)
 
             // ->select(  )
             // ->leftjoin( '' )
@@ -65,14 +65,14 @@ class TourCategoryController extends Controller
     public function create()
     {
         return view('forms.tours.category.form')->with([
-            'statusList' => ToursCategory::status()
+            'statusList' => TourCategory::status()
         ]);
     }
 
     public function store(TourCategoryRequest $request)
     {
 
-        $data = new ToursCategory();
+        $data = new TourCategory();
         if( $data->fill( $request->input() )->save() ){
 
             // update permalink
@@ -105,17 +105,17 @@ class TourCategoryController extends Controller
 
     public function edit($id)
     {
-        $data = ToursCategory::findOrFail($id);
+        $data = TourCategory::findOrFail($id);
 
 
         return view('forms.tours.category.form')->with([
             'data' => $data,
-            'statusList' => ToursCategory::status()
+            'statusList' => TourCategory::status()
         ]);
     }
     public function update(TourCategoryRequest $request)
     {
-        $data = ToursCategory::findOrFail($request->id);
+        $data = TourCategory::findOrFail($request->id);
 
         if( $data->fill( $request->input() )->save() ){
 
@@ -152,7 +152,7 @@ class TourCategoryController extends Controller
 
     public function switch(Request $request)
     {
-        $data = ToursCategory::findOrFail($request->id);
+        $data = TourCategory::findOrFail($request->id);
 
         if( $data->fill( $request->input() )->save() ){
             $res['data'] = [

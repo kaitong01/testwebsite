@@ -1,6 +1,12 @@
 @extends('layouts.admin')
 
+
+@section('title', $title)
+
 @section('content')
+
+    @if  ($navleft)
+
 
     @component('components.columns', [
         'navleft'=> ''
@@ -9,7 +15,7 @@
         {{-- nav --}}
         @slot('nav')
         @component('components.navleft', [
-            'title' => 'ตะกร้า',
+            'title' => $title,
 
             'current' => Route::getFacadeRoot()->current()->uri(),
 
@@ -30,8 +36,6 @@
         @endisset
         {{-- end: component->datatable --}}
 
-
-
         {{-- include --}}
         @isset($include)
         @include($include)
@@ -40,4 +44,8 @@
 
     @endcomponent
     {{-- end: endcomponent->columns --}}
+
+    @else
+
+    @endif
 @endsection
